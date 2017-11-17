@@ -1,0 +1,30 @@
+Title:			Update Mtg Agenda 
+Project Descriptor:	LANDISII Corrections/Upgrades
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		01 Nov 2016
+Revision Date:		
+
+
+############
+Mtg Agenda
+############
+
+	a. Report out Dakota (Core-Model)
+
+	b. Report out Austen (Base_harvest)
+
+	c. Report out Armann ()LANDVIZ)
+
+	d. Accessing and stocking .dlls in Rob' s new repo (Support-Library-Dlls)
+
+	e. Use of the ChangeLog
+
+	f. Sample TJ output and Prelim milestones
+
+	g. Timesheet: task leads and % complete estimates
+		
+	h. Dakota hrs to be added for missed pay period
+
+	i. 
+	

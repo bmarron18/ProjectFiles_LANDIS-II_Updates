@@ -1,0 +1,58 @@
+Title:				Base Harvest updates
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			10 Jan 2017
+Revision Date:		
+
+
+
+#############
+updates to BaseHarvest repo
+###############
+
+	a. re-wrote READ after testing rebuild in VS and subsequent .dll
+
+	b. updates to .iss file directory (.iss == Inno setup Script?)
+`	b1. creating an installer
+
+Inno Setup is a free installer for Windows programs. 
+Supports creation of a single EXE to install your program for easy online distribution.
+
+Inno Script Studio is a new intuitive graphical interface for generating and compiling scripts for 
+the award winning Inno Setup compiler from Jordan Russell.
+
+The MSI Wrapper was produced to create MSI packages from executable files built with Inno Setup. 
+It puts the setup.exe inside an MSI file and runs it with the specified command line switches when the MSI package is installed.
+
+
+
+Inno Setup Studio
+http://www.jrsoftware.org/isinfo.php#features
+http://www.jrsoftware.org/isdl.php
+https://www.kymoto.org/products/inno-script-studio
+http://stackoverflow.com/questions/21575241/how-to-make-the-silent-installation-by-using-innosetup
+
+msi
+http://www.exemsi.com/inno-setup-and-msi
+http://www.exemsi.com/
+http://stackoverflow.com/questions/71203/is-it-feasible-sensible-to-wrap-an-innosetup-installer-inside-an-msi-for-easier
+http://www.advancedinstaller.com/
+
+
+	c. confusion!
+How do we create Wizard installers? Use Inno Setup alone? Use Inno Setup w/ MSI Wrapper? Ue Advanced Installer?
+
+
+	d. install Inno Setup ==> innosetup-5.5.9.exe
+Destination location:
+      C:\Program Files (x86)\Inno Setup 5
+Start Menu folder:
+      Inno Setup 5
+Additional tasks:
+      Associate Inno Setup with the .iss file extension
+
+	e. install Inno Studio ==> ISStudio_Latest.exe
+
+
+

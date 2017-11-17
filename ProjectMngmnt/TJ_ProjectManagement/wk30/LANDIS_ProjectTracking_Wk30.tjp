@@ -1,0 +1,1739 @@
+#	Title: 		LANDIS-II Updates and Corrections Project -- InProgress
+#	Project:	2016SoE021_LANDIS_Upgrades	
+#	Author:		bmarron
+#	Origin Date:			06 Sept 2016
+#
+#	Reporting Start Date:	27 Mar 2017
+#	Reporting End Date:		02 Apr 2017		
+
+
+
+
+####################################	*syntax ==> project <your_project_id> "Your Project Title" start - end {}
+###	[[project header]]			####	*includes some globals
+####################################
+
+project tj_2016SoE021 "Programming Updates for LANDIS-II" 2016-09-05 - 2017-06-15 {
+	timingresolution 30 min				#defualt is 60 min
+	timezone "America/Vancouver"
+	currency "USD"
+	currencyformat "(" ")" "," "." 2
+	dailyworkinghours 3
+}
+
+# wk1	= start 2016-09-05
+# wk2	= start 2016-09-12
+# wk3	= start 2016-09-19
+# wk4	= start 2016-09-26
+# ......
+
+
+############################	*Define subsets w/ flags that can be filtered from reports
+####	[[flags]]	#### 	*Every container task level assigned a flag
+############################
+
+#	flag1	= Management Tasks
+#	flag2	= Programming and Training Tasks
+#	flag3	= Milestone Tasks
+#	flag4	= <open>
+
+flags flag1,
+      flag2,
+      flag3,
+      flag4
+
+############################	*syntax ==> account <your_account_id> "Your Acct Name"
+####	[[accounts]]	#### 	*global accounts: (1)account cost "Your Acct Name", (2)account rev "Your Acct Name"			
+############################	*ids must be unique within their property class	
+		
+account ProjectCost "Total Costs" {
+  account Dakota "DSanchez"
+  account Austen "ARuzicka"
+  account Armaan "ARoshani"
+  account Vincent "VSchuster"
+  account Bruce "BMarron" 
+}
+
+account ProjectFunding "Total Funding"{
+credits ${projectstart} "USFS Grant1" 50000
+}
+				#MUST set a balance calc even if no revenue is being tracked
+balance ProjectCost ProjectFunding
+
+
+####################################	*The expected default daily rate for ALL resources; global
+####	[[defaultrate]]		#### 	*This can be overridden for each resource
+####################################	*MUST be set to get 'cost' into taskreports
+
+rate 60.00				#the default DAILY (here, 3h) cost of a resource
+					# 3h*$20/h = $60/d
+
+
+############################	*syntax ==> resource <your_resource_id> "Your Resource Name"
+####	[[resources]]	#### 	*ids must be unique within their property class
+############################	*An effort of 6d (6 resource-days) can be done with 2 full-time resources in 3 working days
+############################	*see workinghours(project) for global settings; workinghours(resource) for local settings
+############################	*to override default rate MUST define new rate at the individ resource level (not team level)
+############################	*billing rate $75/hr*3hr/day = 225; pay rate $70/hr
+############################	*#billing rate $50/hr*3hr/day; pay rate $45/hr
+
+
+					#need 'resource clones' if same person works on multiple projects during a single week
+					#o/w TJ will not pick up all worked hours for accounting
+
+#---- Manager ------------------------------------------
+resource bmarron1 "Bruce Marron" {
+}
+
+resource bmarron2 "Bruce Marron" {
+}
+
+resource bmarron3 "Bruce Marron" {
+}
+
+resource bmarron4 "Bruce Marron" {
+}
+
+resource bmarron5 "Bruce Marron" {
+}
+
+# ------------Developer A ---------------------------------------							
+resource devA1 "DSanchez" {
+}
+
+resource devA2 "DSanchez" {
+}
+
+resource devA3 "DSanchez" {
+}
+
+resource devA4 "DSanchez" {
+}
+
+resource devA5 "DSanchez" {
+}
+
+
+# ------------Developer B ---------------------------------------							
+resource devB1 "ARuzicka" {
+}
+
+resource devB2 "ARuzicka" {
+}
+
+resource devB3 "ARuzicka" {
+}
+
+resource devB4 "ARuzicka" {
+}
+
+resource devB5 "ARuzicka" {
+}							
+
+
+# ------------Developer C ---------------------------------------							
+resource devC1 "ARoshani" {
+}
+
+resource devC2 "ARoshani" {
+}
+
+resource devC3 "ARoshani" {
+}
+
+resource devC4 "ARoshani" {
+}
+
+resource devC5 "ARoshani" {
+}	
+
+# ------------Developer D ---------------------------------------							
+resource devD1 "VSchuster" {
+}
+
+resource devD2 "VSchuster" {
+}
+
+resource devD3 "VSchuster" {
+}
+
+resource devD4 "VSchuster" {
+}
+
+resource devD5 "VSchuster" {
+}
+
+resource devD6 "VSchuster" {
+}
+
+
+############################	*syntax ==> task <your_task_id> "Your Task Name"
+####	[[tasks]]   ########	*unlike all other properties, tasks have a hierarchical id name space ==> can repeated subtask codes!
+############################	*attributes: allocate, effort/length/duration, complete, depends, start, end
+#				*watch start/end dates!!
+#				*watch effort!! Only one value allowed per task
+#				*Container level tasks cannot have any 'effort'
+#				*syntax ==> allocate team5, team6
+#				*'effort' partitioned equally: a team of 5 people can only be assigned en block; ALL work
+
+##============= Administration (ADM) =================================================================
+
+
+#Marron hrs should RE-START (ie set to zero) with "start 2016-11-14" given Armaan!!!
+# Value of my time through "start 2016-11-07" = $1800
+
+
+						#Tier_1.0.0.0 (container level task)
+task ADM "PROJECT MANAGEMENT (ADM)" {
+ flags flag1
+ chargeset Bruce
+
+#--------------- ADM Management ---------------------------------------------------------------
+#	ManagementTask#		= MT#
+#	MT1	= Design of Management Structure 
+#	MT2	= Recruitment
+#	MT3	= Trainings
+#	MT4	= Project Management
+#	MT5 = QAQC and Restructuring
+
+						#Tier_1.1.0.0 
+task MT1 "Management Structure (MT1)" {		
+						#Tier_1.1.1.0
+ task wk1a "Develop Task/Cost Accounting"{
+  start 2016-09-05
+  allocate bmarron1
+  length 11h
+ }
+
+ task wk1b "Develop Workflow Accounting"{
+  start 2016-09-05
+  allocate bmarron2
+  length 2h
+ }
+
+ task wk1c "Develop GitHub/Project Tracking Interface"{
+  start 2016-09-05
+  allocate bmarron3
+  length 2h
+ }
+
+ task wk2a "Develop Workflow Algorithm"{
+  start 2016-09-12
+  allocate bmarron1
+  length 5h 
+ }
+
+ task wk2b "git and GitHub Setup"{
+  start 2016-09-12
+  allocate bmarron2
+  length 4h
+ }
+
+  task wk3a "git and GitHub Setup"{
+  start 2016-09-19
+  allocate bmarron1
+  length 2h
+ }
+}	#end Tier_1.1.0.0
+
+
+						#Tier_1.2.0.0
+task MT2 "Recruitment (MT2)" {		
+						#Tier_1.2.1.0
+ task wk2a "Draft Developers Job Description"{
+  start 2016-09-12
+  allocate bmarron3
+  length 3h 
+ }
+
+ task wk3a "Job Postings/Notifications"{
+  start 2016-09-19
+  allocate bmarron2
+  length 2h 
+ }
+
+  task wk4a "Interviews/Candidate Processing"{
+  start 2016-09-26
+  allocate bmarron1
+  length 4h 
+ }
+} 	#end Tier_1.2.0.0
+
+
+						#Tier_1.3.0.0
+task MT3 "Trainings (MT3)" {		
+						#Tier_1.3.1.0
+  task wk4a "Intro Mtg Prep"{
+  start 2016-09-26
+  allocate bmarron2
+  length 2h
+ }
+
+  task wk9b "Team Mtg2 preps "{
+  start 2016-10-31
+  allocate bmarron2
+  length 3h 
+ }
+
+} 	#end Tier_1.3.0.0
+
+
+						#Tier_1.4.0.0
+task MT4 "Project Mngmnt (MT4)" {		
+						#Tier_1.4.1.0
+  task wk5a "Comm.s, Accting, Rpting"{
+  start 2016-10-03
+  allocate bmarron1
+  length 3h 
+ }
+
+  task wk6a "Comm.s, Accting, Rpting"{
+  start 2016-10-10
+  allocate bmarron1
+  length 2h 
+ }
+  task wk7a "Comm.s, Accting, Rpting"{
+  start 2016-10-17
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk7b "Task translation to assignments; ChangeLog R&D"{
+  start 2016-10-17
+  allocate bmarron2
+  length 10h 
+ }
+
+  task wk8a "Comm.s, Accting, Rpting"{
+  start 2016-10-24
+  allocate bmarron1
+  length 3h 
+ }
+
+ task wk9c "Comm.s, Accting, Rpting"{
+  start 2016-10-31
+  allocate bmarron3
+  length 2h 
+ }
+
+  task wk10a "Comm.s, Accting, Rpting"{
+  start 2016-11-07
+  allocate bmarron1
+  length 3h 
+ }
+
+  task wk11a "Comm.s, Accting, Rpting"{
+  start 2016-11-14
+  allocate bmarron1
+  length 4h 
+ }
+
+  task wk12a "Slack setup; interview scheduling; Comm.s, Accting, Rpting"{
+  start 2016-11-21
+  allocate bmarron1
+  length 3h 
+ }
+
+  task wk13a "Comm.s, Accting, Rpting"{
+  start 2016-11-28
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk14a "Comm.s, Accting, Rpting"{
+  start 2016-12-05
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk15a "Comm.s, Accting, Rpting, GitHub"{
+  start 2016-12-12
+  allocate bmarron1
+  length 5h 
+ }
+
+  task wk16a "Comm.s, Accting, Rpting, GitHub"{
+  start 2016-12-19
+  allocate bmarron1
+  length 3h 
+ }
+
+  task wk17a "Comm.s, Accting, Rpting, GitHub"{
+  start 2016-12-26
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk18a "Comm.s, Accting, Rpting, GitHub"{
+  start 2017-01-02
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk19b "Comm.s, Accting, Rpting, GitHub"{
+  start 2017-01-09
+  allocate bmarron2
+  length 3h 
+ }
+
+
+  task wk20a "Comm.s, Accting, Rpting, GitHub"{
+  start 2017-01-16
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk21a "Comm.s, Accting, Rpting, GitHub"{
+  start 2017-01-23
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk22a "Comm.s, Accting, Rpting, GitHub"{
+  start 2017-01-30
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk23a "Comm.s, Accting, Rpting, GitHub"{
+  start 2017-02-06
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk24a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-02-13
+  allocate bmarron1
+  length 2h 
+ }
+
+
+  task wk25a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-02-20
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk26a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-02-27
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk27a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-03-06
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk28a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-03-13
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk29a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-03-20
+  allocate bmarron1
+  length 2h 
+ }
+
+  task wk30a "Comm.s, Mtgs, Accting, Rpting, GitHub"{
+  start 2017-03-27
+  allocate bmarron1
+  length 2h
+ }
+
+
+} 	#end Tier_1.4.0.0
+
+
+						#Tier_1.5.0.0
+task MT5 "QA/QC, Restructuring, Documentation (MT5)" {		
+						#Tier_1.5.1.0
+
+ task wk10b "Build test of restructured Base Harvest"{
+  start 2016-11-07
+  allocate bmarron3
+  length 7h 
+ }
+
+  task wk11b "Writing support materials for restructured extensions"{
+  start 2016-11-14
+  allocate bmarron2
+  length 4h 
+ }
+
+  task wk12b "Writing support materials for restructured extensions"{
+  start 2016-11-21
+  allocate bmarron2
+  length 4h 
+ }
+
+  task wk12c "Build test of restructured BiomassHarvest"{
+  start 2016-11-21
+  allocate bmarron3
+  length 2h 
+ }
+
+  task wk14b "Restructure BaseHarvest, Core .dlls, BaseHarvest #3"{
+  start 2016-12-05
+  allocate bmarron2
+  length 10h 
+ }
+
+  task wk19c "Re-write README, re-test build, restructure BaseHarvest"{
+  start 2017-01-09
+  allocate bmarron3
+  length 3h 
+ }
+
+  task wk21b "QAQCL3 Library-Biomass-Harvest"{
+  start 2017-01-23
+  allocate bmarron2
+  length 3h 
+ }
+
+  task wk22b "QAQCL3 Library-Biomass-Harvest"{
+  start 2017-01-30
+  allocate bmarron2
+  length 6h 
+ }
+
+  task wk23b "Library.HarvestManagement/NECN/Biomass testing"{
+  start 2017-02-06
+  allocate bmarron2
+  length 8h 
+ }
+
+   task wk24b "SalvageLogging in BaseHarvest/ QAQC of LANDVIZ"{
+  start 2017-02-13
+  allocate bmarron2
+  length 13h 
+ }
+  task wk25b "QAQC salvage logging; QAQC dead biomass"{
+  start 2017-02-20
+  allocate bmarron2
+  length 13h 
+ }
+
+  task wk26b "Cleanup, restructure, reformate NECN, BaseHarvest, BiomassHarvest"{
+  start 2017-02-27
+  allocate bmarron2
+  length 10h 
+ }
+
+  task wk26c "QAQC dead biomass (Extension-Biomass-Harvest/issues/13)"{
+  start 2017-02-27
+  allocate bmarron3
+  length 2h 
+ }
+
+  task wk27b "Trello setup"{
+  start 2017-03-06
+  allocate bmarron2
+  length 4h 
+ }
+
+  task wk28b "First round QAQC on CoreModel"{
+  start 2017-03-13
+  allocate bmarron2
+  length 10h 
+ }
+
+  task wk29b "QAQC on CoreModel, Bas Wind, Base BDA, Output Cohort Stats, Output MaxSppAge"{
+  start 2017-03-20
+  allocate bmarron2
+  length 25h 
+ }
+
+  task wk30b "QAQC on metadata-processed repos"{
+  start 2017-03-27
+  allocate bmarron2
+  length 5h 
+ }
+
+
+} 	#end Tier_1.5.0.0
+
+
+
+
+
+#--------------- ADM Overhead ---------------------------------------------------------------
+#	OverHead#	= OV#
+#	OV1	= Basic Trainings
+#	OV2	= Mtgs
+
+
+						#Tier_1.6.0.0
+task OV1 "Basic Trainings (OV1)" {		
+						#Tier_1.6.1.0
+  task wk5b "Kickoff Mtg"{
+  start 2016-10-03
+  allocate bmarron2
+  length 1h
+ }
+
+  task wk5c "C#, MonoDevelop, Slack"{
+  start 2016-10-03
+  allocate bmarron3
+  length 3h 
+ }
+
+  task wk5d "VisualStudio, Premake, Lua"{
+  start 2016-10-03
+  allocate bmarron4
+  length 4h 
+ }
+
+
+  task wk6b "Core-Model w/ VisualStudio, Premake, Lua"{
+  start 2016-10-10
+  allocate bmarron2
+  length 6h 
+ }
+
+   task wk7c "LANDVIZ and Harvest extensions"{
+  start 2016-10-17
+  allocate bmarron3
+  length 2h 
+ }
+
+}	#end Tier_1.6.0.0
+
+
+
+						#Tier_1.7.0.0
+task OV2 "Status Mtgs (OV2)" {		
+						#Tier_1.7.1.0
+  task wk6c "Team Mtg1"{
+  start 2016-10-10
+  allocate bmarron3
+  length 1h 
+ }
+
+ task wk9a "Team Mtg2"{
+  start 2016-10-31
+  allocate bmarron1
+  length 1h 
+ }
+
+  task wk14c "Team Mtg3"{
+  start 2016-12-05
+  allocate bmarron3
+  length 1h 
+ }
+
+  task wk22c "CoreModel mtg; Team mtg"{
+  start 2017-01-30
+  allocate bmarron3
+  length 2h 
+ }
+
+
+}	#end Tier_1.7.0.0
+
+} 	#end Tier_1.0.0.0 (ADM container level task)
+
+
+
+##============= Programming (PRG) =======================================================================
+
+# Task code key example:
+#
+# task wk7b1	==> wk7 of the project
+#				==> programmer 'b' (Austen)
+#				==> reported timesheet task #1
+
+						#Tier_2.0.0.0 (container task level)
+task PRG "PROJECT REALIZATION (PRG)" {
+  flags flag2							
+
+
+#----------- PRG Overhead ---------------------------------------------------------------------------------
+#	OverHead#	= OV#
+#	OV1	= Basic Trainings
+#	OV2	= Status Mtgs
+
+
+
+						#Tier_2.1.0.0
+task OV1 "Basic Trainings (OV1)" {
+						#Tier_2.1.1.0
+						# wk5 starts 2016-10-03; wk5 has had three separate task tickets (a,b,c) arrive; 
+						#each of the three student programmers has allocated resources to a task ticket; 
+						#the task tickets are all for the same task ("Kickoff Mtg")
+						#  
+  task wk5a1 "Kickoff Mtg(DSa)"{
+  start 2016-10-03
+  chargeset Dakota
+  allocate devA1
+  length 1h
+ }
+
+  task wk5a2 "setup and IDE experimentation (DSa)"{
+  start 2016-10-03
+  chargeset Dakota
+  allocate devA2
+  length 2h
+ }
+
+
+ task wk5b1 "Kickoff Mtg (ARz)"{
+  start 2016-10-03
+  chargeset Austen
+  allocate devB1
+  length 1h
+ }
+
+ task wk5b2 "Work environment setup (ARz)"{
+  start 2016-10-03
+  chargeset Austen
+  allocate devB2
+  length 1h
+ }
+
+
+ task wk5c1 "Kickoff Mtg (ARo)"{
+  start 2016-10-03
+  chargeset Armaan
+  allocate devC1
+  length 1h
+ }
+
+ task wk5c2 "Work env. setup, C# (ARo)"{
+  start 2016-10-03
+  chargeset Armaan
+  allocate devC2
+  length 7h
+ }
+
+
+  task wk6a2 "Core-Model Solution and Project Builds(DSa)"{
+  start 2016-10-10
+  chargeset Dakota
+  allocate devA2
+  length 4h
+ }
+
+ task wk6b2 "Core-Model Solution and Project Builds(ARz)"{
+  start 2016-10-10
+  chargeset Austen
+  allocate devB2
+  length 11h
+ }
+
+
+ task wk6c2 "Work env. setup, C# (ARo)"{
+  start 2016-10-10
+  chargeset Armaan
+  allocate devC2
+  length 11h
+ }
+
+ task wk7c2 "JAVA (ARo)"{
+  start 2016-10-17
+  chargeset Armaan
+  allocate devC2
+  length 8h
+ }
+
+
+ task wk7b2 " Visual Studio and GitHub setup (ARz)"{
+  start 2016-10-17
+  chargeset Austen
+  allocate devB2
+  length 4h				#add plus 0.5 (reported 4.5) ==> ADDED to wk12
+ }
+
+
+ task wk8c1 "JAVA training (ARo)"{
+  start 2016-10-24
+  chargeset Armaan
+  allocate devC1
+  length 5h
+ }
+
+  task wk9c1 "JAVA training (ARo)"{
+  start 2016-10-31
+  chargeset Armaan
+  allocate devC1
+  length 3h
+ }
+
+  task wk10a4 "Unpaid hrs from 1st PSU reporting period (DSa)"{
+  start 2016-11-07
+  chargeset Dakota
+  allocate devA4
+  length 8h
+ }
+
+  task wk10c1 "LANDIS setup and test runs (ARo)"{
+  start 2016-11-07
+  chargeset Armaan
+  allocate devC1
+  length 3h
+ }
+
+  task wk15d1 "Explorations of Core-Model and BaseHarvest (VSch)"{
+  start 2016-12-12
+  chargeset Vincent
+  allocate devD1
+  length 5h
+ }
+
+  task wk16d1 "new build options (VSch)"{
+  start 2016-12-19
+  chargeset Vincent
+  allocate devD1
+  length 2h
+ }
+
+  task wk19a "C# programming (BMa)"{
+  start 2017-01-09
+  allocate bmarron1
+  chargeset Bruce
+  length 5h 
+ }
+
+  task wk20b "C# programming (BMa)"{
+  start 2017-01-16
+  allocate bmarron2
+  chargeset Bruce
+  length 2h 
+ }
+
+  task wk21c "C# programming (BMa)"{
+  start 2017-01-23
+  allocate bmarron3
+  chargeset Bruce
+  length 2h 
+ }
+
+
+}	#end Tier_2.1.0.0
+
+
+
+						#Tier_2.2.0.0
+task OV2 "Status Meetings (OV2)" {
+						#Tier_2.2.1.0
+  task wk6a1 "Team Mtg1 (DSa)"{
+  start 2016-10-10
+  chargeset Dakota
+  allocate devA1
+  length 1h
+ }
+
+ task wk6b1 "Team Mtg1 (ARz)"{
+  start 2016-10-10
+  chargeset Austen
+  allocate devB1
+  length 1h
+ }
+
+ task wk6c1 "Team Mtg1 (ARo)"{
+  start 2016-10-10
+  chargeset Armaan
+  allocate devC1
+  length 1h
+ }
+
+
+ task wk9a1 "Team Mtg2 (DSa)"{
+  start 2016-10-31
+  chargeset Dakota
+  allocate devA1
+  length 1h 
+ }
+
+ task wk9b1 "Team Mtg2 (ARz)"{
+  start 2016-10-31
+  chargeset Austen
+  allocate devB1
+  length 1h 
+ }
+
+  task wk14b1 "Team Mtg3 (ARz)"{
+  start 2016-12-05
+  chargeset Austen
+  allocate devB1
+  length 1h 
+ }
+
+  task wk14d1 "Team Mtg3 (VSch)"{
+  start 2016-12-05
+  chargeset Vincent
+  allocate devD1
+  length 1h 
+ }
+
+  task wk15b1 "Rob mtg (ARz)"{
+  start 2016-12-12
+  chargeset Austen
+  allocate devB1
+  length 1h							
+ }
+
+  task wk15d2 "Rob mtg (VSch)"{
+  start 2016-12-12
+  chargeset Vincent
+  allocate devD2
+  length 1h							#subtract 0.5 hr (reported 0.5) ==> 0.5 SUBTRACTED from  wk??
+ }
+
+
+  task wk19b1 "Rob mtg (ARz)"{
+  start 2017-01-09
+  chargeset Austen
+  allocate devB1
+  length 1h							
+ }									#ADDED 0.5 hr (reported 0.5) ==> 0.5 SUBTRACTED from wk19b2
+
+
+  task wk19d1 "Rob mtg (VSch)"{
+  start 2017-01-09
+  chargeset Vincent
+  allocate devD1
+  length 1h						
+ }
+
+  task wk21b1 "Team mtg (ARz)"{
+  start 2017-01-23
+  chargeset Austen
+  allocate devB1
+  length 1h							#ADDED 0.5 hr (reported 1.0) ==> 0.5 SUBTRACTED from wk 21, GHB3	
+ }
+
+
+  task wk21d1 "Team mtg (VSch)"{
+  start 2017-01-23
+  chargeset Vincent
+  allocate devD1
+  length 1h						
+ }
+
+
+  task wk22b1 "Team mtg (ARz)"{
+  start 2017-01-30
+  chargeset Austen
+  allocate devB1
+  length 1h	
+  }
+
+  task wk22d1 "Team mtg (VSch)"{
+  start 2017-01-30
+  chargeset Vincent
+  allocate devD1
+  length 1h	
+  }
+
+  task wk23b1 "Team mtg (ARz)"{
+  start 2017-02-06
+  chargeset Austen
+  allocate devB1
+  length 1h	
+  }
+
+  task wk23d1 "Team mtg (VSch)"{
+  start 2017-02-06
+  chargeset Vincent
+  allocate devD1
+  length 1h	
+  }
+
+  task wk24b1 "Team mtg (ARz)"{
+  start 2017-02-13
+  chargeset Austen
+  allocate devB1
+  length 1h	
+  }
+
+  task wk25b1 "Team mtg (ARz)"{
+  start 2017-02-20
+  chargeset Austen
+  allocate devB1
+  length 1h	
+  }
+
+  task wk27b1 "Team mtg (ARz)"{
+  start 2017-03-06
+  chargeset Austen
+  allocate devB1
+  length 1h	
+  } 
+
+ task wk28b1 "Team mtg (ARz)"{
+  start 2017-03-13
+  chargeset Austen
+  allocate devB1
+  length 30min	
+  }
+  
+
+
+}	#end Tier_2.2.0.0
+
+
+
+						#Tier_2.3.0.0
+#task OV3 "Specialty Trainings (OV3)" {
+
+
+#}	#end Tier_2.3.0.0
+
+
+
+
+
+#--------- PRG GitHub Branch Issues -------------------------------------------------------------------
+
+#	GitHubBranch	= GHB#
+#	GHB1 =	Core-Model
+#	GHB2 = 	LANDVIZ
+#	GHB3 = 	Extension-Base-Harvest
+#	GHB4 =	Extension-Biomass-Harvest
+#	GHB5 = 	MiscQuikFix (list)
+#	GHB6 = 
+
+						#Tier_2.4.0.0						
+task GHB1 "Core-Model (GHB1)" {
+						#Tier_2.4.1.0
+
+ task wk7a1 "Build/run Core-Model sample scenarios (DSa)"{
+  start 2016-10-17
+  chargeset Dakota
+  allocate devA1
+  length 5h
+  complete 10
+ }
+
+  task wk8a1 "Streamline Core-Model build process (DSa)"{
+  start 2016-10-24
+  chargeset Dakota
+  allocate devA1
+  length 5h
+  complete 10
+ }
+
+
+  task wk8a2 "R&D with .csproj dynamic dlls (DSa)"{
+  start 2016-10-24
+  chargeset Dakota
+  allocate devA2
+  length 3h
+  complete 10
+ }
+
+
+ task wk9a2 "Streamline Core-Model build process (DSa)"{
+  start 2016-10-31
+  chargeset Dakota
+  allocate devA2
+  length 10h 
+ }
+
+ task wk9a3 "Scripts for pulling in .dlls  (DSa)"{
+  start 2016-10-31
+  chargeset Dakota
+  allocate devA3
+  length 1h 
+ }
+
+ task wk9a4 "Resolve log4net runtime errors  (DSa)"{
+  start 2016-10-31
+  chargeset Dakota
+  allocate devA4
+  length 4h 
+ }
+
+
+ task wk10a1 "Streamline Core-Model build process (DSa)"{
+  start 2016-11-07
+  chargeset Dakota
+  allocate devA1
+  length 8h 
+ }
+
+ task wk10a2 "Migrate svn repo materials to GitHub (DSa)"{
+  start 2016-11-07
+  chargeset Dakota
+  allocate devA2
+  length 5h 
+ }
+
+ task wk11a1 "Streamline Core-Model build process (DSa)"{
+  start 2016-11-14
+  chargeset Dakota
+  allocate devA1
+  length 5h 
+ }
+
+  task wk12a1 "Finalize Core-Model build process to-date(DSa)"{
+  start 2016-11-21
+  chargeset Dakota
+  allocate devA1
+  length 3h 
+ }
+
+  task wk13b1 "Restructure Core-Model (ARz)"{
+  start 2016-11-28
+  chargeset Austen
+  allocate devB1
+  length 10h						#add plus 0.5 (reported 10.5) ==> 0.5 ADDED to wk15
+ }
+
+  task wk14b2 "Restructure Core-Model (ARz)"{
+  start 2016-12-05
+  chargeset Austen
+  allocate devB2
+  length 10h					
+ }
+
+  task wk14d2 "Restructure Core-Model (VSch)"{
+  start 2016-12-05
+  chargeset Vincent
+  allocate devD2
+  length 4h					
+ }
+
+  task wk15b2 "Restructure Core-Model (ARz)"{
+  start 2016-12-12
+  chargeset Austen
+  allocate devB2
+  length 4h					
+ }
+
+  task wk15d3 "Remove /sdk; begin Issues (VSch)"{
+  start 2016-12-12
+  chargeset Vincent
+  allocate devD3
+  length 4h							
+ }
+
+  task wk16d2 "Issue #12 and #13 (VSch)"{
+  start 2016-12-19
+  chargeset Vincent
+  allocate devD2
+  length 8h
+ }
+
+  task wk18d1 "Issue #10 (VSch)"{
+  start 2017-01-02
+  chargeset Vincent
+  allocate devD1
+  length 11h
+ }
+
+  task wk19d2 "LMSL.cmd issues (VSch)"{
+  start 2017-01-09
+  chargeset Vincent
+  allocate devD2
+  length 3h						
+ }
+
+  task wk20d1 "LMSL.cmd issues (VSch)"{
+  start 2017-01-16
+  chargeset Vincent
+  allocate devD1
+  length 3h						
+ }
+
+  task wk21d "Evaluate possible changes for LSML.cmd (BMa)"{
+  start 2017-01-23
+  allocate bmarron4
+  chargeset Bruce
+  length 3h 
+ }
+
+  task wk21d2 "LSML and GDAL; InitializePhase2 & Cleanup changed to virtual (VSch)"{
+  start 2017-01-23
+  chargeset Vincent
+  allocate devD2
+  length 10h						
+ }
+
+  task wk22d2 "restructure w/o .lua  (VSch)"{
+  start 2017-01-30
+  chargeset Vincent
+  allocate devD2
+  length 7h						
+ }
+
+  task wk23d2 "LSML GDAL scripts for restaging (VSch)"{
+  start 2017-02-06
+  chargeset Vincent
+  allocate devD2
+  length 8h	
+  }
+
+  task wk24d2 "Fix build and staging scripts (VSch)"{
+  start 2017-02-13
+  chargeset Vincent
+  allocate devD2
+  length 5h	
+  }
+
+  task wk25d2 "Final revisions to staging scripts; restructure  (VSch)"{
+  start 2017-02-20
+  chargeset Vincent
+  allocate devD2
+  length 11h	
+  }
+
+
+  task wk26d2 "InitializePhase2() and CleanUp() to virtual  (VSch)"{
+  start 2017-02-27
+  chargeset Vincent
+  allocate devD2
+  length 6h	
+  }
+
+
+  task wk26d3 "Extension Version is now printed with extensions listing command (VSch)"{
+  start 2017-02-27
+  chargeset Vincent
+  allocate devD3
+  length 3h	
+  }
+
+  task wk26d4 "Species name now in error msg; Extension Input Files now in log (VSch)"{
+  start 2017-02-27
+  chargeset Vincent
+  allocate devD4
+  length 9h	
+  }
+
+  task wk26d5 "Add ASC-ii as output filetype (VSch)"{
+  start 2017-02-27
+  chargeset Vincent
+  allocate devD5
+  length 6h	
+  }
+
+
+  task wk29d2 "QAQC-drive changes and repairs (VSch)"{
+  start 2017-03-20
+  chargeset Vincent
+  allocate devD2
+  length 8h	
+  }
+
+
+}	#end Tier_2.4.0.0
+
+
+
+
+						#Tier_2.5.0.0						
+task GHB2 "LANDVIZ (GHB2)" {
+						#Tier_2.5.1.0
+
+ task wk7c1 "Intro to LANDVIZ and setup (ARo)"{
+  start 2016-10-17
+  chargeset Armaan
+  allocate devC1
+  length 5h							#add plus 0.5 (reported 5.5) ==> 0.5 ADDED to wk10 
+ }
+
+
+ task wk8c2 "Work through LANDVIZ training materials (ARo)"{
+  start 2016-10-24
+  chargeset Armaan
+  allocate devC2
+  length 3h				
+ }
+
+  task wk9c2 "Working through LANDVIZ .js files (ARo)"{
+  start 2016-10-31
+  chargeset Armaan
+  allocate devC2
+  length 7h
+ }
+
+  task wk9c3 "Recreating integer bug (Issue #18) (ARo)"{
+  start 2016-10-31
+  chargeset Armaan
+  allocate devC3
+  length 7h
+ }
+
+  task wk10a3 "Investigate integer bug issue (DSa)"{
+  start 2016-11-07
+  chargeset Dakota
+  allocate devA3
+  length 2h
+ }
+
+  task wk10c2 "Trouble-shooting Issue #18 (ARo)"{
+  start 2016-11-07
+  chargeset Armaan
+  allocate devC2
+  length 11h
+ }
+
+ task wk11a2 "Help with LANDVIZ bug (DSa)"{
+  start 2016-11-14
+  chargeset Dakota
+  allocate devA2
+  length 5h 
+ }
+
+ task wk11b1 "Help with LANDVIZ bug (ARz)"{
+  start 2016-11-14
+  chargeset Austen
+  allocate devB1
+  length 5h 
+ }
+
+  task wk11c1 "LANDVIZ attempts (ARo)"{
+  start 2016-11-14
+  chargeset Armaan
+  allocate devC1
+  length 10h							#estimated; no timesheet submitted
+ }
+
+  task wk15b "LANDVIZ troubleshooting (BMa)"{
+  start 2016-12-12
+  chargeset Bruce
+  allocate bmarron2
+  length 8h 
+ }
+
+  task wk16b "LANDVIZ-Python-- prep for rebuild (BMa)"{
+  start 2016-12-19
+  chargeset Bruce
+  allocate bmarron2
+  length 5h 
+ }
+
+  task wk17b "LANDVIZ (Python)-- prep for rebuild / FIXMEs (BMa)"{
+  start 2016-12-26
+  chargeset Bruce
+  allocate bmarron2
+  length 2h 
+ } 
+
+  task wk18b "LANDVIZ (Python)-- multiple issues w/ rebuild (BMa)"{
+  start 2017-01-02
+  chargeset Bruce
+  allocate bmarron2
+  length 15h 
+ }
+
+  task wk20c "Meet w/ RKramer; rebuild and test issues (BMa)"{
+  start 2017-01-16
+  chargeset Bruce
+  allocate bmarron3
+  length 8h 
+ }
+ 
+
+}	#end Tier_2.5.0.0
+
+
+
+						#Tier_2.6.0.0						
+task GHB3 "Ext-Base-Harvest (GHB3)" {
+						#Tier_2.6.1.0
+
+ task wk7b1 "Intro to Base-Harvest and setup (ARz)"{
+  start 2016-10-17
+  chargeset Austen
+  allocate devB1
+  length 6h
+ }
+
+ task wk8b1 "Restructure Base-Harvest (ARz)"{
+  start 2016-10-24
+  chargeset Austen
+  allocate devB1
+  length 10h
+  complete 30
+ }
+
+ task wk9b2 "Restructure Base-Harvest (ARz)"{
+  start 2016-10-31
+  chargeset Austen
+  allocate devB2
+  length 10h 
+ }
+
+ task wk10b1 "Restructure Base-Harvest (ARz)"{
+  start 2016-11-07
+  chargeset Austen
+  allocate devB1
+  length 10h 
+ }
+
+  task wk15b3 "Change to install script; begin Issue #3  (ARz)"{
+  start 2016-12-12
+  chargeset Austen
+  allocate devB3
+  length 5h					
+ }
+
+  task wk16b1 "Issue #3 -- PlantOnly prescription  (ARz)"{
+  start 2016-12-19
+  chargeset Austen
+  allocate devB1
+  length 10h					
+ }
+
+  task wk17b1 "Issue #3 -- PlantOnly prescription  (ARz)"{
+  start 2016-12-26
+  chargeset Austen
+  allocate devB1
+  length 4h										#subtract minus 0.5 (reported 3.5) ==> 0.5 SUBTRACTED from wk???
+ }
+
+  task wk18b1 "Issue #1 -- Issue #1 (salvage logging)  (ARz)"{
+  start 2017-01-02
+  chargeset Austen
+  allocate devB1
+  length 5h									
+ }
+
+  task wk19b3 " Issue #1 -- salvage logging (ARz)"{
+  start 2017-01-09
+  chargeset Austen
+  allocate devB3
+  length 3h							
+ }
+
+  task wk20b1 " Issue #1 -- salvage logging (ARz)"{
+  start 2017-01-16
+  chargeset Austen
+  allocate devB1
+  length 3h							
+ }
+
+  task wk21b2 " Issue #1 -- salvage logging (ARz)"{
+  start 2017-01-23
+  chargeset Austen
+  allocate devB2
+  length 8h							
+ }
+
+}	#end Tier_2.6.0.0
+
+
+						#Tier_2.7.0.0						
+task GHB4 "Ext-Biomass-Harvest (GHB4)" {
+						#Tier_2.7.1.0
+
+ task wk11b2 "Restructure Biomass-Harvest (ARz)"{
+  start 2016-11-14
+  chargeset Austen
+  allocate devB2
+  length 5h 
+ }
+
+  task wk12b1 "Restructure BiomassHarvest; work w/ Dakota (ARz)"{
+  start 2016-11-21
+  chargeset Austen
+  allocate devB1
+  length 3h		
+ }
+
+  task wk18b2 "Issue #10 and Issue #13 (ARz)"{
+  start 2017-01-02
+  chargeset Austen
+  allocate devB2
+  length 6h									
+ }
+
+  task wk19b2 "Issue #13 (ARz)"{
+  start 2017-01-09
+  chargeset Austen
+  allocate devB2
+  length 11h					#SUBTRACTED 0.5 (reported 11.5) ==> ADDED to wk19b1							
+ }
+
+  task wk20b2 " Issue #13 (ARz)"{
+  start 2017-01-16
+  chargeset Austen
+  allocate devB2
+  length 7h							
+ }
+
+  task wk21e "Rebuild BiomassHarvest w/ new library (BMa)"{
+  start 2017-01-23
+  allocate bmarron5
+  chargeset Bruce
+  length 2h 
+ }
+
+  task wk21b3 " Issue #1 -- Biomass spray treatment (ARz)"{
+  start 2017-01-23
+  chargeset Austen
+  allocate devB3
+  length 1h							
+ }
+
+
+
+}	#end Tier_2.7.0.0
+
+
+						#Tier_2.8.0.0						
+task GHB5 "Misc Repo Fixes (GHB5)" {
+						#Tier_2.8.1.0
+
+  task wk22b2 "Climate library to Succession Ext.s; Metadata to Ext.s (ARz)"{
+  start 2017-01-30
+  chargeset Austen
+  allocate devB2
+  length 9h	
+  }
+
+  task wk23b2 "Meta-Data Library/Harvest Repos/Update Biomass-Succession(ARz)"{
+  start 2017-02-06
+  chargeset Austen
+  allocate devB2
+  length 9h	
+  }
+
+
+  task wk24b2 "Update BiomassSuccession/Add MetaData to extensions (ARz)"{
+  start 2017-02-13
+  chargeset Austen
+  allocate devB2
+  length 9h	
+  }
+
+  task wk25b2 "Add Metadata Lib to extensions and restructure (ARz)"{
+  start 2017-02-20
+  chargeset Austen
+  allocate devB2
+  length 9h	
+  }
+
+  task wk26b2 "Add Metadata Lib to extensions and restructure (ARz)"{
+  start 2017-02-27
+  chargeset Austen
+  allocate devB2
+  length 10h	
+  }
+
+  task wk26d6 "Fixed Staging Script in Spatial-Modeling-Library (VSch)"{
+  start 2017-02-27
+  chargeset Vincent
+  allocate devD6
+  length 3h	
+  }
+
+  task wk27b2 "Add Metadata Lib to extensions and restructure (ARz)"{
+  start 2017-03-06
+  chargeset Austen
+  allocate devB2
+  length 9h	
+  }
+
+  task wk27d2 "Library Utiltites -parameters and namespace  (VSch)"{
+  start 2017-03-06
+  chargeset Vincent
+  allocate devD2
+  length 5h	
+  }
+
+  task wk29b2 "Add Metadata Lib to extensions and restructure (ARz)"{
+  start 2017-03-20
+  chargeset Austen
+  allocate devB2
+  length 15h	
+  }
+
+  task wk30b2 "Add Metadata Lib to extensions and restructure (ARz)"{
+  start 2017-03-27
+  chargeset Austen
+  allocate devB2
+  length 13h	
+  }
+
+  task wk30d2 "Add Metadata Lib to extensions and restructure (VSch)"{
+  start 2017-03-27
+  chargeset Vincent
+  allocate devD2
+  length 9h	
+  }
+
+}	#end Tier_2.8.0.0
+
+
+
+
+}	#end Tier_2.0.0.0 (PRG container task level)
+
+
+############################	*syntax ==> task <your_milestone_id> "Your Milestone Name"
+####	[[milestones]]	#### 	*ids must be unique within their property class
+############################	*attributes: end (cannot have 'effort' values here!!)
+
+#=========== Project Milestones (MST) =====================================================================
+
+							#Tier_3.0.0.0 (MST container task level)
+task MST "Project Milestones"{
+ flags flag3
+
+#-----------ADM Milestones -----------------------------------------------
+#	MST1	= ADM Milestones
+
+
+							#Tier_3.1.0.0 (container task level)
+task MST1 "ADM Milestones"{
+							#Tier_3.1.1.0 									
+  task m1 "Management Structure Completed"{
+   end 2016-09-16   
+  }
+
+  task m2 "git and GitHub Workflows Designed"{
+   end 2016-09-30   
+  }
+											
+  task m3 "Recruitment and Hiring Completed"{
+   end 2016-09-30
+  }
+
+  task m4 "First-Round of Trainings Completed"{
+   end 2016-10-12
+  }
+
+   task m5 "First Week of GHB Tasks Billed by Programming Team"{
+   end 2016-10-21
+  }
+
+  task m6 "New Hire for Programming Team"{
+   end 2016-12-02
+  }
+
+ } 	#end Tier_3.1.0.0 (container task level)
+
+
+
+
+#-----------PRG Milestones -----------------------------------------------
+#	MST2	= PRG Milestones 
+
+							#Tier_3.2.0.0 (container task level)
+task MST2 "PRG Milestones"{
+
+						#Tier_3.2.1.0									
+
+task m1b "CoreModel (completed)"{
+   end 2017-03-25
+  }
+   
+
+  task m2a "LANDVIZ (completed)"{
+  end 2017-03-01
+  }
+
+
+  task m3a "Disturbance extensions (projected)"{
+   end 2017-05-15
+  }
+
+  task m3b "Succession extensions (projected)"{
+   end 2017-05-30
+  }
+
+  task m3c "Output extensions (projected)"{
+   end 2017-05-01   
+  }
+
+ 
+
+ }	#end Tier_3.2.0.0 (container task level)
+
+}	#Tier_3.0.0.0 (MST container task level)
+
+
+
+############################	
+####	[[task reports]] #### 	
+############################	
+
+
+## ----- initial setup for report generation --------------------------------------------------
+navigator navbar {
+  hidereport @none
+ }
+
+#--- textreports: layout for taskreports -----------------------------------------------------------------------
+
+									# Add header to printout
+textreport frame1 "report title name" {
+	header -8<-
+	== Project: LANDIS-II Updates and Corrections ==  				
+	->8-
+
+	footer "----"
+									# Specific reports to be included in printout
+									# textreport status1 "name of the .html file"
+textreport status1 "LANDIS_Project_Status" {
+	formats html
+    	center -8<-
+      	<[report id="gantt1"]>
+      	----
+      	<[report id="gantt2"]>
+      	----
+      	<[report id="acct1"]>
+ 	->8-
+  }
+}
+
+
+#--- taskreports: to be included in textreport -------------------------------------------------------------------
+
+taskreport gantt1 "Project Status" {
+	header -8<-
+	== Task Status as of ${today} ==
+	->8-
+	footer "----"
+	
+	hidetask (flag3 | flag4)
+
+	columns 
+	  name,
+	  start,
+#          end,
+          chart
+}
+
+taskreport gantt2 "Milestones" {
+	header -8<-
+	== Expected Milestones as of ${today} ==
+	->8-
+	footer "----"
+
+	hidetask (flag1 | flag2)
+
+	columns 
+	  name,
+          end,
+          chart
+}
+
+
+
+#######################################
+##### [[account reports]]  ############
+#######################################
+
+
+accountreport acct1 "ProfitandLoss" {
+	header -8<-
+	== Accounting Status as of ${today} ==
+	->8-
+	footer "----"
+  
+  columns 
+	no, 
+	name, 
+	weekly
+}
+
+
+

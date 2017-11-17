@@ -1,0 +1,163 @@
+Title:				PWL56e_QAQC&RepoStd-BiomassSuccession
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			27 June 2017
+Final Date:			
+
+
+############
+QAQC Summary
+#############
+
+	a. Installed new, ReleaseParty updates
+
+	b. Ran C:\Program Files\LANDIS-II\v6\examples\Biomass Succession\scenario_s2e1.txt
+	   w/ the following active extensions (RandomNumberSeed  147):
+
+		"Biomass Succession"		biomass-succession_SetUp_s2e1.txt
+		"Base Wind"			base-wind_SetUp_s2e1.txt
+		"Biomass Harvest"		biomass-harvest_SetUp_s2e1.txt
+		"Output Max Species Age"	output_MaxSppAge.txt
+		"Output Biomass-by-Age"		output_Biomass-by-Age.txt
+
+	b. Examine "Biomass-succession-v3-log" (Log1) and "spp-biomass-log.csv" (Log2) with  
+	reference to "Log file does not match output from Biomass Output" (Issue #3)
+
+
+
+
+#############
+QAQC Results
+#############
+
+	a. Might this issue be the result of log file duplication? There are apparently two distinct log files for 
+	Biomass Succession with nearly identical names that are called by different .cs files:
+
+		PlugIn.cs(20): 		public static readonly string summaryLogFile = "Biomass-succession-v3-log";
+		Outputs.cs(24): 	string logFileName = "Biomass-succession-v3-log.csv";
+	Are the data in these two log files calculated equivalently?
+
+	Although it appears that Outputs.cs(27) will generate a log file (log = Landis.Data.CreateTextFile(logFileName);),
+	running Biomass Succession produces the output "Biomass-succession-v3-log" NOT "Biomass-succession-v3-log.csv"
+
+
+	The file, "Biomass-succession-v3-log" has no year zero output and is the file called by Metadata:
+
+		MetadataHandler.cs(27): PlugIn.summaryLog = new MetadataTable(summaryLogFileName);
+
+	Perhaps "Biomass-succession-v3-log.csv" should be the correct output log file?
+
+
+	b. Check:
+		sum of zero-year biomass (Log1) 	?=? sum of zero-year biomass (Log2) (not possible b/c no zero year output for Log1)
+		sum of five-year biomass (Log1) 	= sum of five-year biomass (Log2)
+		sum of ten-year biomass (Log1) 		= sum of ten-year biomass (Log2)
+		sum of fifteen-year biomass (Log1) 	= sum of fifteen-year biomass (Log2)
+ 
+
+
+##################
+QAQC Sequence
+##################
+
+
+	a. Pull "spp-biomass-log.csv" into R
+	a1. check data types in cells with "class" (R keeps C# data types)
+	a2. change all data cells [ , 4:37] to numeric
+	a3. sum zero-year biomass across both ecoreegions (subset == [1:2,4:37])
+	a4. sum five-year biomass across both ecoreegions (subset == [3:4,4:37])
+	a5. sum ten-year biomass across both ecoreegions (subset == [5:6,4:37])
+
+> sapply(spp_biomass_log, class)
+> sapply(spp_biomass_log[ ,4:37], as.numeric)
+
+	# Time 0
+> sum(rowSums(spp_biomass_log[1:2,4:37]))
+[1] 46648.9
+	# Time 5
+> sum(rowSums(spp_biomass_log[c(3,4),4:37]))
+[1] 45818.24
+	# Time 10
+> sum(rowSums(spp_biomass_log[5:6,4:37]))
+[1] 46843.76
+	# Time 15
+> sum(rowSums(spp_biomass_log[7:8,4:37]))
+[1] 40855.43
+
+
+
+	b. Pull "Biomass_succession_v3_log.csv" into R
+	b1. check data types in cells w/ "class" (R keeps C# data types)
+	b2. sum five-year biomass across both ecoreegions (subset == [1:2,4])
+	b3. sum ten-year biomass across both ecoreegions (subset == [3:4,4])
+	b4. sum fifteen-year biomass across both ecoreegions (subset == [5:6,4])
+
+> sapply(Biomass_succession_v3_log, class)
+
+	# Time 5
+> sum(colSums(Biomass_succession_v3_log[1:2,4]))
+[1] 45818.24
+	# Time 10
+> sum(colSums(Biomass_succession_v3_log[3:4,4]))
+[1] 46843.76
+	# Time 15
+> sum(colSums(Biomass_succession_v3_log[5:6,4]))
+[1] 40855.43
+
+
+##############################
+log file inconsistencies?
+##############################
+
+Where does "Biomass-succession-v3-log" come from?
+Search "Biomass-succession-v3-log" in VS:
+PlugIn.cs(20):        		public static readonly string summaryLogFile = "Biomass-succession-v3-log";
+Outputs.cs(24):            	string logFileName   = "Biomass-succession-v3-log.csv";
+
+
+Search "summaryLogFile" in VS:
+PlugIn.cs(20):        		public static readonly string summaryLogFile = "Biomass-succession-v3-log";
+PlugIn.cs(91):            	utility.MetadataHandler.InitializeMetadata(summaryLogFile);
+MetadataHandler.cs(10):        	public static void InitializeMetadata(string summaryLogFileName)
+MetadataHandler.cs(26):      	CreateDirectory(summaryLogFileName);
+MetadataHandler.cs(27):      	PlugIn.summaryLog = new MetadataTable<SummaryLog>(summaryLogFileName);
+  
+
+
+
+Where does "spp-biomass-log.csv" come from?
+Not in biomass-succession_SetUp_s2e1.txt (eg, in base-wind_SetUp_s2e1.txt last line is ==> LogFile	wind/wind-events-log.csv)
+
+Search "spp-biomass-log" in VS:
+  Matching lines: 0    Matching files: 0    Total files searched: 33
+
+
+
+Search "InitialBiomass" in VS:
+CohortBiomass.cs(390):        	public static int InitialBiomass(ISpecies species,
+CohortBiomass.cs(414):         	double initialBiomass = maxANPP * Math.Exp(-1.6 * B_ACT / EcoregionData.B_MAX[ecoregion]);
+CohortBiomass.cs(418):        	initialBiomass = Math.Min(maxANPP, initialBiomass);
+CohortBiomass.cs(421):        	initialBiomass = Math.Max(2.0, initialBiomass);
+InitialBiomass.cs(15):    	public class InitialBiomass
+InitialBiomass.cs(62):        	private InitialBiomass(SiteCohorts cohorts,
+InitialBiomass.cs(81):        	private static IDictionary<uint, InitialBiomass> initialSites;
+InitialBiomass.cs(103):        	static InitialBiomass()
+InitialBiomass.cs(105):       	initialSites = new Dictionary<uint, InitialBiomass>();
+InitialBiomass.cs(133):        	public static InitialBiomass Compute(ActiveSite site,
+InitialBiomass.cs(138):       	InitialBiomass initialBiomass;
+InitialBiomass.cs(139):       	if (initialSites.TryGetValue(key, out initialBiomass)
+InitialBiomass.cs(140):                return initialBiomass;
+InitialBiomass.cs(152):       	initialBiomass = new InitialBiomass(cohorts,
+InitialBiomass.cs(155):       	initialSites[key] = initialBiomass;
+InitialBiomass.cs(156):        	return initialBiomass;
+InitialBiomass.cs(205):       	ComputeMethod initialBiomassMethod)
+InitialBiomass.cs(238):       	int initialBiomass = initialBiomassMethod(species, SiteVars.Cohorts[site], site);
+InitialBiomass.cs(241):                                                initialBiomass);
+PlugIn.cs(106):            InitialBiomass.Initialize(Timestep);
+PlugIn.cs(121):            InitialBiomass initialBiomass = InitialBiomass.Compute(site, initialCommunity);
+PlugIn.cs(122):            SiteVars.Cohorts[site] = InitialBiomass.Clone(initialBiomass.Cohorts); //.Clone();
+PlugIn.cs(123):            SiteVars.WoodyDebris[site] = initialBiomass.DeadWoodyPool.Clone();
+PlugIn.cs(124):            SiteVars.Litter[site] = initialBiomass.DeadNonWoodyPool.Clone();
+ 
+

@@ -1,0 +1,27 @@
+Title:			Scheller additions to Core Model Issues
+Project Descriptor:	LANDISII Updgrades and Corrections
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		17 Sep
+Revision Date:		
+
+#################
+per rmscheller
+as comments on ltr
+from USFS
+##################
+
+Add to Core-Model:
+
+
+1. Write names of ALL input files to the log.  Needed to later verify and archive simulation results.
+
+2. Write all of the extension versions used per simulation run to the log file.  This info is needed to later verify and archive simulation results.
+
+3. Include the species name in the error message triggered by age > longevity.
+
+4. Parse out all input files (including disturbance and output) before spin-up
+ 
+5. Print the extension version installed when querying with the extensions listing command 
+
+6. Replace “Ageing cohorts” with “Growing cohorts” in the console when running succession extensions

@@ -1,0 +1,72 @@
+Title:			R Script for LANDISII reps
+Project:		LANDIS-II Updates Project
+Project Component:	
+Component Deposition:	
+Author:			LANDIS-II Foundation
+Origin Date:		19 July 2017
+Final Date:		30 July 2017
+
+
+
+#######################
+R script for replicate
+LANDISII runs
+########################
+
+The following single line of code exactly duplicates the functionality of LANDIS-II Replicator widget. It must be executed within R
+as a ONE-LINE INPUT (ie no breaks in the line of code). Because the code calls a Windows, console-based "FOR" loop, the user must 
+manually set 
+	1) the number of LANDIS-II replications, 
+	2) the directory path to the LANDIS-II scenario files, 
+	3) the directory (folder) housing the LANDIS-II scenario files, 
+	4) the directory (folder) where the replications are to be outputted, and
+	5) the name of the scenario.txt file to be run
+
+Note that the current working directory in R is irrelevant. An example is provided below referencing the five, requisite manual settings listed above.
+ 
+
+---- EXAMPLE---------------------------------------------------------------------------------------------------------------------------------
+
+The full line of code to be entered as ONE LINE of input in R:
+
+shell(shQuote(paste("FOR /l %A IN (1,1,3) DO (cd C:\\Users\\bmarr\\Desktop\\ & robocopy AgeOnlySuccession_s1e1 LANDISII\\Run%A /e & cd C:\\Users\\bmarr\\Desktop\\LANDISII\\Run%A\\ & call landis-ii scenario_s1e1.txt)")))
+
+
+
+
+Itemized sections of the line of code:
+
+shell(shQuote(paste("FOR /l %A IN (1,1,3) DO (cd C:\\Users\\bmarr\\Desktop\\ & ....
+				      ---
+				      1) number of reps; here 3
+
+
+shell(shQuote(paste("FOR /l %A IN (1,1,3) DO (cd C:\\Users\\bmarr\\Desktop\\ & ....
+					         --------------------------
+						 2) path to the location of LANDIS-II scenario files (note use of double slashes which are required for R)
+
+
+... DO (cd C:\\Users\\bmarr\\Desktop\\ & robocopy AgeOnlySuccession_s1e1 LANDISII\\Run%A /e & ....
+						 --------------------
+						 3) name of directory housing the LANDIS-II scenario files
+
+
+... & robocopy AgeOnlySuccession_s1e1 LANDISII\\Run%A /e & cd C:\\Users\\bmarr\\Desktop\\LANDISII\\Run%A\\ & call landis-ii scenario_s1e1.txt)")))
+				      -------					        --------
+				      4) name of directory where the replications are to be outputted
+				      4) note that the ampersand signals a new command and the full directory path must be specified)
+
+
+
+
+
+
+... & robocopy AgeOnlySuccession_s1e1 LANDISII\\Run%A /e & cd C:\\Users\\bmarr\\Desktop\\LANDISII\\Run%A\\ & call landis-ii scenario_s1e1.txt)")))
+													   -------------------------------
+													   5) standard call to run LANDIS-II
+													   5) LANDIS-II will run 'scenario_s1e1.txt'
+
+------------------------------------------------------------------------------------------------------------------------------------------------------																						      
+
+
+

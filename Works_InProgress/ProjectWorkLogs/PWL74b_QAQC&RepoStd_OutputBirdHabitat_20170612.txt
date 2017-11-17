@@ -1,0 +1,146 @@
+Title:				PWL74b_QAQC&RepoStd_OutputBirdHabitat
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			12 June 2017
+Final Date:			12 June 2017
+
+
+
+
+
+############
+QAQC Summary
+#############
+
+	a. Rob cleaned things up considerably; only one (1) .csproj file which is now compiling correctly.
+
+	b. The following were scratch-built:
+		==> "Landis.Extension.Output.BirdHabitat.dll"
+	     	==> "LANDIS-II Output Bird Habitat-setup.exe" installer
+
+	c. Tested whether the extension is compatible with the Biomass Library by running the example with Biomass Succession.
+
+
+
+
+#############
+QAQC Results
+#############
+
+	a.  Minor QAQC tests were successfully performed
+		==> built assembly
+		==> built installer
+
+	b. BiomassSuccession_s2e3 example successfully adapted and added
+
+	c. != Passed QAQC in spite of simple fixes (see below)
+
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. deploy\examples\ files 
+		==> BiomassSuccession_s2e3 example added
+		==> "example_monthly_climate0.csv" renamed "output_BirdHabitat_WeatherData.csv"
+
+
+	b. NB. PlugIn.cs currently set to ignore "PDSI"
+
+Lines 651 - 658
+                                foreach (int monthIndex in monthRange)
+                                {
+                                    //if (climateVar.ClimateLibVariable == "PDSI")
+                                    //{
+
+                                    //double monthPDSI = PDSI_Calculator.PDSI_Monthly[monthIndex-1];
+                                    //   varValue = monthPDSI;
+                                    //}
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. VS build of "output-bird-habitat.csproj"
+1>C:\Users\bmarr\Desktop\working_OutputBirdHabitat\Extension-Output-Bird-Habitat\src\AssemblyInfo.cs(19,32,19,39): warning CS7035: The specified version string does not conform to the recommended format - major.minor.build.revision
+1>  output-bird-habitat -> C:\Users\bmarr\Desktop\working_OutputBirdHabitat\Extension-Output-Bird-Habitat\src\bin\Debug\Landis.Extension.Output.BirdHabitat.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+	b. Inno Setup installer build of "OutputBirdHabitat 1.1.iss"
+Starting compile.  [Monday, June 12 2017 at 8:48:30 PM]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+......
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Monday, June 12 2017 at 8:48:31 PM]
+Total compile time: 00:01.156
+
+
+
+	c. install the freshly-minted Extension-Output-Bird-Habitat
+
+
+
+
+	d. run "scenario_s2e3.txt" with the following active extensions:
+
+   	"Biomass Succession"    	biomass-succession_SetUp_s2e3.txt
+	"Base Wind"			base-wind_SetUp_s2e3.txt
+	"Output Max Species Age"	output_MaxSppAge.txt
+	"Output Bird Habitat"		output_BirdHabitat.txt
+
+
+	d1. Trial Run #1
+C:\Program Files\LANDIS-II\v6\examples\Output Bird Habitat>call landis-ii scenario_s2e3.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_s2e3.txt" ...
+....
+Loading Base Wind extension ...
+   Registering Data:  Wind.TimeOfLastEvent.
+   Registering Data:  Wind.Severity.
+Loading Output Max Species Age extension ...
+Loading Output Bird Habitat extension ...
+Error at line 48 of file "output_BirdHabitat.txt":
+  Error reading input value for Tranformation:
+    Missing value
+
+[uncommented Lines 651-658 PlugIn.cs ==> NO GO! wouldn´t build in VS]
+[commented out Line 48 "output_BirdHabitat.txt" ==> OK]
+
+
+
+	d2. Trial Run #2
+Loading Output Bird Habitat extension ...
+Error at line 61 of file "output_BirdHabitat.txt":
+  Error with the input value for LocalVarMapFileNames:
+    The template uses an unknown variable: {reclass-map-name}
+
+[commented out Line 61 "output_BirdHabitat.txt" ==> OK]
+
+
+	d3. Trial Run #3
+Loading Output Bird Habitat extension ...
+Error at line 62 of file "output_BirdHabitat.txt":
+  Error with the input value for NeighborVarMapFileNames:
+    The template uses an unknown variable: {var-name}
+
+[commented out Line 62 "output_BirdHabitat.txt" ==> OK]
+
+
+	d4. Trial Run #4
+Loading Output Bird Habitat extension ...
+Cohorts are empty.  Please double-check that this extension is compatible with your chosen succession extension.
+
+
+

@@ -1,0 +1,64 @@
+Title:			Team Mtg Agenda 
+Project Descriptor:	LANDISII Corrections/Upgrades
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		24 Jan 2017
+Revision Date:		
+
+
+
+############
+Mtg Agenda
+############
+
+	a. Rob report out
+		==> tags 
+		==> Johannes L 
+
+	b. Austen report out
+		==> BiomassHarvest #13 ready for QAQC testing?
+		==> BaseHarvest 
+		
+
+	d. Vincent report out
+		==> LMSL.cmd 
+		==> Core
+
+	e. Bruce report out
+		==> LANDVIZ
+		==> BaseHarvest dir restructure as template?
+		==> prioritize remaining issues from Eric G. list
+		==> new timesheet
+		==> Robert K
+
+
+
+
+	
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

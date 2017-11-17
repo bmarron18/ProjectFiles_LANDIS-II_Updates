@@ -1,0 +1,307 @@
+Title:				Project Work Log7
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			12 Nov 2016
+Revision Date:					
+
+
+#########################################################################
+Log:
+Testing the build capability of the restructured Base Harvest extension
+(see https://github.com/bmarron18/Extension-Base-Harvest/pull/1)
+#########################################################################
+
+	a. working hypothesis of the LANDIS-II 'SourceCode-to-User' sequence for extensions
+
+a set of .cs files is created that translate the science behind the extension to algorithms and script
+  ==> a .csproj file is created that link the .cs files together within an IDE
+    ==> the .cs files are modified, as needed, to reflect updated science or to create a new extension 
+      ==> the IDE takes the set of modified .cs files and 'builds' one or more .dll files
+        ==> the newly-built .dll files constitute 'the extension' and are packaged into a Windows-based installer 
+          ==>  LANDIS-II users install the newly-built .dll files into the C:\Program Files\LANDIS-II\v6\bin\extensions directory
+
+
+	b. if true, then should be able to build the new .dlls and paste them into 
+	the C:\Program Files\LANDIS-II\v6\bin\extensions directory
+
+	c. setup new .git-tracked repo
+	c1. follow the instructions in 'git_on_Windows20161109.txt'
+
+bmarr@DESKTOP-1KEFDDQ MINGW64 ~/Desktop/BaseHarvest_testRepo
+$ git clone https://github.com/bmarron18/Extension-Base-Harvest
+
+bmarr@DESKTOP-1KEFDDQ MINGW64 ~/Desktop/BaseHarvest_testRepo/Extension-Base-Harvest (master)
+$ ls -A
+.git/  deploy/  README.md  README.txt  src/  tests/
+
+$ git last
+commit ebadd741ca0de7131b8a08d3cd23f9cf1eb41f77
+Merge: 059f5e2 f093ac3
+Author: Bruce Marron <bmarron@pdx.edu>
+Date:   Sat Nov 12 10:07:32 2016 -0800
+
+    Merge pull request #1 from aruzicka555/master
+
+    Restructured Base Harvest
+
+$ git remote -v
+origin  https://github.com/bmarron18/Extension-Base-Harvest (fetch)
+origin  https://github.com/bmarron18/Extension-Base-Harvest (push)
+
+$ git remote show origin
+
+
+
+	d. open Visual Studio Community 2015
+	d1. Aaaarrrrggg! 
+"License 30 day trial. Your evaluation period has ended. Please sign in to unlock the product."
+
+	d2. Looks like Microsoft has a "Work or school account" set up for bmarron@pdx.edu by PSU IT Dept
+	d3. couldn't access the school accout
+	d4. logged into personal account (charges?!)
+
+	e. Open VS and load .csproj
+	e1. select "Open Project" ==> open C:\...\Extension-Base-Harvest\src\base-harvest.csproj
+	e2. select 'Solution Explorer' tab
+Solution 'base harvest' (1 project)
+  C# base-harvest
+    Prperties
+    References
+    EventsLog.cs
+    InputParametersParser.cs
+    MetadataHandler.cs
+      packages.config
+    PlugIn.cs
+    SummaryLog.cs
+
+	e3. VisualStudio has added three (3) directories:
+\.vs
+\bin
+\obj
+
+
+	f. try build as-is
+	f1. select "Build" tab ==> select "Build base-harvest"
+	f2. 101 errors!
+
+
+	g. from Austen's README.txt,
+"When opening the Visual Studio Solution, check Project->Properties->Reference Paths
+for a reference path "...Extension-Base-Harvest\src\libs". If it is not there, add the
+path to ensure the Solution builds correctly."
+	g1. select "File" tab ==> Open ==> File... to open "base-harvest.csproj" and "base-harvest.csproj.user" as files
+	g2. try adding the following to "base-harvest.csproj" from "base-harvest.csproj.user"
+	g3. No-go
+
+original from "base-harvest.csproj.user":
+line 5  <PropertyGroup>
+line 6    <ReferencePath>C:\Users\Austen\Documents\GitHub\Extension-Base-Harvest\src\libs\</ReferencePath>
+line 7  </PropertyGroup>
+
+change and insert into "base-harvest.csproj":
+line 102  <PropertyGroup>
+line 103    <ReferencePath>C:\Users\bmarr\Desktop\BaseHarvest_testRepo\Extension-Base-Harvest\src\libs\</ReferencePath>
+line 104  </PropertyGroup>
+
+	h. in VS select "Open Project" ==> open C:\...\Extension-Base-Harvest\src\base-harvest.csproj
+	h1. select 'Solution Explorer' tab ==> double-click on Project->Properties
+	h2. note Reference Paths on the left-hand side; reports "Not set"
+	h3. click on Reference Paths ==> paste "C:\Users\bmarr\Desktop\BaseHarvest_testRepo\Extension-Base-Harvest\src\libs\"
+	into "Folder:   " then click on "Add Folder" button
+	h4. the new reference path should be listed along with the path,
+	"C:\Users\Austen\Documents\GitHub\Extension-Base-Harvest\src\libs\"
+	h5. delete Austen's path and Save
+
+    <ReferencePath>C:\Users\bmarr\Desktop\BaseHarvest_testRepo\Extension-Base-Harvest\src\libs\</ReferencePath>
+  </PropertyGroup>
+
+
+	i. try build again
+	i1. select "Build" tab ==> select "Build base-harvest"
+	i2. looks good!
+	i3. Save .sln file
+
+	j. look at changes
+	j1. some files and directories missing (ignored)!
+http://stackoverflow.com/questions/18804380/source-tree-and-github-not-seeing-all-of-my-files
+https://answers.atlassian.com/questions/150610/commit-a-file-in-bin-directory
+http://stackoverflow.com/questions/1753070/git-ignore-files-only-locally
+https://github.com/github/gitignore
+
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   src/base-harvest.csproj
+        modified:   src/base-harvest.csproj.user
+        modified:   src/base-harvest.sln
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        src/.vs/
+        src/bin/
+        src/libs/Edu.Wisc.Forest.Flel.Util.dll
+        src/libs/Landis.Core.dll
+        src/libs/Landis.Library.AgeOnlyCohorts.dll
+        src/libs/Landis.Library.Biomass-v1.dll
+        src/libs/Landis.Library.BiomassCohorts.dll
+        src/libs/Landis.Library.Climate.dll
+        src/libs/Landis.Library.Cohorts.dll
+        src/libs/Landis.Library.HarvestManagement-v1.dll
+        src/libs/Landis.Library.LeafBiomassCohorts.dll
+        src/libs/Landis.Library.Metadata.dll
+        src/libs/Landis.Library.Parameters-v1.dll
+        src/libs/Landis.Library.SiteHarvest-v1.dll
+        src/libs/Landis.Library.Succession.dll
+        src/libs/Landis.SpatialModeling.dll
+        src/libs/README.md
+        src/libs/Troschuetz.Random.dll
+        src/libs/log4net.dll
+        src/obj/
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+
+
+
+
+	k. uninstall all extensions except for Base-Harvest
+	k1. go to C:\Program Files\LANDIS-II\v6\uninstall
+unins000.exe	==> Age-Only Succession
+unins001.exe	==> Base-Harvest v.3.0
+unins002.exe	==> Biomass Succession
+unins003.exe	==> Biomass Harvest v.3
+
+
+
+	l. compare .dlls
+	l1. installed dotPeek 
+	l2. complicated
+http://stackoverflow.com/questions/590863/tool-to-compare-dlls-and-disassemble-the-differences
+http://www.jetbrains.com/decompiler/
+http://www.wikihow.com/Open-DLL-Files
+
+
+
+	m. compare files/folders
+	m1. installed WinMerge
+	m2. useful
+http://winmerge.org/
+https://sourceforge.net/projects/winmerge/?source=typ_redirect
+
+
+	n. used WinMerge to compare directories
+	n1. outcome (only differences)
+	n2. differences reflect the fact that the build pulled in the .dlls from Rob's new GitHub repo:
+		https://github.com/LANDIS-II-Foundation/Support-Library-Dlls
+
+C:\Program Files\LANDIS-II\v6\bin\extensions\
+C:\Users\bmarr\Desktop\BaseHarvest_testRepo\Extension-Base-Harvest\src\bin\Debug\
+		==> Landis.Extension.BaseHarvest-3.0.dll "binary files are different"
+		==> Landis.Library.Metadata.dll "binary files are different"
+
+C:\Users\bmarr\Desktop\BaseHarvest_testRepo\Extension-Base-Harvest\src\libs\
+C:\Program Files\LANDIS-II\v6\bin\6.1\
+		==> Landis.Core.dll "binary files are different"
+
+
+	o. just check by date; Rob uploaded libraries 11/03/2016
+	o1. only three (3) files created by build
+
+Landis.Extension.BaseHarvest-3.0.dll
+Landis.Extension.BaseHarvest-3.0.pdb
+Landis.Library.Metadata.dll.VisualState.xml
+
+
+	p. pasted new "Landis.Extension.BaseHarvest-3.0.dll" into C:\Program Files\LANDIS-II\v6\bin\extensions>
+	p1. run test scenario
+C:\Program Files\LANDIS-II\v6\examples\Base Harvest>call landis-ii scenario.txt
+log4net:ERROR [FileAppender] Unable to acquire lock on file C:\Program Files\LANDIS-II\v6\examples\Base Harvest\Landis-log.txt. Access to the path 'C:\Program Files\LANDIS-II\v6\examples\Base Harvest\Landis-log.txt' is denied.
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario.txt" ...
+Initialized random number generator with seed = 785,413,440
+Loading species data from file "species.txt" ...
+Loading ecoregions from file "./ecoregions.txt" ...
+Initializing landscape from ecoregions map "./ecoregions.gis" ...
+Cell length = 100 m, cell area = 1 ha
+Map dimensions: 99 rows by 99 columns = 9,801 cells
+Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+  reading in ecoregion from ./ecoregions.gis
+Loading Age-only Succession extension ...
+   Registering Data:  Succession.AgeCohorts.
+   Loading dynamic input data from file "age-only-succession-dynamic-inputs.txt" ...
+  Dynamic Input Parser:  Add new year = 0.
+   Registering Data:  TimeOfLastSuccession.
+   Registering Data:  Shade.
+   Creating Dispersal Neighborhood List.
+   Dispersal:  NeighborRadius=5050, CellLength=100, numCellRadius=50
+   Loading initial communities from file "./initial-communities.txt" ...
+   Reading initial communities map "./initial-communities.gis" ...
+Loading Base Harvest extension ...
+   Registering Data:  Harvest.PrescriptionName.
+   Registering Data:  Harvest.TimeOfLastEvent.
+   Registering Data:  Harvest.CohortsDamaged.
+Could not create the directory "harvest":
+  Access to the path 'harvest' is denied.
+
+
+
+
+	q. uninstalled and re-installed Base-Harvest
+	q1. run test scenario
+C:\Program Files\LANDIS-II\v6\examples\Base Harvest>call landis-ii scenario.txt
+log4net:ERROR [FileAppender] Unable to acquire lock on file C:\Program Files\LANDIS-II\v6\examples\Base Harvest\Landis-log.txt. Access to the path 'C:\Program Files\LANDIS-II\v6\examples\Base Harvest\Landis-log.txt' is denied.
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario.txt" ...
+Initialized random number generator with seed = 1,165,660,429
+Loading species data from file "species.txt" ...
+Loading ecoregions from file "./ecoregions.txt" ...
+Initializing landscape from ecoregions map "./ecoregions.gis" ...
+Cell length = 100 m, cell area = 1 ha
+Map dimensions: 99 rows by 99 columns = 9,801 cells
+Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+  reading in ecoregion from ./ecoregions.gis
+Loading Age-only Succession extension ...
+   Registering Data:  Succession.AgeCohorts.
+   Loading dynamic input data from file "age-only-succession-dynamic-inputs.txt" ...
+  Dynamic Input Parser:  Add new year = 0.
+   Registering Data:  TimeOfLastSuccession.
+   Registering Data:  Shade.
+   Creating Dispersal Neighborhood List.
+   Dispersal:  NeighborRadius=5050, CellLength=100, numCellRadius=50
+   Loading initial communities from file "./initial-communities.txt" ...
+   Reading initial communities map "./initial-communities.gis" ...
+Loading Base Harvest extension ...
+   Registering Data:  Harvest.PrescriptionName.
+   Registering Data:  Harvest.TimeOfLastEvent.
+   Registering Data:  Harvest.CohortsDamaged.
+   Reading management-area map ./management.gis ...
+   Inactive management areas: 3
+   Reading stand map ./stand.gis ...
+   Opening harvest log file "harvest-event-test-log.csv" ...
+Access to the path 'C:\Program Files\LANDIS-II\v6\examples\Base Harvest\harvest-event-test-log.csv' is denied.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

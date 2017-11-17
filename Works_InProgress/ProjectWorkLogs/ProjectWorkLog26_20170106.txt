@@ -1,0 +1,232 @@
+Title:				Project Work Log26
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			06 Jan 2017
+Revision Date:		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run under python
+#########################################################################
+
+
+	a. run main.py from command line 
+https://docs.python.org/2/library/argparse.html
+
+	a1. look at help file
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source>python main.py -h
+Start LANDIS-II PreProcTool
+usage: main.py [-h] -p FILE -o FOLDER
+
+Landis2Vis
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p FILE, --projectfile FILE
+                        Pre-Proc-Project File
+  -o FOLDER, --outputfolder FOLDER
+                        Pre-Proc-Project Output Folder
+
+
+
+	a2. IT WORKS!!!!
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source> python main.py -p C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project\preproc_VizTool_example.xml -o C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project\CNF_Landscape_Example_LinearWind
+
+
+
+
+	b. almost worked ==> check log C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\logs>
+	b1. copy \gdal-data\ and \webbase\ to ..PreProcTool\source\
+	b2. re-run (as adm)
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source> python main.py -p C:\Users\bmarr\Downloads\LANDVIZ_example2\example_project\preproc_VizTool_example.xml -o C:\Users\bmarr\Downloads\LANDVIZ_example2\example_project\CNF_Landscape_LANDVIZ_LinearWind
+
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.100999832153 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 10
+prepair year = 20
+prepair year = 30
+prepair year = 40
+prepair year = 50
+prepair year = 60
+prepair year = 70
+prepair year = 80
+prepair year = 90
+prepair year = 100
+tttile year = 10
+ile year = 30
+tile year = 40
+ile year = 20
+too many values to unpack		<== what?!
+tile year = 50
+
+	b3. look at log (C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\logs>)
+...
+01/06/2017 06:03:29 PM landis.tiler              DEBUG    Start tiling process with multiprocessing
+01/06/2017 06:03:29 PM preworker.prepairMaps     ERROR    too many values to unpack
+01/06/2017 06:03:29 PM preworker.prepairMaps     DEBUG    <type 'exceptions.ValueError'>::preworker.py::83
+
+	b4. no "import tilertools" ==> it's in ..\PreProcTool\source\tilertools
+https://github.com/vadp/tilers-tools/tree/master/tilers_tools
+
+	b5. changes made to tiler tools repo (eg gdal_tiler.py --> tiler.py
+	b6. download .zip of tiler tools repo and replace original (add in __ini__.py!!)
+BIG TICKET ==> update the tilertools dir and preworker.py
+BIG TICKET ==> PyInstaller upgrade
+
+
+
+	c. try other scenario
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source> python main.py -p C:\Users\bmarr\Downloads\LANDVIZ_example1\preproc_example_project.xml -o C:\Users\bmarr\Downloads\LANDVIZ_example1\LANDVIZ_output
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Example Project Name"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.0160000324249 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: baseline climates
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 5
+prepair year = 10
+prepair year = 15
+prepair year = 20
+prepair year = 25
+prepair year = 30
+prepair year = 35
+prepair year = 40
+prepair year = 45
+prepair year = 50
+ttile year = 10
+ile year = 5
+tile year = 15
+tile year = 20
+ttile year = 25
+too many values to unpack
+ile year = 30
+tile year = 35
+tile year = 40
+
+
+	c1. check log ==> same issue!!
+...
+01/06/2017 07:21:00 PM landis.tiler              DEBUG    Start tiling process with multiprocessing
+01/06/2017 07:21:00 PM preworker.prepairMaps     ERROR    too many values to unpack		<== Line 121 preworker.py
+01/06/2017 07:21:00 PM preworker.prepairMaps     DEBUG    <type 'exceptions.ValueError'>::preworker.py::83
+
+	c2. in spyder check 
+Line 83 preworker.py and Line 76-140 gdal_tiler.py
+Line 83 preworker.py has a  ,z, (NOT '-z') ==> delete it!		<== Nope didn't work
+
+
+
+	d. try with original .exe		<== IT WORKED (dammit)
+C:\Program Files (x86)\LANDIS-II\LandisPreProcTool_original>PreProcTool.exe -p C:\Users\bmarr\Downloads\LANDVIZ_example1\preproc_example_project.xml -o C:\Users\bmarr\Downloads\LANDVIZ_example1\LANDVIZ_output
+
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Example Project Name"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.0 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: baseline climates
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 5
+prepair year = 10
+prepair year = 15
+prepair year = 20
+prepair year = 25
+prepair year = 30
+prepair year = 35
+prepair year = 40
+prepair year = 45
+prepair year = 50
+ttile year = 10
+ile year = 5
+tile year = 15
+tile year = 20
+tile year = 25
+tile year = 30
+tile year = 35
+tile year = 40
+ttile year = 45
+ile year = 50
+scenario: baseline climates
+extension: Leaf Biomass Harvest
+output: biomass removed
+prepair year = 0 [year not available]
+prepair year = 5
+prepair year = 10
+prepair year = 15
+prepair year = 20
+prepair year = 25
+prepair year = 30
+prepair year = 35
+prepair year = 40
+prepair year = 45
+prepair year = 50
+tile year = 5
+tile year = 10
+tile year = 15
+tile year = 20
+tile year = 25
+tile year = 30
+tile year = 35
+tile year = 40
+tile year = 45
+tile year = 50
+scenario: baseline climates
+extension: Output Leaf Biomass Reclass
+output: reclass1 Forest Type Map
+prepair year = 0
+prepair year = 10
+prepair year = 20
+prepair year = 30
+prepair year = 40
+prepair year = 50
+ttttile year = 30
+ile year = 0
+ile year = 10
+ile year = 20
+tile year = 40
+tile year = 50
+End prepairing Map Output [time: 68.1919999123 sec]
+Save Metadata as JSON files
+Copy webbase to output directory
+Update web settings file
+End of LANDIS-II PreProcTool.
+
+
+

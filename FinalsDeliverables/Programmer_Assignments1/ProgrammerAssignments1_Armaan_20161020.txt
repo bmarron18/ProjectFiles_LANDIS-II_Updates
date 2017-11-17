@@ -1,0 +1,53 @@
+Title:				LANDVIZ - Development Task Items
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			21 Oct 2016
+Final Date:							
+
+
+
+Hi Armaan,
+
+Looks like LANDVIZ-Development has a very high priority for Rob so 
+we are having you lead this one because of your Java background.
+Don't worry, your C# efforts will not go wasted!
+
+Given the GitHub repo and some of the materials from last year's
+LANDIS-II training I was able to piece together a set of documents
+regarding the workings and supposed workings of the LANDVIZ tool. I will
+put these in a .zip file and email them to you. I also looked at the 
+GitHub Issues board and they are actually decipherable so we should be 
+able to work through them. I will also contact Melissa Lucash 
+(research scientist in Rob's lab) about additional changes she would like to see.
+
+I tried running the example (per instructions in the "manual") but
+it was a no go. The log is in the .zip.
+
+OK thanks much! The LANDVIZ-Development repo has been forked and the billing code will be GHB2.
+
+##########
+task list
+##########
+
+	a. get 'example_project' up and running and compare to the "manual"
+
+	b. evaluate the current repository build configuration (this has been a real problem in the Core-Model)
+	b1. Is it really straightforward or do you recommend changes? Let me knpw.
+
+	c. tackle the first listed GitHub Issue ("Area units need to be flexible") first
+
+	d. work through the remaining GitHub Issues as you like
+
+	e. make note of changes away from the "manual"; we will probably revise.
+
+
+
+
+
+
+
+
+
+
+

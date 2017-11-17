@@ -1,0 +1,92 @@
+Title:			Team Mtg Agenda 
+Project Descriptor:	LANDISII Corrections/Upgrades
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		10 Jan 2017
+Revision Date:		
+
+
+############
+Mtg Agenda
+############
+
+	a. Rob report out
+		==> retain instructional .pdf files?
+
+	b. Austen report out
+
+	d. Vincent report out
+
+	e. Bruce report out
+
+
+
+
+	f. Issues BaseHarvest 	==> #3 ready for QAQC testing?
+				==> #1 still open, yes?
+
+		Plant only prescription in biomass harvest #3
+			lbross, "Matthew, can you provide a sample scenario"
+
+		Add Salvage Logging to Base Harvest? #1
+ 			add a sort type parameter for standing snag biomass, 
+			allow simulation of salvage harvesting
+
+	g. Issues BiomassHarvest 	==> were there commits specifically tied to #10 and #13?
+					==> careful with documenting changes!
+					==> #1 still open, yes?
+
+		AdjacencyType Input error #10
+		
+		Biomass Harvest Spray Treatment #1
+			Mark stand as sprayed so that the BDA extension can access 
+			that info starts with the harvest extension providing the 
+			info needed by BDA
+
+		Biomass Harvest not communicating with succession for partial cohort disturbance #13
+			When a partial cohort removal is performed, the biomass harvested should be handled 
+			by the succession extension such that the appropriate amount of biomass is removed from 
+			the site or left on site. For example, typically all leaves are left on site along with 15% 
+			of the wood (branches). This functionality seems to have been lost with the updates to the biomass libraries.
+
+			An update: After working at it diligently, I got it to work. However, doing so required large changes 
+			to library-biomass-cohorts and library-leaf-biomass-cohorts and some of the harvest libraries.
+
+
+	h. Issues CoreModel 	==> careful w/ documenting changes!
+				
+
+			Replace “Ageing cohorts” with “Growing cohorts” Issue #13 
+				==> moved to Library-Succession Change 'Ageing Cohorts' to 'Growing Cohorts' #3
+				==> looks like changes made but #3 still open in Library-Succession (no Pull request up to LANDIS Foundation master)
+				==> have forked this repo but might be too late document changes with Pull request
+
+			Extension versions should be written in the log file #9
+				==> were there commits specifically tied to #9?
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

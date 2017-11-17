@@ -1,0 +1,103 @@
+Title:				Project Work Log23b
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			04 Jan 2017
+Revision Date:			06 Jan 2017		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run a build test w/ pyinstaller (Windows)
+#########################################################################
+
+
+	a. comparing outputs ==> too much difference
+	
+	b. uninstall / reinstall LANDVIZ (it was in \Program Files (x86)) 32-bit?
+	B1. tHIS IS CRAZY!! Need 64-bit Python to process regex pkg and LANDIS-II is now (exclusively) 64-bit so shouldn't LANDVIZ be 64-bit?!  
+http://www.howtogeek.com/129178/why-does-64-bit-windows-need-a-separate-program-files-x86-folder/
+
+	C. installer
+https://docs.google.com/a/pdx.edu/uc?id=0B6eUM6Se6MFBZm1mc3lwcW1qVlU&export=download&urp=https://drive.google.com/file/d/0B6eUM6Se6MFBZm1mc&pli=1
+LANDIS-II PreProc Tool 1.0-setup.msi
+
+	d. try updated PyInstaller (3.2)
+	d1. download and unzip in LANDVIZ
+http://www.pyinstaller.org/
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-3.2>
+
+	d2. 'import pefile' failed
+http://stackoverflow.com/questions/39728108/running-pyinstaller-after-anaconda-install-results-in-importerror-no-module-nam
+http://redino.net/blog/2016/07/no-module-named-pefile/
+
+Starting from PyInstaller 3.2, a new module named pefile is introduced. This module is used to work with Windows binary file (EXE file, also called PE file).
+Before PyInstaller 3.2, PE related operation is done using its own module, like setting PE header and DOS header)
+You can use Anaconda's pip to install it, just go to the Script folder in Anaconda and execute:
+
+pip.exe install pefile
+
+Successfully installed future-0.16.0 pefile-2016.3.28
+You are using pip version 8.1.2, however version 9.0.1 is available.
+You should consider upgrading via the 'python -m pip install --upgrade pip' command.
+
+
+
+	e. trial2 build: sequential commands (originally) from build_preproctool.bat (modified)
+	e1. open command-line (admin); cd
+	e2. execute 1st build command
+	e3. execute 2nd build command
+	e4. execute 3rd build command
+	e5. execute 4th build command
+	e6. execute 5th build command
+	e7. check git changes
+	e8. compare changes as .txt files
+
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python PyInstaller-3.2\pyinstaller.py --workpath=build_output_logs -y --clean --name=PreProcTool_bm --distpath=..\dist --hidden-import=scipy.special._ufuncs_cxx ..\source\main.py
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python PyInstaller-3.2\pyinstaller.py --onefile --workpath=build_output_logs -y --clean --name=Proj4Extent_bm --distpath=..\dist ..\source\Proj4Extent.py
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "..\source\config" "dist\preproctool_bm\config" /MIR /NFL /NDL /NP /NJH /NJS
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "..\..\WebVisTool\build\dist" "dist\preproctool_bm\webbase" /MIR /NFL /NDL /NP /NJH /NJS
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "gdal-data" "dist\preproctool_bm\gdal-data" /NFL /NDL /NP /NJH /NJS
+
+
+
+	f. combined output from trial2 build into \PreProceTool_bm folder; C:\Program Files (x86)\LANDIS-II\PreProcTool_bm
+	f1. rename EXACTLY like LANDVIZ and place in same LANDIS-II directory
+C:\Program Files (x86)\LANDIS-II>dir
+Directory of C:\Program Files (x86)\LANDIS-II
+
+01/04/2017  23:34    <DIR>          .
+01/04/2017  23:34    <DIR>          ..
+01/04/2017  23:21    <DIR>          LandisPreProcTool			<== my rebuild w/ PyInstaller 3.2 (named EXACTLY as the original download from LANDIS-II website)
+01/04/2017  23:33    <DIR>          LandisPreProcTool_original		<== the original download from LANDIS-II website
+
+
+	f2. try running my rebuild on the example project downloaded from LANDIS-II website (in Downloads)
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Example_LinearWind
+Traceback (most recent call last):
+  File "PyInstaller\loader\rthooks\pyi_rth_pkgres.py", line 11, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-3.2\PyInstaller\loader\pyimod03_importers.py", line 389, in load_module
+    exec(bytecode, module.__dict__)
+  File "site-packages\setuptools-27.2.0-py2.7.egg\pkg_resources\__init__.py", line 68, in <module>
+  File "site-packages\setuptools-27.2.0-py2.7.egg\pkg_resources\extern\__init__.py", line 61, in load_module
+ImportError: The 'appdirs' package is required; normally this is bundled with this package so if you get this warning, consult the packager of your distribution.
+Failed to execute script pyi_rth_pkgres
+
+	f3. add 'appdirs' to anaconda
+https://pypi.python.org/pypi/appdirs
+
+	f4. problem w/ setuptools or 'stable' PyInstaller version?
+https://github.com/pyinstaller/pyinstaller/issues/2123
+http://stackoverflow.com/questions/37815371/pyinstaller-failed-to-execute-script-pyi-rth-pkgres-and-missing-packages
+
+	f5. try latest develop vesion
+
+
+
+

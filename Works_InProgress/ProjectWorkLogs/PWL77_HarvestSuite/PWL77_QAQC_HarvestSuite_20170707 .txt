@@ -1,0 +1,60 @@
+Title:				PWL77_QAQC_HarvestSuite
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			07 July 2017
+Final Date:			
+
+
+
+###################################################################################
+The Harvest Suite:
+	Extension-Base-Harvest		==> Landis.Extension.BaseHarvest-3.1.dll
+	Extension-Biomass-Harvest	==> Landis.Extension.BiomassHarvest-3.2.dll
+	Library-Harvest-Mgmt		==> Landis.Library.HarvestManagement-v2.dll
+	Library-Biomass-Harvest		==> Landis.Library.BiomassHarvest-v2.dll
+	Library-Site-Harvest		==> Landis.Library.SiteHarvest-v1.dll	(v2 w/ Vincent changes?)
+
+https://github.com/LANDIS-II-Foundation/Libraries-Archived/wiki/HarvestLibraries
+##################################################################################
+
+
+
+####################################
+Harvest Suite Outstanding Issues
+####################################
+
+	a. Salvage logging enhancement
+https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest/issues/1
+https://github.com/LANDIS-II-Foundation/Library-Harvest-Mgmt/pull/6
+
+
+	b. Stand Ranking by average aboveground biomass (Same as g. below?)
+https://github.com/LANDIS-II-Foundation/Extension-Biomass-Harvest/issues/14
+
+
+	c. Error with the input value for End Time
+https://github.com/LANDIS-II-Foundation/Extension-Biomass-Harvest/issues/20
+
+
+	d. Widgets fails after first run
+https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest/issues/5
+
+
+	e. SingleRepeat (Brooke)
+https://github.com/LANDIS-II-Foundation/Extension-Biomass-Harvest/issues/22
+
+
+
+
+
+
+####################
+QAQC Testing Needs
+#####################
+
+
+		See folder, PWL77_HarvestSuite
+
+
+

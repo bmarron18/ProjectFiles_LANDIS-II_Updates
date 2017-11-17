@@ -1,0 +1,89 @@
+Title:			Project GitHub Workflow Sketch
+Project Descriptor:	LANDIS Programming Updates Project
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		11 Sep 2016
+Revision Date:		09 Oct 2016
+
+
+
+
+==== References =============================
+https://progit.org/
+https://help.github.com/articles/fork-a-repo/
+https://help.github.com/articles/configuring-a-remote-for-a-fork/
+https://help.github.com/articles/syncing-a-fork/
+
+https://landisdev.slack.com
+
+
+#######################
+GitHub Workflow Sketch
+#######################
+
+
+Bruce:
+* Fork the to-be-modified repository from https://github.com/LANDIS-II-Foundation.
+This will create a clone of the repo, https://github.com/LANDIS-II-Foundation/<name of LANDIS repo>
+at https://github.com/bmarron18/<name of LANDIS repo>.
+
+* Keep the forked clone (at https://github.com/bmarron18/<name of LANDIS repo>) 'in sync' with the original 
+repo (the upstream repository at https://github.com/LANDIS-II-Foundation/<name of LANDIS repo>)
+
+
+Programmer:
+* Setup GitHub account and install Git on local (programmer's) computer  
+
+* Based on task (Issue) selection, clone a repo from https://github.com/bmarron18/<name of LANDIS repo> 
+to local (programmer's) computer. This becomes the local 'master'. 
+
+* Create a descriptive topic branch from the local (cloned) repo 'master'
+
+* Make changes to the code on the (parallel-to-repo) topic branch
+
+* Perform QA/QC L1: Verify the syntax and content of the change
+
+* Commit the change to the (local) topic branch
+
+* Push the topic branch back up to the https://github.com/bmarron18/<name of LANDIS repo>. This will generate
+a Pull Request to bmarron18. 
+
+
+Bruce:
+* Open the Pull Request and select 'Comment'
+
+* Specify QA/QC L2: 1) assign a code reviewer, 2) assign a code check testing procedure 
+(per rmscheller) with defined metrics for acceptable model behavior and defined documentation procedures
+
+
+Programmer:
+* Perform QA/QC L2: 1) dialog with reviewer about corrections, typos, etc (tracked in Pull Request), 
+2) incorporate agreed-upon code changes code, and 3) complete verification tests
+
+* Notify bmarron18 that QA/QC L2 complete (can be set to auto with email notification)
+
+
+Bruce:
+* Open the (programmer's) updated Pull Request and either merge it 
+(to https://github.com/bmarron18/<name of LANDIS repo>) or re-start the comment cycle.
+
+* If the changes are accepted, push the newly-merged repo 
+(https://github.com/bmarron18/<name of LANDIS repo>), back up to the upstream repository at 
+https://github.com/LANDIS-II-Foundation/<name of LANDIS repo>. This will generate 
+a Pull Request to rmscheller
+
+
+Rob:
+* Open the (manager's) Pull Request and accept (merge)it, rejectit, or comment on it. Merging will close 
+the Pull Request.
+
+* Close the associated Issue
+
+* Track the sequence of resolution efforts using the GitHub tabs, Graphs ==> Network  
+
+
+
+ 
+
+
+ 

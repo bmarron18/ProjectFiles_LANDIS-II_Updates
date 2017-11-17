@@ -1,0 +1,39 @@
+2015-07-11 09:24:07,303 - LANDIS-II 6.0 (official release)
+2015-07-11 09:24:07,325 - 
+2015-07-11 09:24:09,702 - Loading scenario from file "base-fire-scenario.txt" ...
+2015-07-11 09:24:09,851 - Initialized random number generator with seed = 1,742,368,023
+2015-07-11 09:24:09,852 - Loading species data from file "species.txt" ...
+2015-07-11 09:24:09,909 - Loading ecoregions from file "ecoregions.txt" ...
+2015-07-11 09:24:09,952 - Initializing landscape from ecoregions map "ecoregions.gis" ...
+2015-07-11 09:24:10,034 - Cell length = 100 m, cell area = 1 ha
+2015-07-11 09:24:10,037 - Map dimensions: 99 rows by 99 columns = 9,801 cells
+2015-07-11 09:24:10,054 - Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+2015-07-11 09:24:10,076 - Loading Age-only Succession extension ...
+2015-07-11 09:24:10,237 -    Registering Data:  Succession.AgeCohorts.
+2015-07-11 09:24:10,241 -    Loading dynamic input data from file "age-only-succession-dynamic-inputs.txt" ...
+2015-07-11 09:24:10,265 -   Dynamic Input Parser:  Add new year = 0.
+2015-07-11 09:24:10,291 -    Registering Data:  TimeOfLastSuccession.
+2015-07-11 09:24:10,291 -    Registering Data:  Shade.
+2015-07-11 09:24:10,296 -    Creating Dispersal Neighborhood List.
+2015-07-11 09:24:10,297 -    Dispersal:  NeighborRadius=5050, CellLength=100, numCellRadius=50
+2015-07-11 09:24:10,317 -    Loading initial communities from file "./initial-communities.txt" ...
+2015-07-11 09:24:10,362 -    Reading initial communities map "./initial-communities.gis" ...
+2015-07-11 09:24:10,468 - Loading Base Fire extension ...
+2015-07-11 09:24:10,520 -    Registering Data:  Fire.Severity.
+2015-07-11 09:24:10,589 -    Loading FireRegion data...
+2015-07-11 09:24:10,646 -    Opening Fire log file "output/fire/log.csv" ...
+2015-07-11 09:24:10,673 - Internal error occurred within the program:
+2015-07-11 09:24:10,674 -   The process cannot access the file 'C:\Users\dynamic-ecos-lab\Desktop\LANDIS_TRAINING_07102015\LANDIS-II_Training\Book-exercises_v3\Chapter_12_Fire\Chapter_12_Fire\Chapter 12\output\fire\log.csv' because it is being used by another process.
+2015-07-11 09:24:10,674 - 
+2015-07-11 09:24:10,675 - Stack trace:
+2015-07-11 09:24:10,769 -    at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileStream.Init(String path, FileMode mode, FileAccess access, Int32 rights, Boolean useRights, FileShare share, Int32 bufferSize, FileOptions options, SECURITY_ATTRIBUTES secAttrs, String msgPath, Boolean bFromProxy)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, String msgPath, Boolean bFromProxy)
+   at System.IO.FileStream..ctor(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options)
+   at System.IO.StreamWriter..ctor(String path, Boolean append, Encoding encoding, Int32 bufferSize)
+   at System.IO.StreamWriter..ctor(String path)
+   at Landis.Data.CreateTextFile(String path)
+   at Landis.Extension.BaseFire.PlugIn.Initialize()
+   at Landis.Model.InitExtensions(ExtensionMain[] extensions)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)

@@ -1,0 +1,98 @@
+Title:				ChangeLog Example
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			20 Oct 2016
+Final Date:					
+
+
+Hi All!
+
+Given the upgrades/corrections Rob has in mind, I realize that while GitHub is tremendous for tracking 
+line item changes we will need documentation for tracking configuration and process changes. Not to 
+get bogged down too much (QAQC stuff is generally a hassle no matter what), I would like folks to use 
+this form as a ChangeLog template.  We will keep it in .txt format.
+
+My expectation is that each programmer records change events alpha-numerically and provides a BRIEF 
+statement of the change event. Statement detail should be proportional to the difference away from 
+the current repo. For example, simple coding changes to a *.cs file will be tracked in GitHub and 
+because comments can be added directly into the script, the ChangeLog simply notes the event as,
+
+	a. coding changes to *.cs
+
+On the other hand, pulling in new .dll files into GitHub because we are eliminating pulls from 
+(deprecated)Google repos, might be looged as,
+
+	b. change current config which requires pulling in .dll files from (deprecated) Google code 
+	repo
+	b1. the following files added to Core-model/model/trunk/third-party
+
+Landis.Landscapes.dll
+Landis.RasterIO.dll
+Landis.RasterIO.Gdal.dll
+Landis.SpatialModeling.dll
+ 
+	b2. .dll files pulled from
+https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/landis-spatial/
+%LibraryFileName%
+
+
+Note that in b. above there is some insight provided as to why the change is being made. Again this 
+is a template so make it work for you given the guidelines above. At the minimum, the start of a 
+foray into a LANDIS-II repo (eg, Core-Model, Extension-Base-Harvest, LANDVIZ-Development) will 
+require a ChangeLog. You will need to change the header, as appropriate. You may decide it easier to 
+create multiple ChangeLogs depending on your work style. Ideally, the ChangeLog.txt file can be open 
+(like a true note pad) and entries quickly made while you work.  
+
+
+
+Putting it all together, Dakota's actual ChangeLog for working on the Core-Model might look 
+something like this:
+
+
+Title:				Core-Model ChangeLog1
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				dsanchez
+Origin Date:			20 Oct 2016
+Final Date:					
+
+
+#########
+Core-Model
+##########
+
+
+	a. coding changes
+AssemblyInfo.cs
+TextParser.cs
+
+	b. change current config which requires pulling in .dll files from (deprecated) Google 
+	code repo
+	b1. the following files added to Core-model/model/trunk/third-party
+
+Landis.Landscapes.dll
+Landis.RasterIO.dll
+Landis.RasterIO.Gdal.dll
+Landis.SpatialModeling.dll
+ 
+	b2. .dll files pulled from
+https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/landis-spatial/
+%LibraryFileName%
+
+	c. coding changes
+LANDIS-II.sln
+
+	d.
+
+
+
+
+
+
+
+
+
+
+
+

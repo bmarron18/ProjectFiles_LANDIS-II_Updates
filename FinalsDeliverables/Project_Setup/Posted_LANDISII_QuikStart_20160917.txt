@@ -1,0 +1,640 @@
+Title:			QuikStart of LANDIS-II v6.1 (64-bit) on Windows 10
+Project Descriptor:	LANDIS-II Upgrades and Corrections Project 
+Project ID:		2016SoE021	
+Author:			bmarron
+Origin Date:		10 Sept 2016
+Revision Date:		17 Sept 2016
+
+
+#############
+Background
+#############
+This document is a QuikStart for new, LANDIS-II v6.1 (64-bit) users. It details installation instructions and 
+provides expected outputs to verify correct installation on a Windows 10 platform.  It also provides some direct
+ways of examining model outputs in R.
+
+
+===== STEP 1. Install LANDIS-II v6.1 (64-bit) ================================
+
+	a. Install LANDIS-II and five (5) extensions
+	a1. Go to the LANDIS-II website (http://www.landis-ii.org/home) and follow the 
+	instructions under the 'Install' tab (ie, 1) join the users group, 2) install LANDIS-II v6.1, 
+	and 3) install the four (4) recommended extensions 
+	a2. Go back to the main (Home) page and under the "Extensions" tab install the 
+	'Cohort Statistics Output' extension 
+	a3. NB. The installation Wizards are very straighforward. 
+
+
+==== STEP 2. Check the installation of LANDIS-II and the five (5) extensions ======================================
+
+	a. Check initial access to LANDIS-II by running the LANDIS-II 'extensions installed?' query 
+	a1. Open a (Administrator) Command Prompt
+	a2. At the Command Prompt, change the directory (cd) to the LANDIS-II directly under Program Files in the C:\ directory
+	a3. Run the extensions program, 'Landis.Extensions.exe' using the alias, 'landis-extensions'
+	a4. NB. The alias calls 'Landis.Extensions.exe' from ~\v6\bin
+
+C:\Program Files\LANDIS-II> landis-extensions
+C:\Program Files\LANDIS-II\v6\bin> Landis.Extensions.exe
+
+
+	b. The following output is expected:
+
+LANDIS-II 6.1
+Extensions Administration Tool 6.1
+Copyright 2005-2006 University of Wisconsin
+Copyright 2011 Portland State University
+
+Extension                 Description
+---------                 -----------
+Age-only Succession       Succession with age cohorts
+Base Fire                 Fire Disturbance
+Base Wind                 Wind Disturbance
+Output Cohort Statistics  This extension will produce outputs of cohort statistics
+Output Max Species Age    Maximum age output maps
+
+
+==== STEP 3. Get acquainted with the contents of \extensions dir ========================
+
+	a. Examine the extensions that are listed as installed 
+	a1. The installation of the five (5) extensions should have automatically modified the file, 'extensions.xml'
+	a2. At the Command Prompt, change the directory (cd) to ~\v6\bin\extensions\
+	a3. Open the 'extensions.xml' in Notepad using the MS-DOS command, start  
+
+C:\Program Files\LANDIS-II\v6\bin\extensions\> start notepad "extensions.xml"
+
+
+	b. The following output is expected:
+
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionDataset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Extensions>
+    <Extension Name="Age-only Succession" Version="4.1">
+      <Type>succession</Type>
+      <Assembly>Landis.Extension.Succession.AgeOnly</Assembly>
+      <Class>Landis.Extension.Succession.AgeOnly.PlugIn</Class>
+      <Description>Succession with age cohorts</Description>
+    </Extension>
+    <Extension Name="Base Fire" Version="3.0.2">
+      <Type>disturbance:fire</Type>
+      <Assembly>Landis.Extension.BaseFire</Assembly>
+      <Class>Landis.Extension.BaseFire.PlugIn</Class>
+      <Description>Fire Disturbance</Description>
+      <UserGuide>LANDIS-II Base Fire v3.0 User Guide.pdf</UserGuide>
+    </Extension>
+    <Extension Name="Base Wind" Version="2.1">
+      <Type>disturbance:wind</Type>
+      <Assembly>Landis.Extension.BaseWind</Assembly>
+      <Class>Landis.Extension.BaseWind.PlugIn</Class>
+      <Description>Wind Disturbance</Description>
+      <UserGuide>LANDIS-II Base Wind v2.1 User Guide.pdf</UserGuide>
+    </Extension>
+    <Extension Name="Output Max Species Age" Version="2.0">
+      <Type>output</Type>
+      <Assembly>Landis.Extension.Output.MaxSpeciesAge</Assembly>
+      <Class>Landis.Extension.Output.MaxSpeciesAge.PlugIn</Class>
+      <Description>Maximum age output maps</Description>
+      <UserGuide>LANDIS-II Output Max Species Age v2.0 User Guide.pdf</UserGuide>
+    </Extension>
+    <Extension Name="Output Cohort Statistics" Version="2.1.1">
+      <Type>output</Type>
+      <Assembly>Landis.Extension.Output.CohortStats</Assembly>
+      <Class>Landis.Extension.Output.CohortStats.PlugIn</Class>
+      <Description>This extension will produce outputs of cohort statistics</Description>
+      <UserGuide>LANDIS-II Age Cohort Statistics v2.1 User Guide.pdf</UserGuide>
+    </Extension>
+  </Extensions>
+</ExtensionDataset>
+
+
+
+	c. Examine the .dll files added by installation of the five (5) extensions
+	c1. NB.  .dll files are Dynamic-Link Libraries 
+	c2. At the Command Prompt, type the MS-DOS command, dir
+
+C:\Program Files\LANDIS-II\v6\bin\extensions>dir
+
+	d. The following outout is expected:
+
+ Volume in drive C has no label.
+ Volume Serial Number is 0AD8-74CB
+
+ Directory of C:\Program Files\LANDIS-II\v6\bin\extensions
+
+09/10/2016  07:07 AM    <DIR>          .
+09/10/2016  07:07 AM    <DIR>          ..
+09/10/2016  07:07 AM             1,969 extensions.xml
+07/01/2014  08:54 AM            34,304 Landis.Extension.BaseFire.dll
+09/19/2014  09:04 AM            26,624 Landis.Extension.BaseWind.dll
+07/01/2014  09:39 AM            22,016 Landis.Extension.Output.CohortStats.dll
+07/01/2014  10:03 AM            11,264 Landis.Extension.Output.MaxSpeciesAge.dll
+02/17/2015  09:26 AM            16,384 Landis.Extension.Succession.AgeOnly.dll
+08/18/2015  01:22 PM             9,728 Landis.Extensions.Dataset.dll
+02/11/2015  03:19 PM            12,800 Landis.Library.AgeOnlyCohorts.dll
+01/24/2011  04:25 PM             4,608 Landis.Library.Cohorts.dll
+07/01/2014  01:22 PM            19,456 Landis.Library.Metadata.dll
+02/12/2015  08:21 AM            27,136 Landis.Library.Succession.dll
+              11 File(s)        186,289 bytes
+               2 Dir(s)  219,453,005,824 bytes free
+
+
+
+
+
+==== STEP 4. Run an example scenario in LANDIS-II =========================
+		
+	a. Run the example scenario that comes with the 'Cohort Statistics Output' extension 
+	a1. At the Command Prompt, change directory (cd) to the directory housing the LANDIS-II example
+	provided for the 'Cohort Statistics Output' extension (~\LANDIS-II\v6\examples\cohort-stats)
+	a2. First, note the types of files that are required to run LANDIS-II by typing the MS-DOS command, dir
+
+C:\Program Files\LANDIS-II\v6\examples\cohort-stats>dir
+
+
+	b. The following outout is expected:
+
+ Volume in drive C has no label.
+ Volume Serial Number is 0AD8-74CB
+
+ Directory of C:\Program Files\LANDIS-II\v6\examples\cohort-stats
+
+09/10/2016  07:07 AM    <DIR>          .
+09/10/2016  07:07 AM    <DIR>          ..
+06/23/2014  03:25 PM             1,099 age-only-succession-dynamic-inputs.txt
+07/01/2014  08:46 AM               259 age-only-succession.txt
+06/23/2014  03:30 PM             1,332 base-fire-6.0.txt
+06/23/2014  03:30 PM               910 cohort-stats.output.txt
+06/23/2014  03:30 PM             9,929 ecoregions.gis
+06/23/2014  03:30 PM               202 ecoregions.txt
+06/23/2014  03:30 PM             9,929 initial-communities.gis
+06/23/2014  03:30 PM             1,162 initial-communities.txt
+06/23/2014  03:30 PM               135 max-spp-age.output.txt
+09/10/2016  07:45 AM             1,029 scenario.txt
+06/23/2014  03:30 PM               132 SimpleBatchFile.bat
+06/23/2014  03:30 PM             1,915 species.txt
+              14 File(s)         45,531 bytes
+               4 Dir(s)  219,452,891,136 bytes free
+
+
+
+	c. Open the file 'scenario.txt' with Notepad using the MS-DOS command, start
+
+C:\Program Files\LANDIS-II\v6\examples\cohort-stats>start notepad 'scenario.txt'
+
+	c1. NB. A scenario.txt file like this one defines a LANDIS-II run.
+	c2. NB. 'scenario.txt' calls other .txt and .gis files
+	c3. NB. The symbol, >> is used to comment out a line in 'scenario.txt'
+	c4. This particular scenario.txt file defines an example scenario that uses Age-only Succession 4.1, 
+	Base Fire 6.0, and Cohort Statistics Output extensions
+	c5. Uncomment the line containg, 'RandomNumberSeed' and save the changes
+
+
+	d. The follwoing output is expected:
+
+-----------------------------------------------------------------
+LandisData  Scenario
+
+Duration  50
+
+Species   species.txt
+
+Ecoregions      ./ecoregions.txt
+EcoregionsMap   ./ecoregions.gis
+
+CellLength  100 << meters, 100 x 100 m = 1 ha
+
+
+>> NOTE:  This example assumes that you have downloaded and installed 
+>> the correpsonding extensions.  These extensions are currently packaged
+>> together as a package.
+
+>> Succession Extension     Initialization File
+>> --------------------     -------------------
+   "Age-only Succession"    age-only-succession.txt
+
+
+>> Disturbance Extensions   Initialization File
+>> ----------------------   -------------------
+   "Base Fire"		    base-fire-6.0.txt
+
+   DisturbancesRandomOrder  yes  << optional parameter; default = no
+
+
+>> Other Extensions         Initialization File
+>> ----------------         -------------------
+"Output Cohort Statistics"    cohort-stats.output.txt
+
+
+RandomNumberSeed  4,357  << optional parameter; default = the seed is
+                         << randomly generated using the current time
+-----------------------------------------------------------------------
+
+
+	e. Perform a LANDIS-II simulation run using the 'scenario.txt' file
+	e1. Use the MS-DOS command, 'start \B' to run the batch file, 'SimpleBatchFile.bat' 
+	without creating a new window
+	e2. NB. The batch file runs the command sequence, 'call landis-ii scenario.txt'
+
+C:\Program Files\LANDIS-II\v6\examples\cohort-stats>start /B SimpleBatchFile.bat
+C:\Program Files\LANDIS-II\v6\examples\cohort-stats>call landis-ii scenario.txt
+
+
+	f. The follwoing output is expected (long!):
+
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario.txt" ...
+Initialized random number generator with user-supplied seed = 4,357
+Loading species data from file "species.txt" ...
+Loading ecoregions from file "./ecoregions.txt" ...
+Initializing landscape from ecoregions map "./ecoregions.gis" ...
+Cell length = 100 m, cell area = 1 ha
+Map dimensions: 99 rows by 99 columns = 9,801 cells
+Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+  reading in ecoregion from ./ecoregions.gis
+Loading Age-only Succession extension ...
+   Registering Data:  Succession.AgeCohorts.
+   Loading dynamic input data from file "age-only-succession-dynamic-inputs.txt" ...
+  Dynamic Input Parser:  Add new year = 0.
+   Registering Data:  TimeOfLastSuccession.
+   Registering Data:  Shade.
+   Creating Dispersal Neighborhood List.
+   Dispersal:  NeighborRadius=5050, CellLength=100, numCellRadius=50
+   Loading initial communities from file "./initial-communities.txt" ...
+   Reading initial communities map "./initial-communities.gis" ...
+Loading Base Fire extension ...
+   Registering Data:  Fire.Severity.
+   Loading FireRegion data...
+   Opening Fire log file "fire-log.csv" ...
+Loading Output Cohort Statistics extension ...
+Running Output Cohort Statistics ...
+   Writing MIN map for tsugcana to spp-age-stats/tsugcana-MIN-0.img ...
+dataset created: spp-age-stats/tsugcana-MIN-0.img
+   Writing MIN map for betupapy to spp-age-stats/betupapy-MIN-0.img ...
+dataset created: spp-age-stats/betupapy-MIN-0.img
+   Writing MAX map for tsugcana to spp-age-stats/tsugcana-MAX-0.img ...
+dataset created: spp-age-stats/tsugcana-MAX-0.img
+   Writing MED map for tsugcana to spp-age-stats/tsugcana-MED-0.img ...
+dataset created: spp-age-stats/tsugcana-MED-0.img
+   Writing SD map for tsugcana to spp-age-stats/tsugcana-SD-0.img ...
+dataset created: spp-age-stats/tsugcana-SD-0.img
+   Writing AVG map for tsugcana to spp-age-stats/tsugcana-AVG-0.img ...
+dataset created: spp-age-stats/tsugcana-AVG-0.img
+   Writing MIN site map to spp-age-stats/AGE-MIN-0.img ...
+dataset created: spp-age-stats/AGE-MIN-0.img
+   Writing MAX site map to spp-age-stats/AGE-MAX-0.img ...
+dataset created: spp-age-stats/AGE-MAX-0.img
+   Writing MED site map to spp-age-stats/AGE-MED-0.img ...
+dataset created: spp-age-stats/AGE-MED-0.img
+   Writing AVG site map to spp-age-stats/AGE-AVG-0.img ...
+dataset created: spp-age-stats/AGE-AVG-0.img
+   Writing RICH site map to spp-age-stats/AGE-RICH-0.img ...
+dataset created: spp-age-stats/AGE-RICH-0.img
+   Writing EVEN site map to spp-age-stats/AGE-EVEN-0.img ...
+dataset created: spp-age-stats/AGE-EVEN-0.img
+   Writing COUNT site map to spp-age-stats/AGE-COUNT-0.img ...
+dataset created: spp-age-stats/AGE-COUNT-0.img
+   Writing RICH site map to spp-age-stats/SPP-RICH-0.img ...
+dataset created: spp-age-stats/SPP-RICH-0.img
+Current time: 5
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-5.img
+Running Age-only Succession ...
+Current time: 10
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-10.img
+Running Age-only Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Running Output Cohort Statistics ...
+   Writing MIN map for tsugcana to spp-age-stats/tsugcana-MIN-10.img ...
+dataset created: spp-age-stats/tsugcana-MIN-10.img
+   Writing MIN map for betupapy to spp-age-stats/betupapy-MIN-10.img ...
+dataset created: spp-age-stats/betupapy-MIN-10.img
+   Writing MAX map for tsugcana to spp-age-stats/tsugcana-MAX-10.img ...
+dataset created: spp-age-stats/tsugcana-MAX-10.img
+   Writing MED map for tsugcana to spp-age-stats/tsugcana-MED-10.img ...
+dataset created: spp-age-stats/tsugcana-MED-10.img
+   Writing SD map for tsugcana to spp-age-stats/tsugcana-SD-10.img ...
+dataset created: spp-age-stats/tsugcana-SD-10.img
+   Writing AVG map for tsugcana to spp-age-stats/tsugcana-AVG-10.img ...
+dataset created: spp-age-stats/tsugcana-AVG-10.img
+   Writing MIN site map to spp-age-stats/AGE-MIN-10.img ...
+dataset created: spp-age-stats/AGE-MIN-10.img
+   Writing MAX site map to spp-age-stats/AGE-MAX-10.img ...
+dataset created: spp-age-stats/AGE-MAX-10.img
+   Writing MED site map to spp-age-stats/AGE-MED-10.img ...
+dataset created: spp-age-stats/AGE-MED-10.img
+   Writing AVG site map to spp-age-stats/AGE-AVG-10.img ...
+dataset created: spp-age-stats/AGE-AVG-10.img
+   Writing RICH site map to spp-age-stats/AGE-RICH-10.img ...
+dataset created: spp-age-stats/AGE-RICH-10.img
+   Writing EVEN site map to spp-age-stats/AGE-EVEN-10.img ...
+dataset created: spp-age-stats/AGE-EVEN-10.img
+   Writing COUNT site map to spp-age-stats/AGE-COUNT-10.img ...
+dataset created: spp-age-stats/AGE-COUNT-10.img
+   Writing RICH site map to spp-age-stats/SPP-RICH-10.img ...
+dataset created: spp-age-stats/SPP-RICH-10.img
+Current time: 15
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-15.img
+Running Age-only Succession ...
+Current time: 20
+Running Base Fire ...
+   Processing landscape for Fire events ...
+   Reading in new Fire Regions Map ecoregions.gis.
+dataset created: fire/severity-20.img
+Running Age-only Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Running Output Cohort Statistics ...
+   Writing MIN map for tsugcana to spp-age-stats/tsugcana-MIN-20.img ...
+dataset created: spp-age-stats/tsugcana-MIN-20.img
+   Writing MIN map for betupapy to spp-age-stats/betupapy-MIN-20.img ...
+dataset created: spp-age-stats/betupapy-MIN-20.img
+   Writing MAX map for tsugcana to spp-age-stats/tsugcana-MAX-20.img ...
+dataset created: spp-age-stats/tsugcana-MAX-20.img
+   Writing MED map for tsugcana to spp-age-stats/tsugcana-MED-20.img ...
+dataset created: spp-age-stats/tsugcana-MED-20.img
+   Writing SD map for tsugcana to spp-age-stats/tsugcana-SD-20.img ...
+dataset created: spp-age-stats/tsugcana-SD-20.img
+   Writing AVG map for tsugcana to spp-age-stats/tsugcana-AVG-20.img ...
+dataset created: spp-age-stats/tsugcana-AVG-20.img
+   Writing MIN site map to spp-age-stats/AGE-MIN-20.img ...
+dataset created: spp-age-stats/AGE-MIN-20.img
+   Writing MAX site map to spp-age-stats/AGE-MAX-20.img ...
+dataset created: spp-age-stats/AGE-MAX-20.img
+   Writing MED site map to spp-age-stats/AGE-MED-20.img ...
+dataset created: spp-age-stats/AGE-MED-20.img
+   Writing AVG site map to spp-age-stats/AGE-AVG-20.img ...
+dataset created: spp-age-stats/AGE-AVG-20.img
+   Writing RICH site map to spp-age-stats/AGE-RICH-20.img ...
+dataset created: spp-age-stats/AGE-RICH-20.img
+   Writing EVEN site map to spp-age-stats/AGE-EVEN-20.img ...
+dataset created: spp-age-stats/AGE-EVEN-20.img
+   Writing COUNT site map to spp-age-stats/AGE-COUNT-20.img ...
+dataset created: spp-age-stats/AGE-COUNT-20.img
+   Writing RICH site map to spp-age-stats/SPP-RICH-20.img ...
+dataset created: spp-age-stats/SPP-RICH-20.img
+Current time: 25
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-25.img
+Running Age-only Succession ...
+Current time: 30
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-30.img
+Running Age-only Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Running Output Cohort Statistics ...
+   Writing MIN map for tsugcana to spp-age-stats/tsugcana-MIN-30.img ...
+dataset created: spp-age-stats/tsugcana-MIN-30.img
+   Writing MIN map for betupapy to spp-age-stats/betupapy-MIN-30.img ...
+dataset created: spp-age-stats/betupapy-MIN-30.img
+   Writing MAX map for tsugcana to spp-age-stats/tsugcana-MAX-30.img ...
+dataset created: spp-age-stats/tsugcana-MAX-30.img
+   Writing MED map for tsugcana to spp-age-stats/tsugcana-MED-30.img ...
+dataset created: spp-age-stats/tsugcana-MED-30.img
+   Writing SD map for tsugcana to spp-age-stats/tsugcana-SD-30.img ...
+dataset created: spp-age-stats/tsugcana-SD-30.img
+   Writing AVG map for tsugcana to spp-age-stats/tsugcana-AVG-30.img ...
+dataset created: spp-age-stats/tsugcana-AVG-30.img
+   Writing MIN site map to spp-age-stats/AGE-MIN-30.img ...
+dataset created: spp-age-stats/AGE-MIN-30.img
+   Writing MAX site map to spp-age-stats/AGE-MAX-30.img ...
+dataset created: spp-age-stats/AGE-MAX-30.img
+   Writing MED site map to spp-age-stats/AGE-MED-30.img ...
+dataset created: spp-age-stats/AGE-MED-30.img
+   Writing AVG site map to spp-age-stats/AGE-AVG-30.img ...
+dataset created: spp-age-stats/AGE-AVG-30.img
+   Writing RICH site map to spp-age-stats/AGE-RICH-30.img ...
+dataset created: spp-age-stats/AGE-RICH-30.img
+   Writing EVEN site map to spp-age-stats/AGE-EVEN-30.img ...
+dataset created: spp-age-stats/AGE-EVEN-30.img
+   Writing COUNT site map to spp-age-stats/AGE-COUNT-30.img ...
+dataset created: spp-age-stats/AGE-COUNT-30.img
+   Writing RICH site map to spp-age-stats/SPP-RICH-30.img ...
+dataset created: spp-age-stats/SPP-RICH-30.img
+Current time: 35
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-35.img
+Running Age-only Succession ...
+Current time: 40
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-40.img
+Running Age-only Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Running Output Cohort Statistics ...
+   Writing MIN map for tsugcana to spp-age-stats/tsugcana-MIN-40.img ...
+dataset created: spp-age-stats/tsugcana-MIN-40.img
+   Writing MIN map for betupapy to spp-age-stats/betupapy-MIN-40.img ...
+dataset created: spp-age-stats/betupapy-MIN-40.img
+   Writing MAX map for tsugcana to spp-age-stats/tsugcana-MAX-40.img ...
+dataset created: spp-age-stats/tsugcana-MAX-40.img
+   Writing MED map for tsugcana to spp-age-stats/tsugcana-MED-40.img ...
+dataset created: spp-age-stats/tsugcana-MED-40.img
+   Writing SD map for tsugcana to spp-age-stats/tsugcana-SD-40.img ...
+dataset created: spp-age-stats/tsugcana-SD-40.img
+   Writing AVG map for tsugcana to spp-age-stats/tsugcana-AVG-40.img ...
+dataset created: spp-age-stats/tsugcana-AVG-40.img
+   Writing MIN site map to spp-age-stats/AGE-MIN-40.img ...
+dataset created: spp-age-stats/AGE-MIN-40.img
+   Writing MAX site map to spp-age-stats/AGE-MAX-40.img ...
+dataset created: spp-age-stats/AGE-MAX-40.img
+   Writing MED site map to spp-age-stats/AGE-MED-40.img ...
+dataset created: spp-age-stats/AGE-MED-40.img
+   Writing AVG site map to spp-age-stats/AGE-AVG-40.img ...
+dataset created: spp-age-stats/AGE-AVG-40.img
+   Writing RICH site map to spp-age-stats/AGE-RICH-40.img ...
+dataset created: spp-age-stats/AGE-RICH-40.img
+   Writing EVEN site map to spp-age-stats/AGE-EVEN-40.img ...
+dataset created: spp-age-stats/AGE-EVEN-40.img
+   Writing COUNT site map to spp-age-stats/AGE-COUNT-40.img ...
+dataset created: spp-age-stats/AGE-COUNT-40.img
+   Writing RICH site map to spp-age-stats/SPP-RICH-40.img ...
+dataset created: spp-age-stats/SPP-RICH-40.img
+Current time: 45
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-45.img
+Running Age-only Succession ...
+Current time: 50
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/severity-50.img
+Running Age-only Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Running Output Cohort Statistics ...
+   Writing MIN map for tsugcana to spp-age-stats/tsugcana-MIN-50.img ...
+dataset created: spp-age-stats/tsugcana-MIN-50.img
+   Writing MIN map for betupapy to spp-age-stats/betupapy-MIN-50.img ...
+dataset created: spp-age-stats/betupapy-MIN-50.img
+   Writing MAX map for tsugcana to spp-age-stats/tsugcana-MAX-50.img ...
+dataset created: spp-age-stats/tsugcana-MAX-50.img
+   Writing MED map for tsugcana to spp-age-stats/tsugcana-MED-50.img ...
+dataset created: spp-age-stats/tsugcana-MED-50.img
+   Writing SD map for tsugcana to spp-age-stats/tsugcana-SD-50.img ...
+dataset created: spp-age-stats/tsugcana-SD-50.img
+   Writing AVG map for tsugcana to spp-age-stats/tsugcana-AVG-50.img ...
+dataset created: spp-age-stats/tsugcana-AVG-50.img
+   Writing MIN site map to spp-age-stats/AGE-MIN-50.img ...
+dataset created: spp-age-stats/AGE-MIN-50.img
+   Writing MAX site map to spp-age-stats/AGE-MAX-50.img ...
+dataset created: spp-age-stats/AGE-MAX-50.img
+   Writing MED site map to spp-age-stats/AGE-MED-50.img ...
+dataset created: spp-age-stats/AGE-MED-50.img
+   Writing AVG site map to spp-age-stats/AGE-AVG-50.img ...
+dataset created: spp-age-stats/AGE-AVG-50.img
+   Writing RICH site map to spp-age-stats/AGE-RICH-50.img ...
+dataset created: spp-age-stats/AGE-RICH-50.img
+   Writing EVEN site map to spp-age-stats/AGE-EVEN-50.img ...
+dataset created: spp-age-stats/AGE-EVEN-50.img
+   Writing COUNT site map to spp-age-stats/AGE-COUNT-50.img ...
+dataset created: spp-age-stats/AGE-COUNT-50.img
+   Writing RICH site map to spp-age-stats/SPP-RICH-50.img ...
+dataset created: spp-age-stats/SPP-RICH-50.img
+Model run is complete.
+
+
+	g. Re-examine the ~\cohort-stats directory and note the new files and directories
+	g1. NB. The 'Landis-log.txt' should contain the same output as above.
+	g2. At the Command Prompt type the MS-DOS command, dir
+
+C:\Program Files\LANDIS-II\v6\examples\cohort-stats>dir
+
+	h. The following output is expected:
+
+ Volume in drive C has no label.
+ Volume Serial Number is 0AD8-74CB
+
+ Directory of C:\Program Files\LANDIS-II\v6\examples\cohort-stats
+
+09/10/2016  07:07 AM    <DIR>          .
+09/10/2016  07:07 AM    <DIR>          ..
+06/23/2014  03:25 PM             1,099 age-only-succession-dynamic-inputs.txt
+07/01/2014  08:46 AM               259 age-only-succession.txt
+06/23/2014  03:30 PM             1,332 base-fire-6.0.txt
+06/23/2014  03:30 PM               910 cohort-stats.output.txt
+06/23/2014  03:30 PM             9,929 ecoregions.gis
+06/23/2014  03:30 PM               202 ecoregions.txt
+09/10/2016  08:01 AM    <DIR>          fire
+09/10/2016  08:01 AM             5,089 fire-log.csv
+06/23/2014  03:30 PM             9,929 initial-communities.gis
+06/23/2014  03:30 PM             1,162 initial-communities.txt
+09/10/2016  08:01 AM            12,409 Landis-log.txt
+06/23/2014  03:30 PM               135 max-spp-age.output.txt
+09/10/2016  07:45 AM             1,029 scenario.txt
+06/23/2014  03:30 PM               132 SimpleBatchFile.bat
+06/23/2014  03:30 PM             1,915 species.txt
+09/10/2016  08:01 AM    <DIR>          spp-age-stats
+              14 File(s)         45,531 bytes
+               4 Dir(s)  219,452,891,136 bytes free
+
+
+==== STEP 5. Examine some of the results in R =======================================
+
+
+	a. Open RStudio, load the appropriate packages, and examine some LANDIS-II output files
+	a1. Load these three (3) packages into RStudio
+
+> library(raster)
+> library(sp)
+> library(rgdal)
+
+	b.  Load the initial-communities.gis file, the AGE-COUNT-0.img file, and the severity-10.img
+	file into R
+
+> test<- paste("C:/Program Files/LANDIS-II/v6/examples/cohort-stats/initial-communities.gis", sep="")
+> raster.test <- raster(test)
+
+> test2<- paste("C:/Program Files/LANDIS-II/v6/examples/cohort-stats/spp-age-stats/AGE-COUNT-0.img", sep="")
+> raster.test2 <- raster(test2)
+
+> test3<- paste("C:/Program Files/LANDIS-II/v6/examples/cohort-stats/fire/severity-10.img", sep="")
+> raster.test3 <- raster(test3)
+
+
+	c. Examine the contents of the output files visually and numerically
+	c1. Examine the 'initial-communities.gis'file 
+
+> raster.test
+> freq(raster.test)
+> plot(raster.test)
+
+	c2. Visually examine the three (3) output files sequentially  
+
+> iteratePlots <- function(x){
+
+    oask <- devAskNewPage(TRUE)
+    on.exit(devAskNewPage(oask))
+
+    for (i in seq_along(x)) {
+
+        plot(x[[i]])
+    }
+}
+
+> x <- c(raster.test, raster.test2, raster.test3)
+
+> iteratePlots(x)
+
+
+

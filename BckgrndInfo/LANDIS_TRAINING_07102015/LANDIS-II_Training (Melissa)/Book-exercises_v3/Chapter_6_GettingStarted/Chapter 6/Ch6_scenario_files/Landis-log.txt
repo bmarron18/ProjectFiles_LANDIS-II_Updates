@@ -1,0 +1,6 @@
+2015-07-10 10:00:15,350 - LANDIS-II 6.0 (official release)
+2015-07-10 10:00:15,376 - 
+2015-07-10 10:00:15,710 - Loading scenario from file "age-only-scenario_mod1.txt" ...
+2015-07-10 10:00:15,856 - Initialized random number generator with seed = 331,813,085
+2015-07-10 10:00:15,856 - Loading species data from file "species_A.txt" ...
+2015-07-10 10:00:15,934 - Error: The file species_A.txt does not exist

@@ -1,0 +1,432 @@
+Title:				Test re-built Landis.Library.BiomassHarvest-v2.dll
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			29 Jan 2017
+Revision Date:		
+
+
+
+#############
+ from Slack
+#############
+
+Per Austen's update, am assuming that the version of Landis.Library.BiomassHarvest-v2.dll in 
+Support-Library-DLLs is not the version that contains Austen's fix (Pull request #1 Fix for 
+allowing total thinning ). Will send you a pull request for Support-Library-DLLs  to add a 
+freshly rebuilt version of Landis.Library.BiomassHarvest-v2.dll . Once the rebuilt version of 
+Landis.Library.BiomassHarvest-v2.dll is in  Support-Library-DLLs I will run a BiomassHarvest 
+test to make sure that the user is forbidden from entering 100% for cohort thinning. Thanks!
+
+
+
+Had the QAQC trail incorrect!! ==> see ProjectWorkLog37d
+
+#######################################
+Testing
+Landis.Library.BiomassHarvest-v2.dll
+#########################################
+
+
+	a. update GitHub Support-Library-DLLs repo
+
+	b. clone Extension-Biomass-Harvest
+bmarr@DESKTOP-1KEFDDQ MINGW64 ~/Desktop/New folder (2)
+$ git clone https://github.com/bmarron18/Extension-Biomass-Harvest.git
+Cloning into 'Extension-Biomass-Harvest'...
+remote: Counting objects: 512, done.
+remote: Total 512 (delta 0), reused 0 (delta 0), pack-reused 512
+Receiving objects: 100% (512/512), 3.93 MiB | 1.61 MiB/s, done.
+Resolving deltas: 100% (318/318), done.
+Checking out files: 100% (242/242), done.
+
+
+
+	c. Open VS an load Extension-Biomass-Harvest .sln
+	c1. There are two (2) "InputParameters.cs" files
+	c2. Austen says one is interface file to the InputParams file
+IInputParameters.cs
+InputParameters.cs
+
+
+	d. Build new extension
+	d1. in VS
+		Build ==> Build Solution
+
+(see complete VS Output below)
+
+	d3. OK to ignore NuGet warnings?
+	
+	d4. OK if have -v1 and -v2 in library?
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.BiomassHarvest-v1.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.BiomassHarvest-v2.dll  
+
+
+Restoring NuGet packages...
+To prevent NuGet from restoring packages during build, open the Visual Studio Options dialog, click on the Package Manager node and uncheck 'Allow NuGet to download missing packages during build.'
+NuGet Package restore failed for project biomass-harvest: Unable to find version '1.0.1' of package 'Landis.Library.Metadata'.
+  C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\: Package 'Landis.Library.Metadata.1.0.1' is not found on source 'C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\'.
+  https://api.nuget.org/v3/index.json: Package 'Landis.Library.Metadata.1.0.1' is not found on source 'https://api.nuget.org/v3/index.json'.
+.
+NuGet Package restore failed for project biomass-harvest: Unable to find version '1.3.0-rc2' of package 'Landis.Library.BiomassCohorts'.
+  C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\: Package 'Landis.Library.BiomassCohorts.1.3.0-rc2' is not found on source 'C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\'.
+  https://api.nuget.org/v3/index.json: Package 'Landis.Library.BiomassCohorts.1.3.0-rc2' is not found on source 'https://api.nuget.org/v3/index.json'.
+.
+NuGet Package restore failed for project biomass-harvest: Unable to find version '1.2.0' of package 'Landis.Library.HarvestManagement'.
+  C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\: Package 'Landis.Library.HarvestManagement.1.2.0' is not found on source 'C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\'.
+  https://api.nuget.org/v3/index.json: Package 'Landis.Library.HarvestManagement.1.2.0' is not found on source 'https://api.nuget.org/v3/index.json'.
+.
+NuGet Package restore failed for project biomass-harvest: Unable to find version '1.1.0' of package 'Landis.Library.BiomassHarvest'.
+  C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\: Package 'Landis.Library.BiomassHarvest.1.1.0' is not found on source 'C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\'.
+  https://api.nuget.org/v3/index.json: Package 'Landis.Library.BiomassHarvest.1.1.0' is not found on source 'https://api.nuget.org/v3/index.json'.
+.
+NuGet Package restore failed for project biomass-harvest: Unable to find version '1.0.0' of package 'Landis.Library.SiteHarvest'.
+  C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\: Package 'Landis.Library.SiteHarvest.1.0.0' is not found on source 'C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\'.
+  https://api.nuget.org/v3/index.json: Package 'Landis.Library.SiteHarvest.1.0.0' is not found on source 'https://api.nuget.org/v3/index.json'.
+.
+NuGet Package restore failed for project biomass-harvest: Unable to find version '1.0.0-rc2' of package 'Landis.Library.Biomass'.
+  C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\: Package 'Landis.Library.Biomass.1.0.0-rc2' is not found on source 'C:\Program Files (x86)\Microsoft SDKs\NuGetPackages\'.
+  https://api.nuget.org/v3/index.json: Package 'Landis.Library.Biomass.1.0.0-rc2' is not found on source 'https://api.nuget.org/v3/index.json'.
+.
+NuGet package restore failed.
+1>------ Build started: Project: biomass-harvest, Configuration: Debug Any CPU ------
+1>  Downloading bin\C:\Program Files\LANDIS-II\bin>landis-extensions.cmd
+LANDIS-II 6.2
+Extensions Administration Tool 6.2
+Copyright 2005-2006 University of Wisconsin
+Copyright 2011 Portland State University
+
+Extension                 Description
+---------                 -----------
+Age-only Succession       Succession with age cohorts
+Base BDA                  Biological disturbance agents
+Base Fire                 Fire Disturbance
+Base Harvest              Harvesting for age cohorts
+Base Wind                 Wind Disturbance
+Output Cohort Statistics  This extension will produce outputs of cohort statistics
+Output Max Species Age    Maximum age output mapsDebug\supportlibs.zip ...
+1>  0%....10%....20%....30%....40%....50%....60%....70%....80%....90%....100% done
+1>  Unpacking bin\Debug\supportlibs.zip ...
+1>  Archive:  bin/Debug/supportlibs.zip
+1>  76f4f9f3638a878d884f02409da57f14ed0ac235
+1>     creating: bin/Debug/Support-Library-Dlls-master/
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Edu.Wisc.Forest.Flel.Util.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Core.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Landscapes.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.AgeOnlyCohorts.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Biomass-v1.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.BiomassCohorts-v2.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.BiomassCohorts.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.BiomassHarvest-v1.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.BiomassHarvest-v2.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Climate.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Cohorts.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.HarvestManagement-v1.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.LeafBiomassCohorts.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Metadata.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Parameters-v1.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.SiteHarvest-v1.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Succession-vAGB-Input.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.Library.Succession.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.RasterIO.Gdal.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.RasterIO.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Landis.SpatialModeling.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/README.md  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/Troschuetz.Random.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/log4net.dll  
+1>    inflating: bin/Debug/Support-Library-Dlls-master/nunit.framework.dll  
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Edu.Wisc.Forest.Flel.Util.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Core.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Landscapes.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.AgeOnlyCohorts.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Biomass-v1.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.BiomassCohorts-v2.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.BiomassCohorts.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.BiomassHarvest-v1.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.BiomassHarvest-v2.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Climate.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Cohorts.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.HarvestManagement-v1.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.LeafBiomassCohorts.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Metadata.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Parameters-v1.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.SiteHarvest-v1.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Succession-vAGB-Input.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.Library.Succession.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.RasterIO.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.RasterIO.Gdal.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Landis.SpatialModeling.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\log4net.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\nunit.framework.dll
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\README.md
+1>  C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Support-Library-Dlls-master\Troschuetz.Random.dll
+1>         25 file(s) moved.
+1>  biomass-harvest -> C:\Users\bmarr\Desktop\New_folder2\Extension-Biomass-Harvest\src\bin\Debug\Landis.Extension.BiomassHarvest.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+	e. check installed extensions
+	e1. open terminal(adm); run extensions.cmd
+
+C:\Program Files\LANDIS-II\bin>landis-extensions.cmd
+LANDIS-II 6.2
+Extensions Administration Tool 6.2
+Copyright 2005-2006 University of Wisconsin
+Copyright 2011 Portland State University
+
+Extension                 Description
+---------                 -----------
+Age-only Succession       Succession with age cohorts
+Base BDA                  Biological disturbance agents
+Base Fire                 Fire Disturbance
+Base Harvest              Harvesting for age cohorts
+Base Wind                 Wind Disturbance
+Output Cohort Statistics  This extension will produce outputs of cohort statistics
+Output Max Species Age    Maximum age output maps
+
+
+
+	f. install Biomass Harvest extension
+		==> http://www.landis-ii.org/extensions/biomass-harvest
+	f1. NB. Fdn website is installing v3.0
+Destination location:
+      C:\Program Files\LANDIS-II\v6
+
+C:\Program Files\LANDIS-II\bin>landis-extensions.cmd
+LANDIS-II 6.2
+Extensions Administration Tool 6.2
+Copyright 2005-2006 University of Wisconsin
+Copyright 2011 Portland State University
+
+Extension                 Description
+---------                 -----------
+Age-only Succession       Succession with age cohorts
+Base BDA                  Biological disturbance agents
+Base Fire                 Fire Disturbance
+Base Harvest              Harvesting for age cohorts
+Base Wind                 Wind Disturbance
+Biomass Harvest           Harvesting for biomass cohorts
+Output Cohort Statistics  This extension will produce outputs of cohort statistics
+Output Max Species Age    Maximum age output maps
+
+
+
+	g. the v3.0 Foundation Installer has installed these BiomassHarvest .dlls:
+C:\Program Files\LANDIS-II\v6\bin\extensions>dir
+10/16/2015  13:54            18,944 Landis.Extension.BiomassHarvest-3.0.dll
+10/16/2015  13:45            12,800 Landis.Library.BiomassHarvest-v1.dll
+
+
+
+	h. delete the .dlls (in g.) above and replace with 
+C:\Program Files\LANDIS-II\v6\bin\extensions>dir
+01/30/2017  00:52            25,088 Landis.Extension.BiomassHarvest-bm.dll
+01/28/2017  10:10            13,312 Landis.Library.BiomassHarvest-v2.dll
+
+
+	i. example sent with Biomass Harvest v3.0
+C:\Program Files\LANDIS-II\v6\examples\Biomass Harvest\3.0>dir
+09/17/2015  12:24               466 age-only-disturbances.txt
+09/17/2015  12:24             1,425 biomass-succession-dynamic-inputs.txt
+09/17/2015  12:24             1,722 biomass-succession.txt
+09/17/2015  12:24             2,493 BiomassHarvest-v1.2-Sample-Input.txt
+09/17/2015  12:24             9,929 ecoregions.gis
+09/17/2015  12:24               202 ecoregions.txt
+09/17/2015  12:24             9,929 initial-communities.gis
+09/17/2015  12:24             1,162 initial-communities.txt
+09/17/2015  12:24            10,240 management.gis
+09/17/2015  12:24             1,098 scenario.txt
+09/17/2015  12:24               132 SimpleBatchFile.bat
+09/17/2015  12:24             1,915 species.txt
+09/17/2015  12:24            10,240 stand.gis
+
+
+
+	j. run example (in i. above)
+	j1. oops! install Biomass Succession (v3.2.2) and re-run
+	j2. oops! must re-name
+		Landis.Extension.BiomassHarvest-bm.dll
+		==> Landis.Extension.BiomassHarvest-3.0.dll
+	j3. oh no!
+
+
+
+C:\Program Files\LANDIS-II\v6\examples\Biomass Harvest\3.0>call landis-ii scenario.txt
+LANDIS-II 6.2 (beta release 1)
+Loading scenario from file "scenario.txt" ...
+Error at line 19 of file "scenario.txt":
+  Error reading input value for Extension:
+    No extension with the name "Biomass Succession".
+
+
+
+
+C:\Program Files\LANDIS-II\v6\examples\Biomass Harvest\3.0>call landis-ii scenario.txt
+...
+Error while loading the plug-in:
+  Cannot get the data type that implements the plug-in:
+    Data type:  Landis.Extension.BiomassHarvest.PlugIn,Landis.Extension.BiomassHarvest-3.0
+
+
+
+
+C:\Program Files\LANDIS-II\v6\examples\Biomass Harvest\3.0>call landis-ii scenario.txt
+...
+Loading Biomass Harvest extension ...
+Error while loading the plug-in:
+  Cannot get the data type that implements the plug-in:
+    Data type:  Landis.Extension.BiomassHarvest.PlugIn,Landis.Extension.BiomassHarvest-3.0
+    Error:      Could not load file or assembly 'Landis.Extension.BiomassHarvest-3.0' or one of its dependencies. The located assembly's manifest definition does not match the assembly reference. (Exception from HRESULT: 0x80131040)
+
+
+
+
+	k. delete Extension Biomass Harvest and re-install
+	k1. Control Panel ==> ==> Programs and Features 
+
+
+	l. run example
+C:\Program Files\LANDIS-II\v6\examples\Biomass Harvest\3.0>call landis-ii scenario.txt
+LANDIS-II 6.2 (beta release 1)
+
+Loading scenario from file "scenario.txt" ...
+Initialized random number generator with seed = 3,575,765,607
+Loading species data from file "species.txt" ...
+Loading ecoregions from file "./ecoregions.txt" ...
+Initializing landscape from ecoregions map "./ecoregions.gis" ...
+Cell length = 100 m, cell area = 1 ha
+Map dimensions: 99 rows by 99 columns = 9,801 cells
+Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+  reading in ecoregion from ./ecoregions.gis
+Loading Biomass Succession extension ...
+   Registering Data:  Succession.BiomassCohorts.
+   Registering Data:  Succession.AgeCohorts.
+   Registering Data:  Succession.WoodyDebris.
+   Registering Data:  Succession.Litter.
+   Loading dynamic input data from file "biomass-succession-dynamic-inputs.txt" ...
+  Dynamic Input Parser:  Add new year = 0.
+   Opening Biomass-succession log file "Biomass-succession-v3-log.csv" ...
+   Registering Data:  TimeOfLastSuccession.
+   Registering Data:  Shade.
+   Creating Dispersal Neighborhood List.
+   Dispersal:  NeighborRadius=5050, CellLength=100, numCellRadius=50
+   Loading biomass parameters for age-only disturbances from file "age-only-disturbances.txt" ...
+   Age-only-disturbances:  reading CohortBiomassReductions.
+   Age-only-disturbances:  reading DeadBiomassReductions.
+   Loading initial communities from file "./initial-communities.txt" ...
+   Reading initial communities map "./initial-communities.gis" ...
+Loading Biomass Harvest extension ...
+   Registering Data:  Harvest.PrescriptionName.
+   Registering Data:  Harvest.TimeOfLastEvent.
+   Registering Data:  Harvest.CohortsDamaged.
+   Registering Data:  Harvest.CapacityReduction.
+   Reading management-area map ./management.gis ...
+   Inactive management areas: 3
+   Reading stand map ./stand.gis ...
+   Opening harvest log file "biomass-harvest-event-test-log.csv" ...
+   Opening summary harvest log file "harvest/summary-log.csv" ...
+Current time: 10
+Running Biomass Harvest ...
+   Writing prescription map to harvest/prescripts-10.img ...
+dataset created: harvest/prescripts-10.img
+   Writing biomass-removed map to harvest/biomass-removed-10.img ...
+dataset created: harvest/biomass-removed-10.img
+Running Biomass Succession ...
+dataset created: biomass-anpp-10.img
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+dataset created: biomass-anpp-10.img
+Current time: 20
+Running Biomass Harvest ...
+   Writing prescription map to harvest/prescripts-20.img ...
+dataset created: harvest/prescripts-20.img
+   Writing biomass-removed map to harvest/biomass-removed-20.img ...
+dataset created: harvest/biomass-removed-20.img
+Running Biomass Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+dataset created: biomass-anpp-20.img
+Current time: 30
+Running Biomass Harvest ...
+   Writing prescription map to harvest/prescripts-30.img ...
+dataset created: harvest/prescripts-30.img
+   Writing biomass-removed map to harvest/biomass-removed-30.img ...
+dataset created: harvest/biomass-removed-30.img
+Running Biomass Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+dataset created: biomass-anpp-30.img
+Current time: 40
+Running Biomass Harvest ...
+   Writing prescription map to harvest/prescripts-40.img ...
+dataset created: harvest/prescripts-40.img
+   Writing biomass-removed map to harvest/biomass-removed-40.img ...
+dataset created: harvest/biomass-removed-40.img
+Running Biomass Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+dataset created: biomass-anpp-40.img
+Current time: 50
+Running Biomass Harvest ...
+   Writing prescription map to harvest/prescripts-50.img ...
+dataset created: harvest/prescripts-50.img
+   Writing biomass-removed map to harvest/biomass-removed-50.img ...
+dataset created: harvest/biomass-removed-50.img
+Running Biomass Succession ...
+Ageing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+dataset created: biomass-anpp-50.img
+Model run is complete.
+
+

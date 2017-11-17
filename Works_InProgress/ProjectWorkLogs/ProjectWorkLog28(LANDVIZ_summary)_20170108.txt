@@ -1,0 +1,865 @@
+Title:				Summary of LANDVIZ ProjectWorkLogs 5, 15-27
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			08 Jan 2017
+Revision Date:		
+
+
+######################
+LANDVIZ Issues
+######################
+
+	a. LANDVIZ returns errors
+		1) when running with non-integer area (in hectares) for input rasters (Issue #18) and 
+		2) when rebuilding the PreProcTool
+
+
+
+
+##############
+LANDVIZ #18 Background
+##############
+
+	a. charles crash output from LANDIS run on BAU_10-14 data folder
+Charles_LANDVIZ_screenshot_error1.png
+
+
+	b. charles email
+Hello,
+
+So from my recollection, I didn't tell LandViz 7.29 (as it isn't in the preproc .xml file).  
+I think the only instance of it is actually in the landis scenario file (Scenario.txt) where there is an input for cell length.  
+Cell length takes meter units, ours is 270, and a 270^2 sized cell is 7.29ha.  Landis does do that calculation internally, but it 
+doesn't seem to care too much about the cell area.  From the original landis log:
+
+2016-10-18 16:23:58,737 - LANDIS-II 6.1 (official release)
+2016-10-18 16:23:58,769 -
+2016-10-18 16:23:58,987 - Loading scenario from file "Scenario.txt" ...
+2016-10-18 16:23:59,237 - Initialized random number generator with seed = 1,645,581,128
+2016-10-18 16:23:59,253 - Loading species data from file "Species.txt" ...
+2016-10-18 16:23:59,393 - Loading ecoregions from file "Ecoregions.txt" ...
+2016-10-18 16:23:59,659 - Initializing landscape from ecoregions map "M_ESIMP_270M_simplified.asc" ...
+2016-10-18 16:23:59,846 - Cell length = 270 m, cell area = 7.29 ha
+2016-10-18 16:23:59,846 - Map dimensions: 1,197 rows by 602 columns = 720,594 cells
+2016-10-18 16:23:59,971 - Sites: 402,769 active (55.9 %), 317,825 inactive (44.1 %)
+
+The cell area does get carried over into the landis .xml metadata, which is what landviz reads.
+
+And that's really about all I know.  Let me know if you have any other questions.
+
+Thanks (and good luck),
+charles
+
+
+
+
+######################
+LANDVIZ #18 sleuthing
+#######################
+
+	a. clone a copy of LANDVIZ from https://github.com/LANDIS-II-Foundation/LANDVIZ
+
+
+	b. track screen ouput sequence (Charles_LANDVIZ_screenshot_error1.png) to ../PreProcTool/source/<module>.py
+	   NB. main.py logs various script actions to the console and to a .log file when running main.py directly in Python using "import logging" pkg
+ 
+	b1. "Start LANDIS-II PreProcTool"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Start LANDIS-II PreProcTool"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/main.py:76:        logMain.info('Start LANDIS-II PreProcTool')
+
+	b2. "Setup application configuration"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Setup application configuration"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py:132:   logSetupConfig.info('Setup application configuration')
+
+	b3. "Create Project"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Create Project"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py:17:            logCreateProject.info('Create Project')
+
+	b4. "Project name:"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Project name:"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py:36:    logCreateProject.info('Project name: "{}"'.format(self.PROJECT.projectName))
+
+	b5. "Load spatial refrence and geo extent from the project xml file"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Load spatial refrence and geo extent from the project xml file"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py:98:      logLoadSRS.info('Load spatial refrence and geo extent from the project xml file')
+
+	b6. "Load Map Preferences form project xml file"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Load Map Preferences form project xml file"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py:56:       logLoadMapPrefs.info('Load Map Preferences form project xml file')
+
+	b7. "Load Datastructure from Lanids Metadata"
+$ grep -rn ~/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/ --include="*.py" -e "Load Datastructure from Lanids Metadata"
+/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py:178:            logLoadDataStruct.info('Load Datastructure from Lanids Metadata')
+
+
+
+	c. compare Charles input project file (preproc_VizTool.xml) with example input project file provided by LANDVIZ repo (preproc_VizTool_example.xml)
+	c1. compare in vim
+	c2. only diff is in <scenarios> ... </scenarios> and <spatialRefernce> ... </spatialRefernce>
+
+$ vim -d /home/bmarron/Desktop/PSU/PhD_EES/2016SoE021_LANDIS_Upgrades_Project/Works_InProgress/LANDVIZ/Charles_BAU_10-14/Charles_preproc-and-bat-files/preproc_VizTool.xml \
+/home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/preproc_VizTool_example.xml
+
+
+
+	d. look at connection between config.yaml file and connector.py
+	d1. NB. the method, "def setup (self, appPath, appFile, configYaml, args)" in collector.py loads the dummy config.yaml file and begins modifying it.
+	    The input project file (<name>.xml) is added to config.yaml '(as the INPUT_XML' field)  on Line 144
+
+		Line 133 ==> # load YAML CONFIG File
+            	Line 134 ==> with open(os.path.join(appPath, configYaml), 'r') as f:
+                Line 135 ==>     self.CONFIG = yaml.load(f)
+
+	    	Line 144 ==> self.CONFIG['PROJECT']['INPUT_XML'] = args.projectFile   #Project XML File
+
+	    NB. the method, "def createProject(self)" in collector.py defines "xml" as the input project file
+		Line 20 ==>      xml = CONFIG['PROJECT']['INPUT_XML']
+
+	    NB.  the logger in collector.py (when main.py is run directly in Python) provides a check that the project input file has been loaded
+		Line 23 ==>    logCreateProject.debug('Load Information from project file: {}'.format(os.path.abspath(self.CONFIG['PROJECT']['INPUT_XML'])))
+
+
+	d2. the dummy (blank) config.yaml file, /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/config/config.yaml
+
+APPLICATION:
+    PATH: dummy
+    FILE: dummy
+
+PROJECT:
+    INPUT_XML: dummy
+    OUTPUT_DIR: dummy
+
+METADATA:
+    DIR: Metadata
+
+XSD:
+    PROJECT: config/xsd/project_file.xsd
+    PROJECTION: config/xsd/projection.xsd
+    METADATA: config/xsd/metadata.xsd
+
+XPATH:
+    PROJECTNAME: /landisPreProcProject
+    SCENARIOLIST: /landisPreProcProject/input/scenarios/scenario
+    SCENARIOREPLICATION: /landisMetadata/extension/scenario-replication
+    EXTENSION: /landisMetadata/extension
+    OUTPUT: /landisMetadata/extension/outputs/output
+    PROJECTION: /landisPreProcProject/input/spatialRefernce/projection
+    GEOEXTENT: /landisPreProcProject/input/spatialRefernce/extent
+    CSVFIELD: /landisMetadata/output/fields/field
+    MAPZOOM: /landisPreProcProject/output/map/zoom
+    BASEMAP: /landisPreProcProject/output/map/baseMap
+    LEGEND: /landisPreProcProject/output/map/legend
+
+ATTRIB:
+    PROJECTNAME: projectName
+    SCENARIOPATH: inputPath
+    SCENARIONAME: displayName
+    TIMEMAX: timeMin
+    TIMEMAX: timeMax
+    RASTERCELLSIZE: rasterOutCellArea
+    PROJ4: proj4
+    ULX: ulx
+    ULY: uly
+    LRX: lrx
+    LRY: lry
+    EXTENSIONNAME: name
+    TIMEINTERVAL: timeInterval
+    OUTPUTTYPE: type
+    OUTPUTNAME: name
+    VISUALIZE: visualize
+    FILEPATHTEMPLATE: filePath
+    MAPUNIT: unit
+    DATATYPE: dataType
+    METADATAFILEPATH: MetadataFilePath
+    CSVFILEPATH: filePath
+
+DEFAULT:
+    PROJECTTITLE: LANDIS-II-Visualization 
+
+
+
+
+	d3. grep searches
+
+$ grep -rn /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/ --include="*.py" -e INPUT_XML
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:20:            xml = CONFIG['PROJECT']['INPUT_XML']
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:23:            logCreateProject.debug('Load Information from project file: {}'.format(os.path.abspath(self.CONFIG['PROJECT']['INPUT_XML'])))
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:144:            self.CONFIG['PROJECT']['INPUT_XML'] = args.projectFile # Project XML File
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:145:            logSetupConfig.debug('Detect Project File: {}'.format(os.path.abspath(self.CONFIG['PROJECT']['INPUT_XML'])))
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:181:            projectFileBase, projectFileName = os.path.split(CONFIG['PROJECT']['INPUT_XML'])
+
+
+
+$ grep -rn /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/ --include="*.py" -e rasterOutCellArea
+$ grep -rn /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/ --include="*.yaml" -e rasterOutCellArea
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/config/config.yaml:36:    RASTERCELLSIZE: rasterOutCellArea
+
+
+$ grep -rn /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/ --include="*.py" -e RASTERCELLSIZE
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:231: PROJECT[PROJECT.lastIdx].rasterOutputCellSize = int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:235: if PROJECT[PROJECT.lastIdx].rasterOutputCellSize != int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']]):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:236: raise Exception(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']], PROJECT[PROJECT.lastIdx].rasterOutputCellSize, PROJECT.lastIdx, 'Scenario Info is not matching with the current Scenario Info')  
+
+
+
+$ grep -rn /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/ --include="*.py" -e rasterOutputCellSize
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:355:    def __init__(self, scenarioName = None, timeMin = 0, timeMax = None, rasterOutputCellSize = None, extent = None):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:362:  self.__rasterOutputCellSize = rasterOutputCellSize
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:415:  def rasterOutputCellSize(self):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:416:  return self.__rasterOutputCellSize        
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:417:  @rasterOutputCellSize.setter
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:418:  def rasterOutputCellSize(self, value):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2data/datastructure.py:419:  self.__rasterOutputCellSize = value
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:230:  if PROJECT[PROJECT.lastIdx].rasterOutputCellSize is None:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:231:  PROJECT[PROJECT.lastIdx].rasterOutputCellSize = int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:235:  if PROJECT[PROJECT.lastIdx].rasterOutputCellSize != int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']]):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:236:  raise Exception(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']], PROJECT[PROJECT.lastIdx].rasterOutputCellSize, PROJECT.lastIdx, 'Scenario Info is not matching with the current Scenario Info')       
+
+
+
+$ grep -rn /home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/ --include="*.py" -e xmlQuery
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:28:            xmlQuery = self.projectFileXML.queryXML(xpath, attrib)
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:31:            if xmlQuery:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:32:                self.PROJECT = landis.Project(xmlQuery)
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:182:            xmlQuery = self.projectFileXML.queryXML(CONFIG['XPATH']['SCENARIOLIST'])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:184:            if xmlQuery and type(xmlQuery) == list:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:185:                for scenario in xmlQuery: 
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:216:                                    xmlQuery = extensionFileXML.queryXML(CONFIG['XPATH']['SCENARIOREPLICATION'])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:218:                                    if xmlQuery:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:219:                                        xmlQuery_ext_name = extensionFileXML.queryXML(CONFIG['XPATH']['EXTENSION'])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:221:                                        if xmlQuery_ext_name:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:222:                                            extensionName_ = xmlQuery_ext_name[0][CONFIG['ATTRIB']['EXTENSIONNAME']]
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:224:                                            PROJECT[PROJECT.lastIdx].timeMax = int(xmlQuery[0][CONFIG['ATTRIB']['TIMEMAX']])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:227:                                            if PROJECT[PROJECT.lastIdx].timeMax != int(xmlQuery[0][CONFIG['ATTRIB']['TIMEMAX']]):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:228:                                                raise Exception(xmlQuery[0][CONFIG['ATTRIB']['TIMEMAX']], PROJECT[PROJECT.lastIdx].timeMax, PROJECT.lastIdx, 'Scenario Info is not matching with the current Scenario Info')
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:231:                                            PROJECT[PROJECT.lastIdx].rasterOutputCellSize = int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:235:                                            if PROJECT[PROJECT.lastIdx].rasterOutputCellSize != int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']]):
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:236:                                                raise Exception(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']], PROJECT[PROJECT.lastIdx].rasterOutputCellSize, PROJECT.lastIdx, 'Scenario Info is not matching with the current Scenario Info')            
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:238:                                        raise Exception(xmlQuery, 'Empty result for the xml Query')
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:242:                                    xmlQuery = extensionFileXML.queryXML(CONFIG['XPATH']['EXTENSION'])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:244:                                    if xmlQuery:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:245:                                        extensionName = xmlQuery[0][CONFIG['ATTRIB']['EXTENSIONNAME']]
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:246:                                        timeInterval = int(xmlQuery[0][CONFIG['ATTRIB']['TIMEINTERVAL']])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:252:                                        raise Exception(xmlQuery, 'Empty result for the xml Query')
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:256:                                    xmlQuery = extensionFileXML.queryXML(CONFIG['XPATH']['OUTPUT'])
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:258:                                    if xmlQuery:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:259:                                        for output in xmlQuery:
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:284:                                        raise Exception(xmlQuery, 'Empty result for the xml Query')
+/home/bmarron/Desktop/LANDVIZ_clone_20170102/LANDVIZ/PreProcTool/source/l2utils/collector.py:291:                raise Exception(xmlQuery, 'Empty result for the xml Query')
+
+
+
+
+
+	e. Metadata from charles' BAU_10-14 data folder, home/bmarron/Desktop/BAU_10-14/Metadata/
+	e1. from Century-Succession
+<landisMetadata>
+	<extension name="Century-Succession" timeInterval="1">
+		<scenario-replication timeMin="0" timeMax="85" rasterOutCellArea="7.29"/>
+
+
+	e2. from NECN-Succession
+<landisMetadata>
+	<extension name="NECN-Succession" timeInterval="1">
+		<scenario-replication timeMin="0" timeMax="85" rasterOutCellArea="7.29"/>
+
+#######################
+ANALYSIS -- Issue #18
+########################
+	1. collector.py Line 231 throws the error, "invalid literal for int() with base 10: '7.29'"
+		Line 231 ==> PROJECT[PROJECT.lastIdx].rasterOutputCellSize = int(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']])
+
+	2. change Line 231 to accept a float
+		proposed Line 231 ==> PROJECT[PROJECT.lastIdx].rasterOutputCellSize = float(xmlQuery[0][CONFIG['ATTRIB']['RASTERCELLSIZE']])
+
+
+===========================================================================================================================================================================
+
+######################
+PreProcTool rebuild 
+######################
+
+	a. to test proposed change need either 
+		==> 1) a rebuild of PreProceTool.exe OR 
+		==> 2) the ability to run main.py directly in Python
+
+	b.  from manual, "Landis-II Visualization Tool v1.0 Developer Guide.pdf"
+
+(p. 17)
+After you made changes in the source of the WebVisTool and/or the PreProcTool the
+following building steps have to be executed:
+
+1. Run the build-landis-webbase.bat (WebVisTool\build\build-lanids-webbase.bat)
+2. Run the build_preproctool batch-file (PreProcTool\build\build_preproctool.bat)
+3. In case of errors, try:
+◦
+Delete the folders/file:
+▪ PreProcTool/build/build
+▪ PreProcTool/build/dist
+▪ PreProcTool/preproctool.spec
+
+run build_preproctool.bat again
+
+
+	c. the build_preproctool batch-file provided in the LANDVIZ repo (PreProcTool\build\build_preproctool.bat)
+	c1. NB. the batch file is simply a PyInstaller script (could use Py2exe?).
+
+	    NB. PyInstaller is not a cross-compiler: to make a Windows app  you  run PyInstaller in  Windows; to make a Linux app you run it in Linux, etc.)
+http://stackoverflow.com/questions/20169728/exe-created-with-py2exe-doesnt-work-and-returns-logfile-with-errors
+http://www.pyinstaller.org/
+https://mborgerson.com/creating-an-executable-from-a-python-script
+http://pythoncentral.io/pyinstaller-package-python-applications-windows-mac-linux/
+https://irwinkwan.com/2013/04/29/python-executables-pyinstaller-and-a-48-hour-game-design-compo/
+
+	    NB.  
+
+
+@echo off
+echo ==============================
+echo build landis2 vis preproc tool
+echo ==============================
+echo run pyinstaller ...
+python pyinstaller\pyinstaller.py --workpath=build -y --clean --name=PreProcTool --hidden-import=scipy.special._ufuncs_cxx ..\source\main.py %*
+:--log-level=WARN
+:--distpath=..\dist
+echo ==============================
+echo build Proj4Extent
+echo ==============================
+echo run pyinstaller
+python pyinstaller\pyinstaller.py --onefile --workpath=build -y --clean --name=Proj4Extent --distpath=dist\PreProcTool ..\source\Proj4Extent.py %*
+echo ==============================
+echo copy config folder ...
+robocopy "..\source\config" "dist\preproctool\config" /MIR /NFL /NDL /NP /NJH /NJS
+echo ==============================
+echo copy web base folder ...
+robocopy "..\..\WebVisTool\build\dist" "dist\preproctool\webbase" /MIR /NFL /NDL /NP /NJH /NJS
+echo ==============================
+echo copy gdal-data ...
+robocopy "gdal-data" "dist\preproctool\gdal-data" /NFL /NDL /NP /NJH /NJS
+echo ==============================
+pause
+
+
+	c2. flags used by PyInstaller
+https://pyinstaller.readthedocs.io/en/stable/usage.html
+
+--workpath=build		==> Where to put all the temporary work files, .log, .pyz and etc. (default: ./build) 
+-y, --noconfirm			==> Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
+--clean 			==> Clean PyInstaller cache and remove temporary files before building.
+--name=PreProcTool 		==> Name to assign to the bundled app and spec file (default: first script’s basename)
+
+
+--hidden-import=scipy.special._ufuncs_cxx 
+--log-level=WARN		==> Amount of detail in build-time console messages. LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
+--distpath=..\dist		==> Where to put the bundled app (default: ./dist)
+
+
+
+	c3. flags used by robocopy
+http://ss64.com/nt/robocopy.html
+
+/MIR : MIRror a directory tree 
+/NP : No Progress
+/NFL : No File List 
+/NDL : No Directory List 
+/NJH : No Job Header 
+/NJS : No Job Summary
+
+
+###############################
+PreProcTool example run (works)
+###############################
+
+	a. run the PreProcTool.exe that comes with LANDVIZ installation on example
+	
+	NB. this is what is SUPPOSED to happen!	
+C:\Program Files (x86)\LANDIS-II\LandisPreProcTool_original>PreProcTool.exe -p C:\Users\bmarr\Downloads\LANDVIZ_example1\preproc_example_project.xml -o C:\Users\bmarr\Downloads\LANDVIZ_example1\LANDVIZ_output
+
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Example Project Name"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.0 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: baseline climates
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 5
+prepair year = 10
+prepair year = 15
+prepair year = 20
+prepair year = 25
+prepair year = 30
+prepair year = 35
+prepair year = 40
+prepair year = 45
+prepair year = 50
+ttile year = 10
+ile year = 5
+tile year = 15
+tile year = 20
+tile year = 25
+tile year = 30
+tile year = 35
+tile year = 40
+ttile year = 45
+ile year = 50
+scenario: baseline climates
+extension: Leaf Biomass Harvest
+output: biomass removed
+prepair year = 0 [year not available]
+prepair year = 5
+prepair year = 10
+prepair year = 15
+prepair year = 20
+prepair year = 25
+prepair year = 30
+prepair year = 35
+prepair year = 40
+prepair year = 45
+prepair year = 50
+tile year = 5
+tile year = 10
+tile year = 15
+tile year = 20
+tile year = 25
+tile year = 30
+tile year = 35
+tile year = 40
+tile year = 45
+tile year = 50
+scenario: baseline climates
+extension: Output Leaf Biomass Reclass
+output: reclass1 Forest Type Map
+prepair year = 0
+prepair year = 10
+prepair year = 20
+prepair year = 30
+prepair year = 40
+prepair year = 50
+ttttile year = 30
+ile year = 0
+ile year = 10
+ile year = 20
+tile year = 40
+tile year = 50
+End prepairing Map Output [time: 68.1919999123 sec]
+Save Metadata as JSON files
+Copy webbase to output directory
+Update web settings file
+End of LANDIS-II PreProcTool.
+
+
+########################################
+PreProcTool rebuild of PreProcTools.exe
+#######################################
+
+	a.  a sequence of pyinstaller-based rebuilds was tried using various versions of PyInstaller on a Windows 10, 64-bit box:
+		* the pyinstaller packaged with the LANDVIZ repo (v2.1 pkged in pyinstaller.zip)
+		* ver. 2.1 		==> PyInstaller-2.1.zip (from http://www.pyinstaller.org/)
+		* v3.2 			==> PyInstaller-2.1.zip 
+		* developer branch 	==> pyinstaller-pyinstaller-v3.2-267-g8892e11.zip 
+
+	a1. all rebuilds followed the same sequence
+		* modify the build_preproctool batch-file provided in the LANDVIZ repo (PreProcTool\build\build_preproctool.bat) to pull the correct PyInstaller
+		* execute the (modified) build_preproctool batch-file 
+			C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>start /B build_preproctool.bat
+		* trials run ok so replace the original LANDVIZ files (installed w/ the LANDVIZ installer) with the trial files 
+			copy C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool; paste into C:\Program Files (x86)\LANDIS-II>
+			rename folder C:\Program Files (x86)\LANDIS-II\PreProcTool; to C:\Program Files (x86)\LANDIS-II\LandisPreProcTool  <== the name of the original LANDVIZ
+
+
+	NB. all rebuilds need a Python 2.7 distro with a variety of pkgs 
+	NB. install Anaconda
+	NB. may need to upgrade Anaconda with these pkgs ==> spyder, gdal, regex, pefile, appdirs, ctypes
+https://docs.continuum.io/anaconda/install#anaconda-for-windows-install
+https://anaconda.org/anaconda/gdal
+https://anaconda.org/conda-forge/regex
+https://github.com/spyder-ide/spyder/releases
+http://redino.net/blog/2016/07/no-module-named-pefile/
+
+
+conda install -c anaconda gdal=2.1.0
+conda install -c conda-forge regex=2016.11.18
+conda update qt pyqt
+conda update spyder
+
+C:\Users\bmarr\Anaconda2\Scripts>pip.exe install pefile
+C:\Users\bmarr\Anaconda2\Scripts>pip.exe install appdirs
+
+
+
+	NB. check Python capability before rebuild by running this script in spyder (Python IDE)
+---------------------------------------------------------------------------------------------
+# -*- coding: utf-8 -*-
+"""
+import main.py as a check on package dependencies
+before rebuilding PreProcTool.exe with pyinstaller
+"""
+
+#%% check that these can be imported
+
+import sys, os
+import logging
+import argparse
+import trace
+from osgeo import gdal, osr
+import regex
+import yaml
+import pefile
+import appdirs
+import ctypes
+
+
+#%% Linux 
+'''
+to import main.py (or any module) must set a path if want to 
+use a module in another directory. Also in order to use trace pkg
+'''
+sys.path.insert(0, '/home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/PreProcTool/source/')
+
+
+#%% Windows
+'''
+to import main.py (or any module) must set a path if want to 
+use a module in another directory. Also in order to use trace pkg
+'''
+sys.path.insert(0, 'C:\\Users\\bmarr\\Desktop\\LANDVIZ_clone_20170103\\LANDVIZ\\PreProcTool\\source')
+
+
+#%%
+import main
+-------------------------------------------------------------------------------------------------
+
+
+
+
+	b. typical outputs and errors
+
+	NB. NONE of these builds a viable PreProcTool.exe 
+
+
+	b1. original pyinstaller (v2.1)
+
+build landis2 vis preproc tool
+==============================
+run pyinstaller ...
+1970 INFO: PyInstaller: 2.1
+1970 INFO: Python: 2.7.12
+1970 INFO: Platform: Windows-10-10.0.14393
+....
+
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Example_LinearWind
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils", line 4, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils.mapworker", line 6, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats", line 344, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats.stats", line 173, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special", line 638, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.basic", line 19, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.orthogonal", line 101, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.linalg", line 190, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 409, in load_module
+  File "scipy/linalg/_decomp_update.pyx", line 1, in init scipy.linalg._decomp_update (scipy\linalg\_decomp_update.c:37677)
+ImportError: No module named cython_blas
+
+
+
+
+	b2. PyInstaller 2.1 (from PyInstaller website)
+
+build landis2 vis preproc tool
+==============================
+run pyinstaller ...
+1970 INFO: PyInstaller: 2.1
+1970 INFO: Python: 2.7.12
+1970 INFO: Platform: Windows-10-10.0.14393
+....
+
+
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>start /B run_preproctool_example.bat
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils", line 4, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils.mapworker", line 6, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats", line 344, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats.stats", line 173, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special", line 638, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.basic", line 19, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.orthogonal", line 101, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.linalg", line 190, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 409, in load_module
+    module = imp.load_module(fullname, fp, filename, self._c_ext_tuple)
+  File "scipy/linalg/_decomp_update.pyx", line 1, in init scipy.linalg._decomp_update (scipy\linalg\_decomp_update.c:37677)
+ImportError: No module named cython_blas
+
+
+
+	b3. PyInstaller 3.2 (most recent stable version)
+
+build landis2 vis preproc tool
+==============================
+run pyinstaller ...
+1970 INFO: PyInstaller: 3.2
+1970 INFO: Python: 2.7.12
+1970 INFO: Platform: Windows-10-10.0.14393
+....
+
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>start /B run_preproctool_example.bat
+Traceback (most recent call last):
+  File "PyInstaller\loader\rthooks\pyi_rth_pkgres.py", line 11, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-3.2\PyInstaller\loader\pyimod03_importers.py", line 389, in load_module
+    exec(bytecode, module.__dict__)
+  File "site-packages\setuptools-27.2.0-py2.7.egg\pkg_resources\__init__.py", line 68, in <module>
+  File "site-packages\setuptools-27.2.0-py2.7.egg\pkg_resources\extern\__init__.py", line 61, in load_module
+ImportError: The 'appdirs' package is required; normally this is bundled with this package so if you get this warning, consult the packager of your distribution.
+Failed to execute script pyi_rth_pkgres
+
+
+
+	b4. PyInstaller 3.3.dev0+8892e11 (developer branch)
+
+build landis2 vis preproc tool
+==============================
+run pyinstaller ...
+5118 INFO: PyInstaller: 3.3.dev0+8892e11
+5118 INFO: Python: 2.7.12
+5118 INFO: Platform: Windows-10-10.0.14393
+
+
+didn't even run this trial b/c checked log file warnPreProcTool.txt in C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\build\PreProcTool>
+...
+missing module named l2utils - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+missing module named l2data - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+
+
+########################################################
+PreProcTool rebuild of PreProcTools directly in Python
+#########################################################
+
+
+	a. run main.py from command line in Windows
+https://docs.python.org/2/library/argparse.html
+
+	a1. look at help file first
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source>python main.py -h
+Start LANDIS-II PreProcTool
+usage: main.py [-h] -p FILE -o FOLDER
+
+Landis2Vis
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p FILE, --projectfile FILE
+                        Pre-Proc-Project File
+  -o FOLDER, --outputfolder FOLDER
+                        Pre-Proc-Project Output Folder
+
+	a2. run it (after making sure Anaconda has the appropriate pkg updates; see above)
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source> python main.py -p C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project\preproc_VizTool_example.xml -o C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project\CNF_Landscape_Example_LinearWind
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.100999832153 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 10
+prepair year = 20
+prepair year = 30
+prepair year = 40
+prepair year = 50
+prepair year = 60
+prepair year = 70
+prepair year = 80
+prepair year = 90
+prepair year = 100
+tttile year = 10
+ile year = 30
+tile year = 40
+ile year = 20
+too many values to unpack		<== what?!
+tile year = 50
+
+
+	a2i. look at logger log (C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\logs>)
+...
+01/06/2017 06:03:29 PM landis.tiler              DEBUG    Start tiling process with multiprocessing
+01/06/2017 06:03:29 PM preworker.prepairMaps     ERROR    too many values to unpack
+01/06/2017 06:03:29 PM preworker.prepairMaps     DEBUG    <type 'exceptions.ValueError'>::preworker.py::83
+
+Line 82 preworker.py ==>                            #tiling mit tilertools
+Line 83 preworker.py ==>                             tiling = tilertools.GdalTiler(['-s', '-p', 'xyz', '-z', z, '-t', tilesOutputDirTT] + tempPathConcat)
+
+	a211. tilertools is a specialty pkg (it's in ..\PreProcTool\source\tilertools)
+https://github.com/vadp/tilers-tools/tree/master/tilers_tools
+
+
+
+
+	b. run main.py from command line in Linux (must make various path changes in .xml files and in main.py to avoid errors)
+http://stackoverflow.com/questions/1945920/why-doesnt-os-path-join-work-in-this-case
+http://stackoverflow.com/questions/35574504/dynamic-replacement-of-path-in-template-via-python-tkinter
+
+start LANDIS-II PreProcTool
+Setup application configuration
+[Errno 2] No such file or directory: '/home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/PreProcTool/source/config\\config.yaml'
+
+
+	b1. run it
+$ python main.py \
+-p /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/preproc_VizTool_example.xml \
+-o /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/LANDVIZ_LinearWind/
+
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.00105690956116 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Output Leaf Biomass
+output: Species Biomass Map: abiebals
+prepair year = 0 [year not available]
+prepair year = 10 [year not available]
+prepair year = 20 [year not available]
+prepair year = 30 [year not available]
+prepair year = 40 [year not available]
+prepair year = 50 [year not available]
+prepair year = 60 [year not available]
+prepair year = 70 [year not available]
+prepair year = 80 [year not available]
+prepair year = 90 [year not available]
+prepair year = 100 [year not available]
+local variable 'tilesOutputDirTT' referenced before assignment
+
+
+
+	b1i. look at logger log
+01/07/2017 03:49:43 PM landis.main               INFO     Start LANDIS-II PreProcTool
+01/07/2017 03:49:43 PM collector.setupConfig     INFO     Setup application configuration
+01/07/2017 03:49:43 PM collector.setupConfig     DEBUG    Detect Application Folder: /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/PreProcTool/source/main.py
+01/07/2017 03:49:43 PM collector.setupConfig     DEBUG    Detect Project File: /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/preproc_VizTool_example.xml
+01/07/2017 03:49:43 PM collector.setupConfig     DEBUG    Detect Output Folder: /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/LANDVIZ_LinearWind/_15
+01/07/2017 03:49:43 PM collector.createProject   INFO     Create Project
+01/07/2017 03:49:43 PM collector.createProject   DEBUG    Load Information from project file: /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/preproc_VizTool_example.xml
+01/07/2017 03:49:43 PM collector.createProject   INFO     Project name: "Chippewa National Forest Landscape"
+01/07/2017 03:49:43 PM collector.loadSRS         INFO     Load spatial refrence and geo extent from the project xml file
+01/07/2017 03:49:43 PM collector.loadSRS         DEBUG    SRS definition: PROJCS["UTM Zone 15, Northern Hemisphere",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4269"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-93],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["Meter",1]]
+01/07/2017 03:49:43 PM collector.loadSRS         DEBUG    geo extent: {'lry': '5202717.52204077', 'lrx': '466234.717985773', 'ulx': '373434.717985773', 'uly': '5300017.52204077'}
+01/07/2017 03:49:43 PM collector.loadMapPrefs    INFO     Load Map Preferences form project xml file
+01/07/2017 03:49:43 PM collector.loadMapPrefs    DEBUG    Zoom: [{'max': '11', 'init': '9', 'min': '7'}]
+01/07/2017 03:49:43 PM collector.loadMapPrefs    DEBUG    Basemap: [{'source': 'osm', 'saturation': '0', 'contrast': '1', 'brightness': '0'}]
+01/07/2017 03:49:43 PM collector.loadMapPrefs    DEBUG    Legend: [{'qualitativeCol': 'Paired', 'sequentialCol': 'Reds', 'initClassCount': '3', 'divergingCol': 'PiYG'}]
+01/07/2017 03:49:43 PM collector.loadDataStruct  INFO     Load Datastructure from Lanids Metadata
+01/07/2017 03:49:43 PM output.genOutputDirs      INFO     Generate output directories
+01/07/2017 03:49:43 PM output.genOutputDirs      DEBUG    Create landisdata directory: /home/bmarron/Desktop/LANDVIZ_20170102/LANDVIZ/deploy/examples/example_project/LANDVIZ_LinearWind/_15/landisdata
+01/07/2017 03:49:43 PM preworker.prepairTables   INFO     Start prepairing Table Output
+01/07/2017 03:49:43 PM preworker.prepairTables   INFO     End prepairing Table Output [time: 0.00105690956116 sec]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     Start prepairing Map Output
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     scenario: Baseline Climate, BaseWind
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     extension: Output Leaf Biomass
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     output: Species Biomass Map: abiebals
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 0 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 10 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 20 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 30 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 40 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 50 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 60 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 70 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 80 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 90 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     INFO     prepair year = 100 [year not available]
+01/07/2017 03:49:43 PM preworker.prepairMaps     ERROR    local variable 'tilesOutputDirTT' referenced before assignment
+01/07/2017 03:49:43 PM preworker.prepairMaps     DEBUG    <type 'exceptions.UnboundLocalError'>::preworker.py::83
+
+
+
+
+
+
+####################################
+ANALYSIS -- Rebuilding PreProcTool
+#####################################
+
+	1. LANDVIZ source code is out-of-date w/ respect to Python 2.7.12 and PyInstaller 3.2 and requires 
+	   an (major?) upgrade. There may be additional specialty pkgs (like tilertools) that also need to be updated.
+
+	2. Issue #18 cannot be resolved until the PreProcTool (ie main.py plus PyInstaller) can be rebuilt.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

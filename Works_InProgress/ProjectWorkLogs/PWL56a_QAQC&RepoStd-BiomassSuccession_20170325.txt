@@ -1,0 +1,240 @@
+Title:				PWL_QAQC&RepoStd-BiomassSuccession
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			25 Mar 2017
+Final Date:			
+
+
+############
+QAQC Summary
+#############
+
+	a. A set of general standardizations, cleanups, and restructurings was performed
+	   (see below). Major revisions to files in deploy\examples were made so that weather
+	   data could be used.
+
+	b. The "Landis.Extension.Succession.Biomass.dll" extension and the 
+	   "LANDIS-II Biomass Succession 3.2-setup.exe" installer were scratch-built.
+
+	c. The newly-minted installer was used to freshly install Biomass Succession on a 
+	    Windows 10 box and the example "scenario_MN.txt" was run.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. When Biomass Succession was run with Biomass Harvest, the run was executed without
+	   error and passed QAQC. The weather data loaded correctly.
+
+	b. There were runtime errors however, when Biomass Succession was run with the
+	   "Output Biomass" and "Output Biomass Reclass" options selected (see below).
+ 
+
+
+
+##########################
+general RepoStd actions
+##########################
+
+* add/modify README_<RepoName.version>.txt file
+* restructure repo:
+
+	deploy\
+	  examples\
+	  installer\
+	  past-releases\
+
+	docs\
+	  calibration\
+
+	src\
+	  WinPkgTools\
+
+	testings\
+	  unit-tests\
+ 	 version-tests\
+
+
+*remove .config files
+*remove .sln file
+*remove directory src\Properties
+*move AssemblyInfo.cs to \src
+*add Austen's Support-Library-Dll scripts
+*update .csproj file
+*update examples\ files
+*update and standardize .iss file
+*update installer\
+
+ 
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. add and modify "README_BiomassSuccession3.2.txt"
+
+	b. modify src\"biomass-succession.csproj"
+		==> simplify <Reference Include=...> statements
+		==> add <SpecificVersion>False</SpecificVersion> statements
+     		==> add <Private>False</Private> statements
+	
+	c. update all deploy\examples\ files
+		==> modify "scenario.txt" to run Biomass Succession
+		==> modify Line 18 "biomass-succession_SetUp" to call ClimateConfigFile
+		==> modify "biomass-succession_InitialCommunities.gis"
+		==> modify "biomass-succession_InitialCommunities.txt"
+		==> modify "biomass-succession_SetUp" MinRelativeBiomass table
+		==> modify "biomass-succession_SetUp" SufficientLight table
+		==> modify "biomass-succession_SetUp" Species Parameters (from NECN data)
+		==> modify "output-Biomass.txt"
+		==> modify "output_BiomassReclass.txt"
+
+		==> modify "biomass-succession_DynamicInput.txt"
+NOTE: need real data for the following spp (all set to 0.5 ProbEst, 1000 MaxANPP):
+acernegu
+acerspic
+celtis
+fraxnigr	
+fraxpenn	
+larilari	
+ostrvirg
+picemari
+popubals	
+popudelt	
+popugran
+prunpens	
+prunsero	
+prunvirg	
+queralba
+quermacr
+salix
+ulmuamer	
+ulmurubr
+
+
+
+	d. update all deploy\examples\ directory
+		==> add "biomass-succession_ClimateGenerator.txt"
+		==> add "PRISM_data_AFRI_4.18.13.csv"
+		==> replace ecoregions_MN.gis (MN101; MN102)
+		==> replace ecoregions_MN.txt (MN101; MN102)
+
+
+	e. modify installer\ directory
+		==> add "package (Setup section) v6.0.iss"
+		==> add "package (Code section) v3.iss"
+		==> add "LANDIS-II_Binary_license.rtf"
+		==> add "EnsureLandisIIDirsUC.iss"
+
+
+	f. restructure of installer\"Biomass Succession 3.2.iss"
+		==> remove all "LANDIS_SDK" references (SDK again!)
+		==> add standardized .iss format
+		==> add "Source: ..\examples\*.csv; ..." to examples
+		==> remove .pdf inclusion into installer
+		==> add code documentation
+
+
+
+
+
+##################
+QAQC Sequence
+##################
+
+
+	a. VS build of "biomass-succession.csproj"
+1>  biomass-succession -> C:\Users\bmarr\Desktop\Working_BiomassSuccession\Extension-Biomass-Succession\src\bin\Debug\Landis.Extension.Succession.Biomass.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Sunday, March 26 2017 at 04:27:00]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+.....
+[PostCompile] Processing finished.
+Compile finished.  [Sunday, March 26 2017 at 04:27:02]
+Total compile time: 00:01.609
+
+
+
+
+	c. install latest "LANDIS-II Biomass Ouput 2.2-setup.exe"
+https://github.com/LANDIS-II-Foundation/Extension-Output-Biomass/blob/master/output-biomass/deploy/LANDIS-II%20Biomass%20Ouput%202.2-setup.exe
+
+
+	d. install latest "LANDIS-II Biomass Reclassified Output 2.0-setup.exe"
+https://github.com/LANDIS-II-Foundation/Extension-Output-Biomass-Reclass/blob/master/output-biomass-reclass/trunk/deploy/LANDIS-II%20Biomass%20Reclassified%20Output%202.0-setup.exe
+
+
+	c. install the freshly-minted Biomass Succession extension
+
+
+
+	d. run the example scenario; no outputs; no fire
+C:\Program Files\LANDIS-II\v6\examples\Biomass Succession>call landis-ii scenario_MN.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_MN.txt" ...
+Initialized random number generator with seed = 3,042,261,270
+Loading species data from file "./species_MN.txt" ...
+Loading ecoregions from file "./ecoregions_MN.txt" ...
+Initializing landscape from ecoregions map "./ecoregions_MN.gis" ...
+.....
+dataset created: biomass-anpp-100.img
+Model run is complete.
+
+!! QAQC PASSED !!
+
+
+	e.  run the example w/ fire
+C:\Program Files\LANDIS-II\v6\examples\Biomass Succession>call landis-ii scenario_MN.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_MN.txt" ...
+Initialized random number generator with seed = 3,042,261,270
+Loading species data from file "./species_MN.txt" ...
+Loading ecoregions from file "./ecoregions_MN.txt" ...
+Initializing landscape from ecoregions map "./ecoregions_MN.gis" ...
+.....
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Library.Metadata.DataTableExtensions.SetColumns[T](DataTable tbl)
+   at Landis.Library.Metadata.MetadataTable`1..ctor(String filePath)
+   at Landis.Extension.BaseFire.MetadataHandler.InitializeMetadata(Int32 Timestep, String MapFileName, String eventLogName, String summaryLogName)
+   at Landis.Extension.BaseFire.PlugIn.Initialize()
+   at Landis.Model.InitExtensions(ExtensionMain[] extensions)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+!! RUNTIME ERRORS !!
+
+
+	f. run the example w/ outputs
+C:\Program Files\LANDIS-II\v6\examples\Biomass Succession>call landis-ii scenario_MN.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_MN.txt" ...
+Initialized random number generator with seed = 3,042,261,270
+Loading species data from file "./species_MN.txt" ...
+Loading ecoregions from file "./ecoregions_MN.txt" ...
+Initializing landscape from ecoregions map "./ecoregions_MN.gis" ...
+.....
+Loading Output Biomass extension ...
+Loading Output Biomass Reclass extension ...
+   Generating summary table...
+The data type of site variable "Succession.BiomassCohorts" is Landis.Library.BiomassCohorts.ISiteCohorts, not Landis.Library.BiomassCohorts.ISiteCohorts
+
+!!RUNTIME ERRORS!!
+
+
+

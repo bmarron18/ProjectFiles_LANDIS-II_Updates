@@ -1,0 +1,71 @@
+Title:			Job Posting Rough Out
+Project Descriptor:	LANDIS Programming Updates Project
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		14 Sep 2016
+Revision Date:		
+
+
+
+
+==== References =============================
+https://sites.google.com/a/pdx.edu/dynamic-ecosystems-landscape-lab/home
+https://sites.google.com/a/pdx.edu/dynamic-ecosystems-landscape-lab/research/landis-ii-development
+https://www.toptal.com/c-sharp/interview-questions
+http://technicalrecruitingbook.com/resources/sample-application-developer-job/
+http://www.developerfusion.com/job/84121/cnet-developer-scrum-master/
+
+
+
+###################
+Job Posting
+##################
+
+
+Mid level C# developer - $20/yr part-time working as part of a team to provide upgrades and bug fixes 
+to the LANDIS-II forest landscape change model.
+
+The Dynamic Ecosystems and Landscapes Lab, under the direction of Dr. Robert Scheller, has immediate
+need for three (3) mid-level C# developers to implement upgrades and bug fixes to the LANDIS-II forest landscape change model
+and its various extensions. LANDIS-II is an open-source, spatially-explicit, process-based simulation model of LANdscape DIsturbance and succession. 
+LANDIS-II is sponsored by the LANDIS-II Foundation, a not-for-profit 501(3)(c) scientific and educational organization.
+(http://www.landis-ii.org/home)
+
+
+Job Summary:
+Developers (C#) are responsible for modification and generation of well-commented code that accurately implements corrections and 
+updates to the LANDIS-II core model and its various extensions as defined by open tickets from key scientific users.  Developers 
+are expected to use sound engineering practices and are expected to perform and participate in all necessary QA/QC procedures and practices 
+including code review, code testing, task branching, and work logs to produce well-documented, model-verified results. Devlopers must be 
+comfortable working autonomously as well as within a collaborative problem solving environment. Develoeprs are expected to work 10-15 hr/wk 
+throughout the anticipated 30 weeks of the project. Expected start date is October 10, 2016.
+
+Your Reponsibilities:
+	Access the LANDIS-II Foundation's GitHub repository to self-select job tasks from open ticket items (Issues on GitHub)
+	Analyze open ticket change requests in light of C# and the LANDIS-II modeling environment
+	Work autonomously to design draft coding solutions to open ticket items
+	Work collectively with other Developers and the Project Manager to perform code review and testing to 
+	produce final coding solutions to open ticket items
+	Rigorously and consistently implement all project QA/QC procedures and practices including revision control, work logs,
+	unit testing and code reviews, by and for peers
+
+Your Skills:
+	Strong understanding of object-oriented programming
+	Strong understanding of iterative problem solving (analysis, design, coding, testing, repeat)
+	Knack for writing clean, well-commented, and readable C# code
+	Proficient in C#, with a good knowledge of its ecosystems and architectures
+	Experience with Git and GitHub as code versioning control tools 
+	Experience with IDEs for C# (Visual Studio 2015 or MonoDevelop)
+	Experience with JavaScript a plus
+	
+Interested? Please send a resume, a small portfolio of applicable work samples, and a brief cover letter
+that includes your contact information to:
+
+Bruce Marron, Project Manager
+bmarron@pdx.edu 
+
+All submitted documents should be in .pdf format.
+
+
+
+

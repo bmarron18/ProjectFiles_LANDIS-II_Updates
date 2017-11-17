@@ -1,0 +1,43 @@
+Title:				QAQC Protocol Sequence
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			02 May 2017
+Final Date:			
+
+
+
+###########################
+Brief outline of the basic
+QAQC protocol sequence 
+############################
+
+	a. add or clean-up the README_<RepoName.version>.txt file
+
+	b. restructure the repo
+
+	c. clean-up \src directory
+
+	d. clean-up and update the .csproj file 
+
+	e. clean-up the extension's unique SetUp files
+
+	f. install a QAQC-checked example
+
+	g. clean-up and update the .iss file 
+
+	h. re-build the extension (Visual Studio)
+
+	i. re-build the installer (Inno Setup)
+
+	j. uninstall the extension
+
+	k. re-install the extension with the newly-minted installer
+
+	l. cd (as ADM) to C:\Program Files\LANDIS-II\v6\examples\"name-of-extension"> 
+
+	m. run the scenario provided in the example
+
+
+
+

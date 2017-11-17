@@ -1,0 +1,102 @@
+Title:				PWL65b_QAQC&RepoStd_Output-Age-Reclassification
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			23 Apr 2017
+Final Date:			06 May 2017
+
+
+
+############
+QAQC Summary
+#############
+
+	a. First round QAQC completed in PWL65a_QAQC&RepoStd_Output-Age-Reclassification
+
+	b. Second round QAQC to check Metadata addition
+
+	c. The "Landis.Extension.Output.AgeReclass.dll" extension and the 
+	   "LANDIS-II Age Reclass Output 2.0-setup.exe" installer were scratch-built following
+	   the addition of Metadata.
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. Output Age Reclassification has passed QAQC (w/ Metadata).
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. VS build of "output-age-reclass.csproj"
+1>  output-age-reclass -> C:\Users\bmarr\Desktop\working_OutputAgeReclassification\Extension-Output-Age-Reclassification\src\bin\Debug\Landis.Extension.Output.AgeReclass.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Saturday, May 06 2017 at 21:08:24]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+
+Debug Information Start
+CurrentPath = C:\Program Files (x86)\Inno Script Studio
+Params.SourcePath = C:\Users\bmarr\Desktop\working_OutputAgeReclassification\Extension-Output-Age-Reclassification\deploy\installer\
+....
+
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Saturday, May 06 2017 at 21:08:26]
+Total compile time: 00:02.141
+
+
+
+
+
+
+	c. install the freshly-minted Output Age Reclass extension
+
+
+
+	d. run the example scenario w/ the following active extensions:
+		==> "Base Wind"
+		==> "Base Harvest"
+		==> "Output Max Species Age"
+		==> "Output Cohort Statistics"
+		==> "Output Age Reclass"
+
+C:\Program Files\LANDIS-II\v6\examples\Output Age Reclass>call landis-ii scenario_s1e1.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_s1e1.txt" ...
+Initialized random number generator with seed = 4,271,828,437
+Loading species data from file "./species_s1e1.txt" ...
+
+...
+
+   Writing COUNT site map to outputs/age-all-spp/AGE-COUNT-100.img ...
+dataset created: outputs/age-all-spp/AGE-COUNT-100.img
+   Writing RICH site map to outputs/spp-counts/SPP-RICH-100.img ...
+dataset created: outputs/spp-counts/SPP-RICH-100.img
+Model run is complete.
+
+
+!! QAQC PASSED !!
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,157 @@
+ID,Story,Description,Checklist,Comments,Labels,Due Date,Members
+1,"Info about this ""QAQC To Do"" list","To Do
+
+The items below are LANDIS-II repos that (1) are ready to be QAQC tested (as documented by GitHub ""Merged"" actions or flagged with a ""Ready-for-Testing"" milestone), (2) are ready for standardization and documentation changes, and/or (3) need a new installer to accompany a new release. 
+
+Repo standardization includes:
+a) re-organizing and standardizing repo directories \deploy, \src, \testings
+b) synchronizing .csproj, .iss, and ExtInfo.txt files
+c) standardizing .iss files for easy replication to new extensions
+d) easily updatable/replicable README.txt
+
+Typically, new releases will require the additional QAQC step of beta-testing the release (ie, the newly-built installer) against a real (user-defined) dataset. 
+
+",,,,,
+4,"Info about this ""QAQC In-Progress"" list","The items below are LANDIS-II repos that are currently being QAQC tested.
+",,,,,
+9,"Info about this ""QAQC Done"" list","Completion will include a Project Work Log (PWL) .txt file documenting QAQC testing , clean-up and standardization, and/or release testing ",,,,,
+11,[LANDIS-II-Foundation/Extension-Biomass-Succession] -- 6(a),"* Repo standardization and cleanup
+* Example files not working (#2)
+* Activate Climate Library in Biomass-Succession #6
+* Restructure and Fix to Work with Biomass Cohorts #8
+* Needs CohortPartialMortality to use the new Library.BiomassCohorts-v2 #9",,"Standardized and restructured repo passed QAQC for running Biommass Succession (no fire, no biomass outputs). Weather data accepted.
+
+Runtime errors when ""Output Biomass"" and ""Output Biomass Reclass"" options activated",,,
+12,[LANDIS-II-Foundation/Extension-Output-Biomass] -- 9,"* Restructure and Metadata (Pull #2)
+* Needs metadata (Issue #1)
+",,"QAQC passed
+Runtime errors when ""Output Biomass"" selected as an output option from Biomass Succession",,,
+15,[LANDIS-II-Foundation/Core-Model] -- 2,"* Restructure away from SVN and remove /sdk directory #15
+* Restructured CoreModel #16
+* Spp name added to error messages; version number added #17
+* Virtual methods #18
+* Fix for Issue #8 plus some small corrections #19",,QAQC complete,,,
+16,[LANDIS-II-Foundation/Extension-Base-BDA] -- 8,"* Tandem method changes with virtual and override #2
+* Repo clean-up and standardization",,QAQC passed,,,
+17,[LANDIS-II-Foundation/Library-Harvest-Management] -- 7(a) ==> on hold,"* Implementation of Salvage Logging #6
+* Fix for Issue #10 in Extension-Biomass-Harvest #5",,First round QAQC exposed exceptions/bugs. Waiting until all Metadata upgrades are completed before doing a second round QAQC.,,,
+18,[LANDIS-II-Foundation/LANDVIZ] -- 1,"* Updates to PreProcTool rebuild protocol #19
+* Area units need to be flexible #18",,"Developer documentation still needs updating for new release #21 (as of 23 Apr). Melissa will add the info provided in, ""README_Rebuild_PreProcTool.txt"" to the Developer's Guide
+QAQC complete",,,
+19,[LANDIS-II-Foundation/Extension-Biomass-Harvest] -- 3(a),"* Repo clean-up and standardization
+* Biomass Harvest not communicating with succession for partial cohort disturbance #13
+* A new issue (Slack, 8 Apr) with parsing biomass reductions.  The parser no longer recognizes 100% harvesting; the default if the biomass reduction is absent (This issue traced to Library.Biomass.Harvest.)",,QAQC passed,,,
+20,[LANDIS-II-Foundation/Extension-Base-Harvest] -- 4,* Repo clean-up and standardization,,"QAQC passed
+Standardization complete",,,
+21,[LANDIS-II-Foundation/Extension-NECN-Succession] -- 5,* Repo clean-up and standardization,,QAQC passed,,,
+24,[LANDIS-II-Foundation/Extension-Biomass-Harvest] -- 3(b),"* Need to add StandRanking by average aboveground biomass (back) (issue #14)
+
+* ""SingleRepeat"" has a bug: it functions (e.g., repeats 10 years later), but then the prescription that uses ""SingleRepeat"" is never again used anywhere on the landscape.",,Assigned to Austen,,,
+25,[LANDIS-II-Foundation/Extension-Biomass-Insect] -- 16(a),"* Needs metadata output (Issue #1)
+* Metadata and File Restructure (Pull #2)
+* Quick Bug Fix (pull #4)",,Passed QAQC,,,
+26,DISTURBANCE EXTENSIONS,,,,,,
+27,SUCCESSION EXTENSIONS,,,,,,
+28,OUTPUT EXTENSIONS,,,,,,
+29,[LANDIS-II-Foundation/Extension-Age-Only-Succession],"*  Needs metadata library (#1)
+* Needs RepoStd",,,,,
+31,[LANDIS-II-Foundation/Extension-Biomass-Succession] -- 6(b),"* Needs metadata (#7)
+* Log file does not match output from Biomass Output (#3)",,Vincent to push metadata up before QAQC on log file,,,
+35,"Info about this ""Programming To Do"" list",Programming tasks are assigned to individuals from repo Issues posted in GitHub. This is simply a list of Issues thta have been assigned.assigned.,,,,,
+36,[LANDIS-II-Foundation/Extension-Output-Biomass-By-Age] -- 11,"* Needs metadata output #1
+* Restructure and Metadata #2",,QAQC passed,,,
+44,[LANDIS-II-Foundation/Extension-Output-Maximum-Spp-Age] -- 14,"* Needs to be migrated from extensions-output sub-directory (Issue #1)
+*  Needs metadata output (Issue #2)",,QAQC passed,,,
+47,[LANDIS-II-Foundation/Extension-Biomass-Succession] -- 6(c),"
+* Documentation needs updating #10",,,,,
+48,[LANDIS-II-Foundation/Extension-Base-Wind] -- 12,* Repo standardization and cleanup,,QAQC passed,,,
+49,[LANDIS-II-Foundation/Extension-Base-Fire] -- 10(a) ==>on hold,"Repo work:
+
+*  Needs metadata output (issue #1)
+*  Repo standardization and cleanup
+*  Restructure and Metadata(pull  #2)
+* Fix for Potentially Problematic Code (pull #3)
+* Bug fix and misc (merge #5)
+
+",,"Second round QAQC has same runtime errors
+First round QAQC has runtime errors",,,
+50,[LANDIS-II-Foundation/Extension-Output-Cohort-Statistics] -- 13,"* Needs to be migrated from extensions-output sub-directory (Issue #1)
+* Needs metadata output (Issue #2)
+* Migrate to Metadata (Pull #4)",,QAQC passed,,,
+51,All new extension releases to use Landis.Library.Utilities.,,,Vince is doing some research on this issue.  ON HOLD.,,,
+52,[LANDIS-II-Foundation/Extension-Biomass-Insect]  -- 16(b),* Remove Landis.Extension.Succession.Biomass.dll as a requisite build library (issue #6),,Assigned to Vincent,,,
+53,PRE-RELEASE,,,,,,
+57,[LANDIS-II-Foundation/Extension-Output-Biomass-Reclass] --15,"* QAQC&RepoStd 
+* Needs metadata (issues #1)",,QAQC passed,,,
+58,Develop R scripts for running model in batch mode.,,,,,,"bmarron18
+Robert Scheller"
+59,Develop R scripts to run the model and subsequently generate LANDVIZ web sites.,,,,,,"bmarron18
+Robert Scheller"
+60,Integrate the Lichti seed dispersal code into LANDIS-II,,,"Bruce, this will require some careful design work.  A good mini-project for V or A.",,,"bmarron18
+Robert Scheller"
+61,[LANDIS-II-Foundation/Extension-Dynamic-Biomass-Fuels],"* Needs metadata (Issue #1)
+* Move to Landis.Utilities (Issue #2)
+",,,,,
+62,[LANDIS-II-Foundation/Extension-Dynamic-Fire] --19,"* Restructure and Metadata (pull #3)
+* Fix for Potentially Problematic Code (pull #3)
+",,,,,
+63,18 Apr 2017,"Brooke:
+
+1) be able to select stands based on highest biomass. This used to be a feature but was removed some time ago (highest av biomass in stand?)
+2) when I include SingleRepeat in a prescription, it functions (e.g., repeats 10 years later), but then that prescription is never again used anywhere on the landscape. It seems like a pretty weird bug
+
+Chris Glidden:
+
+Yes, these positions could fit as an Analyst Programmer classification. A temporary classified appointment can span the duration of 1 year or up to 1039 hours worked, whichever comes first
+
+Austen:
+
+errors in the code which prevent Biomass Browse from being built. Is this a known problem? Has it ever built? Also please add Landis.Library.BiomassCohorts-vBrowse to the support dll repo","Pull request #3 BaseFire ==> RMS approve? May fix QAQC run issues?
+Biomass Harvest ==> Add issues from Brooke (see above)?
+Post-graduation work ==> interested (see above)?
+Lunch with Eric G.
+Biomass Browse ==> needs major work (see above)?
+Biomass Succession ==> change output anpp map output location (modify Outputs.cs)? Actually, can output maps and .csv files be sent to a folder(s) rather than getting mixed in with the scenario files?
+tutorial time ==> can we bill for a few hrs of VS/C# tutorial?
+Namespace change ==> what is needed, how to proceed.
+Biomass Insects ==> help! runtime error: ""The filename template ""insects/{insectName}-{timestep}.img"" has an unknown variable: {timestep}""
+Fire Brigade - anyone?",Biomass Insect theory #1:  only outputting for years when there is an outbreak.  theory #2:  outputs every year and therefore don't need timestep in the template.,,,
+64,11 Apr 2017,No mtg ==> USIALE conference,,,,,
+65,"Standardize README, \examples, outputs","See attached for standardization changes.
+
+* README done? == 1
+* GoldStd examples added? == 2
+* Output nomenclature complete? == 3
+* Extension-generated outputs sent to a folder? == 4
+ ","Extension-Base-Harvest -- 1,2,3
+Extension-Biomass-Insect --1,2,3 
+Extension-Base-Wind -- 1,2,3
+Extension-Base-Harvest -- 4
+Extension-Biomass-Insect -- 4
+Extension-Biomass-Harvest -- 1,2,3
+Extension-Biomass-Harvest -- 4",,,,
+66,[LANDIS-II-Foundation/Extension-Biomass-Browse],"* Needs to be migrated from extensions-disturbance\ sub-directory (issue #1)
+* Missing Project Reference DLL ""Landis.Library.BiomassCohorts-vBrowse"" (issue #2)
+* Incorrect Code Prevents Build (issue #3)",,Assigned to Austen,,,
+67,template,,,,,,
+69,[LANDIS-II-Foundation/Extension-Output-Age-Reclassification] --17(b),* Needs metadata output (#2),,,,,
+70,[LANDIS-II-Foundation/Extension-Output-Age-Reclassification] --17(a),* Needs to be migrated over from extensions extensions-output (#1),,Passed first round standardization and QAQC-driven changes; needs Metadata ,,,
+71,[LANDIS-II-Foundation/Library-Biomass-Harvest] --18,"* harvest prescriptions do not recognize 100% in Extension-Biomass-Harvest
+*  ""Library.Biomass.Harvest-v2.dll"" is linked to Extension-Biomass-Harvest, through ""Landis.Extension.BiomassHarvest.dll""",,Passed QAQC,,,
+74,25 Apr 2017,"* Bruce
+Basically, these repos call inputs and outputs out of sequence in their respective _SetUp files. Confusing!
+","post-metadata tasks ==> new priorities and task assignments? Go thru ToDo lists
+BaseFire & BaseBDA & Biomass Insect==> is it possible to do src code change to correct input/output sequence in SetUp files (see above)?
+Extension-Biomass-Insect -- 16(a)==> should have failed QAQC b/c I hadn't yet changed all references to the correct ecoregions in the PRISM weather data .csv. It ran just fine. This OK?
+Additional support repos ==> we now have a standardized format for scenario examples packed with installers. These are coded based on the succession used. Create new support repo? Others?
+Extension-Biomass-Insect -- 16(b) ==> needs QAQC?
+https://github.com/dcyr ==> who is this French Canadian?!
+Biomass Succession ==> can we move forward?
+GitHub queries ==> command line options for you!
+Extension-Biomass-Insect -- 16(c) ==> programming check to determine best soln (see issue comments in GitHub)?","Trello on Slack 
+
+==> http://blog.trello.com/slack-power-up-trello-alerts
+==> https://trello.com/c/SDmaAwz9/1579-trello-alerts-for-slack
+
+Thanks Austen",,,
+75,2 May 2017,,,,,,

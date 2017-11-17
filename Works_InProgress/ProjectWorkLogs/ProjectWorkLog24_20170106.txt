@@ -1,0 +1,69 @@
+Title:				Project Work Log24
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			06 Jan 2017
+Revision Date:		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run a build test w/ pyinstaller (Windows)
+#########################################################################
+
+
+	a. try: replacement of PreProcTool.exe (original), PreProcTool.exe.manifest (original), and Proj4Extent.exe w/ files fr other builds
+
+	a1. replace from _bm6; run 
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>start /B run_preproctool_example.bat
+Error loading Python DLL: C:\Program Files (x86)\LANDIS-II\LandisPreProcTool\python27.dll (error code 193)
+Press any key to continue . . .
+
+	a2. NO GO!!
+
+
+
+
+	b. try: download PyInstaller 2.1 and try rebuild from this (follow the same steps as in the ProjectWorkLog23e.txt)
+
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>start /B run_preproctool_example.bat
+
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils", line 4, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils.mapworker", line 6, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats", line 344, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats.stats", line 173, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special", line 638, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.basic", line 19, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.orthogonal", line 101, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+    exec(bytecode, module.__dict__)
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.linalg", line 190, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-2.1\PyInstaller\loader\pyi_importers.py", line 409, in load_module
+    module = imp.load_module(fullname, fp, filename, self._c_ext_tuple)
+  File "scipy/linalg/_decomp_update.pyx", line 1, in init scipy.linalg._decomp_update (scipy\linalg\_decomp_update.c:37677)
+ImportError: No module named cython_blas
+
+	b1. NO GO!!
+
+
+
+
+
+
+

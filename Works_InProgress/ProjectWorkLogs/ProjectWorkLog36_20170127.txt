@@ -1,0 +1,125 @@
+Title:				LSML issue
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			27 Jan 2017
+Revision Date:		
+
+
+
+#############
+LSML-admin.cmd
+LSML-admin.sh
+#################
+
+https://github.com/bmarron18/Core-Model/blob/master/model/third-party/LSML/LSML-admin.cmd
+https://github.com/bmarron18/Core-Model/blob/master/model/third-party/LSML/LSML-admin.sh
+
+https://github.com/jealie/binaries_GDAL_Csharp
+
+
+
+
+	a. Line 27 of LSML-admin.cmd
+
+set LibraryURL=https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/landis-spatial/%LibraryFileName%
+
+
+	b. aim seems to be grabbibg these libraries:
+	b1. Line 10 LSML-admin.sh
+
+get       -- download and unpack LSML and GDAL
+
+
+	c. isn't this what we're after?!
+Landis.SpatialModeling.dll
+the GDAL libraries and C# bindings
+
+
+
+	d. the Linux side has list of required, C# GDAL libraries
+	d1. compiled GDAL libraries found here:
+https://github.com/jealie/binaries_GDAL_Csharp/
+
+
+	e. from premake4.lua
+
+Lines 1 - 10 ==>
+thirdPartyDir = "third-party"
+thirdPartyLibs = {
+  FLEL          = thirdPartyDir .. "/FLEL/util/bin/Edu.Wisc.Forest.Flel.Util.dll",
+  LSML          = thirdPartyDir .. "/LSML/Landis.SpatialModeling.dll",
+  Landscapes    = thirdPartyDir .. "/LSML/Landis.Landscapes.dll",
+  RasterIO      = thirdPartyDir .. "/LSML/Landis.RasterIO.dll",
+  RasterIO_Gdal = thirdPartyDir .. "/LSML/Landis.RasterIO.Gdal.dll",
+  log4net       = thirdPartyDir .. "/log4net/bin/log4net.dll",
+  Troschuetz    = thirdPartyDir .. "/Troschuetz/Troschuetz.Random.dll"
+}
+
+Lines 292 - 303 ==>
+-- Run the LSML-admin script with a specific action
+
+function LSMLadmin(action)
+  local onWindows = runningOnWindows()
+  local scriptExt = iif(onWindows, "cmd", "sh")
+  local adminScript = thirdPartyDir .. "/LSML/LSML-admin." .. scriptExt
+  if onWindows then
+    adminScript = path.translate(adminScript, "\\")
+  end
+  print("Running " .. adminScript .. " '" .. action .. "'...")
+  os.execute(adminScript .. " " .. action)
+end
+
+
+	f. review premake and lua
+	f1. download a copy of premake
+
+https://github.com/premake/premake-4.x/wiki
+Premake is built on Lua, a powerful, fast, light-weight scripting language. 
+Premake scripts are really Lua programs, so anything you can do in Lua can 
+also be done in a Premake script.
+
+https://premake.github.io/download.html
+	Download ==> premake-4.4-beta5-windows.zip
+
+	f2. place a copy of premake4.exe in cloned CoreModel repo
+C:\Users\bmarr\Desktop\New folder\Core-Model\model>
+
+	f3. download a .zip of Support-Library-DLLs
+
+
+
+
+
+	g. Place requisite .dlls from Support-Library-DLLs in CoreModel repo and
+	   modify premake4.lua; get rid of LSML-admin.cmd!
+
+Currently premake4.lua builds the .sln and .csproj files. Lines 1-10 of premake4.lua define 
+the libraries (and their locations) needed for a Core build. Lines 292-303 of premake4.lua 
+calls the LSML-admin script which in turn calls the old Google repo looking for GDAL libraries 
+and the Landis.SpatialModeling.dll. But we now have all of the requisite .dlls in 
+Support-Library-Dlls.  
+
+So can't we (1) re-write premake4.lua (change Lines 3-10 to reflect the new directory structure 
+of CoreModel and completely delete Lines 292-303) ,  (2) populate the CoreModel with the needed 
+.dlls from Support-Library-DLLs  and place them in  appropriate directories, and then (3) delete 
+LSML-admin.cmd?   
+
+The processes of pulling in the .dlls from Support-Library-DLLs can proabaly scripted later 
+but this should give us  legit .sln and .csproj files. 
+
+FYI ==> Need to run premake4.exe  (premake-4.4-beta5-windows.zip available from 
+https://premake.github.io/download.html)  in  C:\...\Core-Model\model> along with vs2010.  
+
+That is,  run  
+(1) C:\...\Core-Model\model>premake4.exe  clean 
+(2)  C:\...\Core-Model\model>premake4.exe vs2010. 
+
+Found useful info at https://github.com/premake/premake-4.x/wiki. 
+
+
+
+
+
+
+

@@ -1,0 +1,3060 @@
+/* Austen Ruzicka
+Implementation of the class as well as other functions used in the program. Through inheritance, the classes will allow users to play a simplified game of Magic the Gathering.
+*/
+
+//preprocessor Directives
+#include "Ruzicka_Header2.h"
+
+//constructor: initializes data members to null or zero
+//INPUT: None
+//OUTPUT: None
+Card::Card(void)
+{
+  name = NULL; //set the name to nothing
+  type = NULL; //set the type to nothing
+  cost = 0; //set the cost to nothing
+  power = 0; //set power to zero
+  toughness = 0; //set toughness to nothing
+  damage = 0; //card has no damage on it
+  int effect_pow = 0; //creature has no buffs to power
+  int effect_tough = 0; //creature has no buffs to toughness
+  tap = false; //card is not tapped
+}
+
+
+
+//copy constructor allows a client to initialize a card object to whatever
+//values they want
+//INPUT: A card object with the data members to copy over
+//OUTPUT: None
+Card::Card(const Card & a_card)
+{
+  //setup the card name
+  name = new char[(strlen(a_card.name)) + 1]; //dynamic allocate for name
+  strcpy(name, a_card.name); //copy the name into the memory
+
+  //setup the card's type
+  type = new char[(strlen(a_card.type)) + 1]; //dynamic allocate for type
+  strcpy(type, a_card.type); //copy the name into the memory
+  
+  //copy all ints and bools
+  cost = a_card.cost; //copy the cost
+  power = a_card.power; //copy the power
+  toughness = a_card.toughness; //copy the toughness
+  damage = a_card.damage; //copy the damage
+  effect_pow = a_card.effect_pow; //copy buffs
+  effect_tough = a_card.effect_tough; //copy buffs
+  tap = a_card.tap; //copy tap status
+}
+
+
+
+//copy constructor, to be used to initialize it within hierarchy
+//INPUT: Values to be initialize
+//OUTPUT: None
+Card::Card(char a_name [], char a_type [], int a_cost, int a_power,
+           int a_toughness, int a_damage, int a_epow, int a_e_tough,
+           bool a_tap)
+{
+  if(strcmp(a_name, "\0") == 0) //if the argument passed in is \0
+  {
+    name = NULL; //set name to null
+    type = NULL; //set type to null too
+  }
+  else
+  {
+    //setup dynamic memory to be allocated
+    name = new char[(strlen(a_name)) + 1]; //size up and allocate
+    strcpy(name, a_name); //copy
+
+    type = new char[(strlen(a_type)) + 1]; //size up and allocate
+    strcpy(type, a_type); //copy
+  }
+
+  //copy other data members
+  cost = a_cost; //set cost
+  power = a_power; //copy power
+  toughness = a_toughness; //copy toughness
+  damage = a_damage; //copy damage
+  effect_pow = a_epow; //copy effect power
+  effect_tough = a_e_tough; //copy effect toughness
+  tap = a_tap; //set tap
+}
+
+
+
+//destructor, releases all dynamically allocated memory
+//INPUT: None
+//OUTPUT: None
+Card::~Card()
+{
+  //destroy dynamically allocated memory
+  delete [] name; //deallocate the memory for name
+  name = NULL; //set the pointer to null
+  delete [] type; //deallocate the memory for the type
+  type = NULL; //set the pointer to null
+
+  return; //exit
+}
+
+
+
+//displays the contents of the card
+//INPUT: None
+//OUTPUT: All the details of the card
+void Card::display(void)
+{
+  if(!type || !name) //if these two members are uninitialized
+  {
+    return; //exit
+  }
+
+  //displays information all cards have
+  cout << endl; //new line
+  cout << "Name: " << name << endl; //displays name and newline
+  cout << "Type: " << type << endl; //displays type and newline
+
+  //displays information for land types
+  if(strcmp(type, "Land") == 0) //if the type is a land
+  {
+    if(!tap) //if the card is not tapped
+    {
+      cout << "Not tapped." << endl;
+    }
+    else if (tap) //if the card is tapped
+    {
+      cout << "Card is tapped." << endl;
+    }
+
+    return; //nothing more to display
+  }
+
+  //displays information for a creature
+  else if(strcmp(type, "Creature") == 0) //if the type is a creature
+  {
+    cout << "Cost: " << cost << endl; //displays the cost and a newline
+    cout << "Power: " << power + effect_pow << endl; //displays current
+					//power and a newline
+    cout << "Toughness: " << toughness + damage + effect_tough; //display
+					//the current toughness
+    cout << endl; //and a newline
+    
+    if(!tap) //if the card has not yet been tapped
+    {
+      cout << "Not tapped." << endl << endl;
+    }
+
+    else if(tap) //if the card has been tapped
+    {
+      cout << "Tapped." << endl << endl;
+    }
+
+    return; //nothing more to display  
+  }
+
+  else if (strcmp(type, "Enchantment") == 0) //if the type is an enchantment
+  {
+    cout << "Cost: " << cost << endl; //displays the cost and a newline
+    cout << "Power buff : " << effect_pow << endl; //displays the power buff
+    cout << "Toughness buff: " << effect_tough << endl; //display buff
+    cout << endl; //newline readability
+    return;
+  }
+}
+
+
+
+//read in the card information
+//INPUT: An ifstream object. Another class will keep track of what file to
+//       open and read from so this function does not repeatedly open the
+//       same file
+//OUTPUT: The filled in members of card
+void Card::read_in_card(ifstream & file_in)
+{
+  //read in with dynamic memory
+  char  * temp = new char[500]; //create a temporary array for sizing
+  file_in.getline(temp, 500, '\n'); //read in current line of file to temp
+  name = new char[(strlen(temp)) + 1]; //dynamically allocate
+  strcpy(name, temp); //copy the name
+  file_in.getline(temp, 500, '\n'); //read in current line of file to temp
+  type = new char[(strlen(temp)) + 1]; //dynamically allocate
+  strcpy(type, temp); //copy the type
+
+  //read in integers and bools
+  file_in >> power; //read in current line of file to power
+  file_in >> toughness; //read in current line to toughness
+  file_in >> effect_pow; //read in current line to buff
+  file_in >> effect_tough; //read in line to buff
+  file_in >> cost; //read in line to cost
+
+  delete [] temp; //get rid of the temporary
+  temp = NULL; //set it to null
+
+  return; //done, return
+}
+
+
+
+//function called whenever the card needs to be moved to a different zone
+//INPUT: An empty card class whose members will be filled in and passed on
+//OUTPUT: The filled in members of the card that was passed in
+void Card::transfer(Card & a_card)
+{
+  //prepare dynamic memory
+  a_card.name = new char[(strlen(name)) + 1]; //size up the name
+  strcpy(a_card.name, name); //copy over the name
+
+  a_card.type = new char[(strlen(type)) + 1]; //size up the type
+  strcpy(a_card.type, type); //copy over the type
+
+  //copy the rest of the members over
+  a_card.cost = cost; //copy cost
+  a_card.power = power; //copy power
+  a_card.toughness = toughness; //copy toughness
+  a_card.damage = damage; //copy damage
+  a_card.effect_pow = effect_pow; //copy effect power
+  a_card.effect_tough = effect_tough; //copy effect toughness
+  a_card.tap = tap; //copies tap status
+
+  return; //exit
+}
+
+
+
+//function called at the end of every turn to reset certain data members
+//INPUT: None
+//OUTPUT: None
+void Card::reset(void)
+{
+  //reset the turn dependent members
+  damage = 0; //damage is reset
+  tap = false; //creature is untapped
+
+  return; //done
+}
+
+
+
+//function calculates the card's attack value from its own power and from
+//any enchantments, which is what the a_card object is
+//INPUT: an integer to hold the sum of buffs
+//OUTPUT: the attack power of the card is returned. A 0 is returned if the
+//        card is unable to attack
+int Card::attack(int b_atk)
+{
+
+  //perform checks to see if card can even attack
+
+  if(tap) //if the card has already been tapped
+  {
+    cout << endl << "This card can not attack - it is already tapped.";
+    cout << endl;
+    return 0; //exit, can not attack
+  }
+
+  if(strcmp(type, "Land") == 0) //if it is a land card
+  {
+    cout << endl << "The card is a land type and can not attack." << endl;
+    cout << endl;
+    return 0; //exit, can not attack
+  }
+  else if(strcmp(type, "Enchantment") == 0) //if it is an enchantment
+  {
+    cout << endl << "The card is an enchantment and can not attack." << endl;
+    cout << endl;
+    return 0; //exit, can not attack
+  }
+  else if(tap) //if the card has already been tapped
+  {
+    cout << endl << "This card has been tapped already." << endl << endl;
+    return 0; //exit, can not attack
+  }
+
+  //determine attack power
+  int attack = 0; //variable to hold attack power
+  attack = power + b_atk; //calculate the attack power
+
+  //tap the card so it can not be used again that turn
+  tap = true; //card is tapped
+
+  return attack; //return the attack power
+}
+
+
+
+//function calculates a creature's defense and returns a result of a
+//calculation done between it and an attacking creature, or creatures
+//INPUT: the total attack towards the creature, as well as any enchantments
+//       acting upon in b_def
+//OUTPUT: the creatures toughness after defending if successful, a negative
+//        value if the creature is defeated, and a zero if the creature can
+//        not defend
+int Card::defend(int card_attack, int b_def)
+{
+  if (strcmp(type, "Creature") == 0) //if the card is a creature
+  {
+    if (!tap) //the creature is not yet tapped and can defend
+    {
+      int defense = 0; //a variable to hold the creatures effective toughness
+      defense = (toughness - (damage) + (b_def) - (card_attack));
+				//calculate the creatures defense according
+				//to the forces acting upon it
+      if(defense <= 0) //if the creature has been defeated
+      {
+        cout << endl << name << " has been defeated!" << endl;
+        return -1; //return a negative value to indicate it was defeated
+      }
+
+      else //the creature successfully defended
+      {
+        cout << endl << name << " successfully defended!" << endl;
+        damage = damage + card_attack; //creature takes damage according to
+					//its attacker
+        tap = true; //creature is tapped
+        return defense; //return a positive value indicating successful defense
+      }
+    }
+
+    else if(tap) //the creature is tapped
+    {
+      cout << endl << "This card has already been tapped and can not defend.";
+      cout << endl;
+      return 0; //creature can not defend
+      
+    }
+
+  }
+  else //the card can not defend or be attacked
+  {
+    cout << endl << "This card is not a creature and can not be attacked,";
+    cout << " or defend." << endl;
+    return 0; //exit
+  }
+}
+
+
+//function is called if a player just wants to attack a creature that can not
+//defend a player
+//INPUT: the attacking creatures attack value, and any enchantments held in
+//       b_def
+//OUTPUT: a negative value indicating defeat, 0 for failure, and a positive
+//        value that the card survived
+int Card::take_damage(int card_attack, int b_def)
+{
+  //check to see if card is a creature
+  if(strcmp(type, "Creature") == 0) //if the card is a creature
+  {
+    if (tap) //if the creature is tapped and can not defend a player
+    {
+      int defense = 0; //a variable to hold the creatures effective toughness
+      defense = (toughness - (damage) + (b_def) - (card_attack));
+				//calculate the creatures defense according
+				//to the forces acting upon it
+      if (defense <= 0) //if the creature has been defeated
+      {
+        cout << endl << name << " has been defeated!" << endl;
+        return -1; //return a negative value to indicate it was defeated
+      }
+
+      else //the creature successfully defended
+      {
+        cout << endl << name << " successfully defended!" << endl;
+        damage = damage + card_attack; //creature takes damage according to
+				//its attacker
+        return defense; //return a positive value indicating successful defense
+      }
+    }
+    else if (!tap) //the creature is not tapped
+    {
+      cout << endl << "This card has not been tapped and can still defend.";
+      cout << endl;
+      return 0; //creature can still defend
+    }
+  }
+
+  else //the card can not take damage because its not a creature
+  {
+    cout << endl << "This card is not a creature and can not take damage.";
+    cout << endl;
+    return 0; //exit
+  }
+}
+
+
+
+//function is used to tap lands for mana
+//INPUT: None
+//OUTPUT: A 1 if a land is successfully tapped; a 0 if the card is not a land
+int Card::mana(void)
+{
+  if(!name) //if the card is empty
+  {
+    return 0; //exit
+  }
+  if(tap) //if the card is tapped, nothing can be done
+  {
+    return 0; //exit, function failed
+  }
+
+  else if(strcmp(type, "Land") != 0) //if the card is not a land
+  {
+    return 0; //exit, function failed
+  }
+
+  else //card is a land and can be tapped
+  {
+    tap = true; //tap the card
+    return 1; //card is tapped for one mana
+  }
+}
+
+
+
+//function compares a name passed in with the card name
+//INPUT: a name to be compared
+//OUTPUT: a true if it matches, false if not
+bool Card::compare_name(char a_name [])
+{
+  if(strcmp(name, a_name) == 0) //if the names match
+  {
+    return true; //true, there is a match
+  }
+  else if (strcmp(name, a_name) != 0) //if the names do not match
+  {
+    return false; //false, no match
+  }
+}
+
+
+
+//functions asks the user what kind of card they want
+//INPUT: The user's choices for what kind of card they want
+//OUTPUT: Instructions to the user
+void Card::user_card(void)
+{
+  cout << endl << "Enter the name of the card." << endl;
+
+  char * a_name = new char[100]; //pointer for the name
+
+  cin.get(a_name, 100, '\n'); //get the name
+  cin.ignore(100, '\n'); //ignore extra input
+
+  name = new char[(strlen(a_name)) + 1]; //allocate memory for name
+
+  strcpy(name, a_name); //copy the name over
+
+  cout << "Enter the type of the card: " << endl;
+  cout << "Enter a 1 for creature, 2 for land, 3 for enchantment.";
+  int choice = 0; //hold the user's choice
+
+  do
+  {
+    cout << endl << "Enter a number corresponding to the choices: " << endl;
+    cin >> choice; //get the user's choice
+    cin.ignore(100, '\n'); //ignore extra input
+  }
+  while(choice < 1 || choice > 3); //loop until valid input
+
+  if(choice == 1) //if the user chose creature
+  {
+    type = new char[(strlen("Creature") + 1)]; //allocate type memory
+    strcpy(type, "Creature"); //put the type in
+    cout << endl << "Enter the cost: " << endl;
+    cin >> cost; //get the cost
+    cin.ignore(100, '\n'); //ignore extra input
+    cout << endl << "Enter the power: " << endl;
+    cin >> power; //get the power
+    cout << endl << "Enter the toughness: " << endl;
+    cin >> toughness; //get the toughness
+    cin.ignore(100, '\n'); //ignore extra input
+    return; //exit
+  }
+  else if(choice == 2) //if the user chose a land
+  {
+    type = new char[(strlen("Land") + 1)]; //create memory for type
+    strcpy(type, "Land"); //put the type in
+    return; //exit
+  }
+  else if(choice == 3) //if the user chose an enchantment
+  {
+    type = new char[(strlen("Enchantment")) + 1]; //create mem for type
+    strcpy(type, "Enchantment"); //put the type in
+    cout << endl << "Enter the cost: " << endl;
+    cin >> cost; //get the cost
+    cin.ignore(100, '\n'); //ignore extra input
+    cout << endl << "Enter the buff to power it gives: " << endl;
+    cin >> effect_pow; //get the power buff
+    cin.ignore(100, '\n'); //ignore extra input
+    cout << endl << "Enter the buff to toughness it gives: " << endl;
+    cin >> effect_tough; //get the tough buff
+    cin.ignore(100, '\n'); //ignore extra input
+    return; //exit
+  }
+}
+
+
+
+//function copies a card
+//INPUT: The card to be copied
+//OUTPUT: None
+void Card::copy_card(const Card & a_card)
+{
+  //setup the card name
+
+  if(a_card.name) //if there wasnt a mistake reading in
+  {
+    name = new char[(strlen(a_card.name)) + 1]; //dynamic allocate for name
+    strcpy(name, a_card.name); //copy the name into the memory
+  
+
+    //setup the card's type
+    type = new char[(strlen(a_card.type)) + 1]; //dynamic allocate for name
+    strcpy(type, a_card.type); //copy the name into the memory
+  }
+  else //dont dereference
+  {
+    return; //exit
+  }
+
+  //copy all ints and bools
+  cost = a_card.cost; //copy the cost
+  power = a_card.power; //copy the power
+  toughness = a_card.toughness; //copy the toughness
+  damage = a_card.damage; //copy the damage
+  effect_pow = a_card.effect_pow; //copy buffs
+  effect_tough = a_card.effect_tough; //copy buffs
+  tap = a_card.tap; //copy tap status
+
+  return; //exit
+}
+
+
+
+//function adds up buffs from enchancements
+//INPUT: Two integers to hold sum of buffs
+//OUTPUT: The complete integers
+void Card::buff(int & b_atk, int & b_def)
+{
+  if(!type) //if type uninitalized
+  {
+    return; //exit
+  }
+  if(strcmp(type, "Enchantment") == 0) //if the card is an enchantment
+  {
+    b_atk = b_atk + effect_pow; //add buff
+    b_def = b_def + effect_tough; //add buff
+  }
+  else
+  {
+    return; //card is not an enchantment, leave
+  }
+}
+
+
+
+//if the card is a creature, it is set to tapped
+//INPUT: None
+//OUTPUT: None
+void Card::sickness(void)
+{
+  if(strcmp(type, "Creature") == 0) //if the card is a creature
+  {
+    tap = true; //creature comes into play tapped
+    return; //quit
+  }
+  else //if the card is not a creature
+  {
+    return; //do not tap it
+  }
+}
+
+
+
+//function returns the cost of the card
+//INPUT: None
+//OUTPUT: An integer for the cost of the card
+int Card::r_cost(void)
+{
+  return cost; //return the cost of the card
+}
+
+
+
+//function sets a_name to the card's type
+//INPUT: A_name to hold the type
+//OUTPUT: The type of the card
+void Card::s_type(char a_name [])
+{
+  if(a_name) //if there is a name already
+  {
+    delete a_name; //get rid of it
+    a_name = NULL; //set a_name to null
+  }
+  a_name = new char[(strlen(type)) + 1]; //create room for the type
+  strcpy(a_name, type); //copy the name into the array
+
+  return; //exit
+}
+
+
+
+//function returns the tap status of the card
+//INPUT: None
+//OUTPUT: True if tapped, false if not
+bool Card::is_tapped(void)
+{
+  return tap; //return the tap status of the card
+}
+
+
+
+//constructor initializes data members
+//INPUT: None, but initializes base class members via initialization list
+//OUTPUT: None
+node::node(void) : Card("\0", "\0", 0, 0, 0, 0, 0, 0, 0)
+{
+  next = NULL; //set its pointer to null
+  nodes = NULL; //no extra nodes to allocate
+}
+
+
+
+//copy constructor. Lets a user initialize a node to a certain card
+//INPUT: A card with the members to copy over, and initializes base members
+//OUTPUT: None
+node::node(const Card & a_card) : Card (a_card)
+{
+  next = NULL; //set its pointer to null
+  nodes = NULL; //no extra nodes to allocate
+}
+
+
+
+//copy constructor. Lets a user initialize a node to another node
+//INPUT: A node with the members to copy over, base class members initialized
+//       in an initialization list
+//OUTPUT: None
+node::node(const node & a_node) : Card (a_node.name, a_node.type, a_node.cost,
+           a_node.power, a_node.toughness, a_node.damage, a_node.effect_pow,
+           a_node.effect_tough, a_node.tap)
+{
+  next = NULL; //initalize to null
+  nodes = NULL; //initialize to null
+}
+
+
+
+//destructor deallocates dynamic memory
+//INPUT: None
+//OUTPUT: None
+node::~node(void)
+{
+  next = NULL; //set pointer to NULL
+
+  if(nodes) //if there is an array of nodes
+  {
+    for (int i = 0; i < 3; i++) //deallocate every node
+    {
+      nodes[i].~node(); //deallocate the node
+    }
+    delete [] nodes; //deallocate the array of nodes
+  }
+
+  return; //exit
+}
+
+
+
+//function just points to the node that is sent to it
+//INPUT: a node for the node's next to point to
+//OUTPUT: None
+void node::set_next(node * pointer)
+{
+  next = pointer; //point to whatever was passed in
+}
+
+
+
+//function advances the temporary pointer to the next node
+//INPUT: the current pointer to be changed
+//OUTPUT: None
+void node::go_next(node * & current)
+{
+  current = next; //current goes to the next node
+}
+
+
+
+//function creates an array of nodes in case it is to be used for
+//a flexible array
+//INPUT: None
+//OUTPUT: None
+void node::create(void)
+{
+  nodes = new node[3];
+}
+
+
+
+//function initalizes the node to the node that was passed in
+//INPUT: A node to be copied
+//OUTPUT: None
+void node::copy_node(const node & a_node)
+{
+  //setup the card name
+  if(a_node.name) //if there wasnt a mistake reading in
+  {
+    name = new char[(strlen(a_node.name)) + 1]; //dynamically allocate for name
+    strcpy(name, a_node.name); //copy the name into the memory
+
+    //setup the node's type
+    type = new char[(strlen(a_node.type)) + 1]; //dynamically allocate for type
+    strcpy(type, a_node.type); //copy the type into the memory
+  }
+  else //dont dereference
+  {
+    return; //exit
+  }
+
+  //copy all ints and bools
+  cost = a_node.cost; //copy the cost
+  power = a_node.power; //copy the power
+  toughness = a_node.toughness; //copy the toughness
+  damage = a_node.damage; //copy the damage
+  effect_pow = a_node.effect_pow; //copy buffs
+  effect_tough = a_node.effect_tough; //copy buffs
+  tap = a_node.tap; //copy tap status
+
+  return; //exit
+}
+
+
+
+//function copies a card into a node
+//INPUT: An empty node with members to be filled in
+//OUTPUT: The node with filled in members
+void node::transfer(node & a_node)
+{
+  if(!name) //if there is no name
+  {
+    return; //quit
+  }
+  //prepare dynamic memory
+  a_node.name = new char[(strlen(name)) + 1]; //size up the name
+  strcpy(a_node.name, name); //copy over the name
+
+  a_node.type = new char[(strlen(type)) + 1]; //size up the type
+  strcpy(a_node.type, type); //copy over the type
+
+  //copy the rest of the members over
+  a_node.cost = cost; //copy the cost
+  a_node.power = power; //copy power
+  a_node.toughness = toughness; //copy toughness
+  a_node.damage = damage; //copy damage
+  a_node.effect_pow = effect_pow; //copy effect power
+  a_node.effect_tough = effect_tough; //copy effect toughness
+  a_node.tap = tap; //copy tap status
+
+  return; //exit
+}
+
+
+
+//function displays the array of nodes if it is an array
+//INPUT: None
+//OUTPUT: The contents of the node array
+void node::display_all(void)
+{
+  nodes[0].display(); //display the card at that location
+  nodes[1].display(); //display the card at that location
+  nodes[2].display(); //display the card at that location
+  return; //exit
+}
+
+
+
+//function copies a node sent in into the first unitalized node in the
+//array
+//INPUT: A node to be copied into the array
+//OUTPUT: A true if the operation was successful, a false if not
+bool node::copy_nodes(const node & a_node)
+{
+  for(int i = 0; i < 3; i++) //loop through each node in the array
+  {
+    if(!nodes[i].name) //if the node is unintalized
+    {
+      nodes[i].copy_node(a_node); //copy the node into that node
+      return true; //operation successful
+    }
+  }
+  return false; //all the nodes are initalized
+}
+
+
+
+//function transfers the first initalized card whose damage is equal to or
+//greater than its toughness
+//INPUT: An empty node for transfers
+//OUTPUT: The filled in node as well as a true if a card was found and
+//        a false if not
+bool node::transfer_nodes(node & a_node)
+{
+  bool o_success = false; //holds operation success value
+
+  for (int i = 0; i < 3; i++) //loop through all nodes in the array
+  {
+    //if the node is intalized and is of type creature
+    if(nodes[i].name && (strcmp(nodes[i].type, "Creature") == 0))
+    {
+      int compar = 0; //use for comparison
+      compar = nodes[i].toughness + nodes[i].effect_tough; //add up these
+				//two values to compare to damage
+      if(damage >= compar) //if the creature has taken as much damage as it
+				//can
+      {
+        nodes[i].reset(); //reset the node's values
+        nodes[i].transfer(a_node); //copy the node
+        nodes[i].~node(); //destroy the card at that node
+        o_success = true;
+      }
+    }
+    return o_success; //no cards that need to be transferred
+  }
+}
+
+
+
+//function goes through each node in the array and resets them all
+//INPUT: None
+//OUTPUT: None
+void node::reset_all(void)
+{
+  for(int i = 0; i < 3; i++) //while there are still nodes to reset
+  {
+    nodes[i].reset(); //reset the card at this position
+  }
+  return; //exit
+}
+
+
+
+//function determines if a node is empty
+//INPUT: None
+//OUTPUT: A true if yes a false if not
+bool node::is_empty(void)
+{
+  for (int i = 0; i < 3; i++)
+  {
+    if(nodes[i].name) //if the name has been allocated
+    {
+      return false;
+    }
+  }
+  return true; //return true
+}
+
+
+
+//function taps all mana cards in the array
+//INPUT: None
+//OUTPUT: The amount of mana the player gets
+int node::mana_all(void)
+{
+  int count = 0; //holds the amount of mana
+
+  for(int i = 0; i < 3; i++) //loop through all cards in the array
+  {
+    count = count + nodes[i].mana(); //add the mana value of that card
+  }
+
+  return count; //return the amount of mana from that array
+}
+
+
+
+//function compares all the names of the nodes in the array to the name that
+//is passed in. The first match returns a true and is copied into the empty
+//node
+//INPUT: a_name to be compared, and an empty node to be filled
+//OUTPUT: a true if there was a match and a false if not, and the filled
+//        in members of a_node
+bool node::compare_names(char a_name [], node & a_node)
+{
+  for(int i = 0; i < 3; i++)
+  {
+    if(nodes[i].compare_name(a_name)) //if the name matches
+    {
+      nodes[i].transfer(a_node); //copy the node
+      return true; //success
+    }
+  }
+  return false; //no match
+}
+
+
+
+//function adds up all the buffs present in the node array
+//INPUT: the buff counters
+//OUTPUT: The finalized buff counters
+void node::add_buffs(int & b_atk, int & b_def)
+{
+  for (int i = 0; i < 3; i++) //while there are still items in the array
+  {
+    if(nodes[i].name) //if the card is initalized
+    {
+      if(strcmp(nodes[i].type, "Enchantment") == 0) //if the card in this
+				//spot is an enchantment
+      {
+        b_atk = b_atk + nodes[i].effect_pow; //add the buff to the total buff
+				//attack counter
+        b_def = b_def + nodes[i].effect_tough; //add the buff to the total
+				//buff defense counter
+      }
+    }
+  }
+  return; //exit
+}
+
+
+
+//function taps the node in the array with the matching name to attack, and
+//adds the attack buffs to this value as well
+//INPUT: the name to be compared, and the buff attack value
+//OUTPUT: the integer value of the cards attack
+int node::t_attack(char a_name [], int & b_atk)
+{
+  for(int i = 0; i < 3; i++)
+  {
+    if (nodes[i].name) //if the card is initalized
+    {
+      if(strcmp(nodes[i].name, a_name) == 0) //if this is the card the user
+				//wants to tap
+      {
+        int val = 0; //hold the attack value of the creature
+        val = nodes[i].attack(b_atk); //get the returned value
+
+        if(val) //if this was a positive number, then it could attack
+        {
+          return val; //return its attack value
+        }
+      }
+    }
+  }
+
+  return 0; //there was no match
+}
+
+
+
+//function taps the first untapped card with the same name for defense in the
+//array and an integer indicating the success or failure of the operation
+//INPUT: a_name to be matched, the buff to defense, and the attack value
+//       against the creature
+//OUTPUT: the integer value indicating the status of the operation
+int node::t_defense(char a_name [], int & b_def, int & attack)
+{
+  for(int i = 0; i < 3; i++)
+  {
+    if(nodes[i].name) //if the card is initalized
+    {
+      if(strcmp(nodes[i].name, a_name) == 0) //if this is the card the user
+				//wants to tap
+      {
+        nodes[i].defend(attack, b_def); //have it defend
+
+        if(nodes[i].power != 0) //if this is a creature
+        {
+          if(nodes[i].tap) //if it is tapped
+          {
+             return -100; //return a value indicating it was tapped
+          }
+          return 0; //return a 0 for success
+        }
+        else if(nodes[i].power == 0) //if this is not a creature
+        {
+          return -101; //return a value indicating it was not a creature
+        }
+      }
+    }
+  }
+
+  return -102; //return a value indicating it was not found
+}
+
+
+
+//function determines if a node is empty or not
+//INPUT: None
+//OUTPUT: A true if it is, a false if not
+bool node::n_empty(void)
+{
+  if(name) //if there is a card
+  {
+    return true; //there is information
+  }
+
+  return false; //otherwise it does not
+}
+
+
+
+//function copies the nodes in the array if it is allocated
+//INPUT: A node holding an array of nodes
+//OUTPUT: None
+void node::copy_transfer(node & a_node)
+{
+  if(!nodes) //if there is no array allocated
+  {
+    return; //exit
+  }
+  if(!a_node.nodes) //if the node passed in does not have an array
+  {
+    return; //exit
+  }
+
+  for(int i = 0; i < 3; i++) //copy all nodes
+  {
+    nodes[i].copy_node(a_node.nodes[i]); //copy the node
+  }
+
+  return; //exit
+}
+
+
+
+//function transfers the nodes in an array into a node
+//INPUT: An empty node to be copied into
+//OUTPUT: The filled in members of the node
+void node::transfer_copy(node & a_node)
+{
+  if(!a_node.nodes) //if the array hasnt been allocated yet
+  {
+    a_node.create(); //allocate the memory
+  }
+  for(int i = 0; i < 3; i++) //loop through every element in the array
+  {
+    nodes[i].transfer(a_node.nodes[i]); //transfer the information
+  }
+
+  return; //exit
+}
+
+
+
+//Constructor initializes data members
+//INPUT: None
+//OUTPUT: None
+List::List(void)
+{
+  head = NULL; //head is null
+}
+
+
+
+//copy constructor allows a user to copy over a list
+//INPUT: a_list to be copied over
+//OUTPUT: None
+List::List(const List & a_list)
+{
+  node * destination = head; //a pointer for destination list traversal
+
+  node * source = a_list.head; //source list traversal
+
+  if(!a_list.head) //if the list to be copied has nothing in it
+  {
+    cout << endl << "List has nothing to copy." << endl;
+    return; //exit
+  }
+
+  node a_node; //create a node for copying
+
+  a_list.head -> transfer(a_node); //put the contents of the source list head
+				//node into the new card
+
+  node * temp = new node(a_node); //create a new node with the same details as
+				//the source list's head node
+
+  temp -> set_next(NULL); //the new node points to nothing
+
+  head = temp; //head now points to the new node
+
+  source -> go_next(source); //source moves up
+
+  while(source) //while there are still nodes in the list to be copied
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into it
+    temp2 -> set_next(NULL); //new node points to nothing
+    destination -> set_next(temp2); //point at the new node
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+  }
+  return; //exit now
+}
+
+
+
+//destructor deallocates all dynamic memory
+//INPUT: None
+//OUTPUT: None
+List::~List(void)
+{
+  //variable declaration
+  node * current = head; //temporary pointer to traverse
+
+  while(current) //while there are still nodes
+  {
+    head -> go_next(head); //head progresses to next node
+    delete current; //delete the node
+    current -> set_next(NULL); //set the next pointer to null
+    current = head; //current moves back up to head
+  }
+}
+
+
+
+//function inserts a new node at the head of the list
+//INPUT: a_node, the item to insert, and names to match signatures
+//OUTPUT: None
+void List::insert(char a_name [], char b_name [], node & a_node)
+{
+  node * temp = new node(a_node); //create a new node and have its contents
+				//copied from the a_node passed in
+  if(!head) //if there is nothing in the list
+  {
+     head = temp; //head is set to the new node
+     temp -> set_next(NULL); //new node's next points to nothing
+  }
+  else
+  {
+    temp -> set_next(head); //temp now points to current
+    head = temp; //head now points to temp, the new first node
+  }
+
+  return; //exit
+}
+
+
+
+//function goes through the list and displays all the nodes within it
+//INPUT: None
+//OUTPUT: All the nodes held in the list
+void List::display(void)
+{
+  //variable declarations
+  node * current = head; //create a pointer for traversal and set to head
+
+  if(!head) //nothing to display
+  {
+    cout << endl << "Nothing yet to display." << endl;
+    return; //exit
+  }
+
+  while(current) //while still items in the list
+  {
+    current -> display(); //display the card that current points to
+    current -> go_next(current); //current goes to the next node
+  }
+
+  return; //exit
+}
+
+
+
+//function looks for a node that matches the name, and then removes it if
+//found
+//INPUT: a name, for the program to compare a node to remove, and an empty
+//       node to be filled in in case we want to move it, and b_name for
+//       matching signatures
+//OUTPUT: The filled in members of the node, in case of transfer, and
+//        a true if successful a false if not
+bool List::removal(char a_name [], char b_name [], node & a_node)
+{
+  if(!head) //if nothing is in the list
+  {
+    return false; //exit, nothing to remove
+  }
+  else if (head -> compare_name(a_name)) //if the first node is what we want
+				//to remove
+  {
+    node * current = head; //temporary pointer for traversal
+    current -> go_next(current); //current goes to the next node
+    head -> set_next(NULL); //head's next points to NULL
+    head -> transfer(a_node); //transfer the node
+    delete head; //delete the node
+    head = current; //head now points at current
+    return false; //done, return
+  }
+  else //its not the first node, so time to look for it
+  {
+    node * current = head; //temporary pointer for traversal
+    node * previous = head; //previous pointer for removal
+
+    while(current && (!current -> compare_name(a_name))) //while items
+				//still and no match
+    {
+      previous = current; //previous catches up to current
+      current -> go_next(current); //current goes to next node
+    }
+
+    if(!current) //if the loop broke because no more items
+    {
+      cout << endl << "Item not found." << endl;
+      return false;
+    }
+    else if (current -> compare_name(a_name)) //if the loop broke because
+				//there is a match
+    {
+       node * temp = current; //create a temporary pointer to bridge gap
+				//between nodes
+       temp -> go_next(temp); //temp goes to the next node
+       previous -> set_next(temp); //node before now points around node
+				//to delete
+       current -> set_next(NULL); //set the node's next pointer to NULL
+       current -> transfer(a_node); //store the card
+       delete current; //get rid of the node
+       return true;
+    }
+  }
+}
+
+
+
+//function traverses the list and retrieves a card that matches the name
+//of an arrau that is passed in and puts the information into a new node
+//INPUT: a name to match a name in the list, and an empty node class to
+//       copy into that card, b_name to match signatures
+//OUTPUT: The filled in members of a_node
+void List::retrieve(char a_name [], char b_name [], node & a_node)
+{
+  node * current = head; //temp pointer for traversal
+
+  if(!head)
+  {
+    cout << endl << "Nothing to retrieve yet." << endl;
+    return; //exit
+  }
+
+  else //there are items to look at
+  {
+    while (current && (!current -> compare_name(a_name)))
+				//loop while items in list or no match
+    {
+      current -> go_next(current); //traverse to the next node
+    }
+
+    if(!current) //item not found
+    {
+      cout << endl << "Card not found." << endl;
+      return; //exit
+    }
+    else if(current -> compare_name(a_name))
+				//if loop broke because there is a match
+    {
+      cout << endl << "Item found." << endl;
+
+      current -> transfer(a_node); //call function to transfer info into the
+				//a_node class instance
+
+      return; //exit
+    }
+  }
+}
+
+
+
+//function will be implemented in a certain derived class
+//INPUT: File_in, used to navigate the deck file
+//OUTPUT: None
+void List::read_in(ifstream & file_in)
+{
+  return;
+}
+
+
+
+//function will be implemented in a certain derived class
+//INPUT: None
+//OUTPUT: None
+void List::reset(void)
+{
+  return; //exit
+}
+
+
+
+//function will be implemented in a certain derived class
+//INPUT: None
+//OUTPUT: A 0
+int List::tap_mana(void)
+{
+  return 0; //exit
+}
+
+
+
+//function will be implemented in a certain derived class
+//INPUT: All input is to match signautres
+//OUTPUT: None
+void List::tap_attack(int attackers [], int & i, char a_name [])
+{
+  return; //exit
+}
+
+
+
+//function to be implemented in a certain derived class
+//INPUT: All input is to match signatures
+//OUTPUT: A 0
+int List::tap_defense(int attackers [], const int & i)
+{
+  return 0; //exit
+}
+
+
+
+//function to be implemented in derived classes
+//INPUT: None
+//OUTPUT: A 0
+int List::card_count(void)
+{
+  return 0; //exit
+}
+
+
+
+//constructor initializes data members
+//INPUT: None
+//OUTPUT: None
+Library::Library(void)
+{
+  head = NULL; //set the head to null
+  num_cards = 0; //library starts with no cards
+}
+
+
+
+//library copy constructor - copies an existing list
+//INPUT: a_library to be copied over
+//OUTPUT: None
+Library::Library(const Library & a_library)
+{
+  node * destination = head; //a pointer for destination list traversal
+
+  node *source = a_library.head; //source list traversal
+
+  if(!a_library.head) //if the list to be copied has nothing
+  {
+    cout << endl << "Library has nothing to copy." << endl;
+    return; //exit
+  }
+  node a_node; //create a node for copying
+  a_library.head -> transfer(a_node); //put contents of source list head into
+				//new card
+
+  node * temp = new node(a_node); //create a new node with the same details as
+				//the source library's head node
+  temp -> set_next(NULL); //the new node points to nothing
+
+  head = temp; //head now points to the new node
+
+  source -> go_next(source); //source moves up
+
+  while(source) //while there are still nodes in the list to be copied
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into it
+    temp2 -> set_next(NULL); //new node points to nothing
+    destination -> set_next(temp2); //point at the new node
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+  }
+}
+
+
+
+//copy constructor for pointers
+//INPUT: A pointer to a library to be copied
+//OUTPUT: None
+Library::Library(const Library * & a_library)
+{
+  node * destination = head;
+  node * source = a_library -> head; //source list traversal
+
+  if(!source) //if the list to be copied has nothing
+  {
+    cout << endl << "Library has nothing to copy." << endl;
+    return; //exit
+  }
+  node a_node; //create a node for copying
+
+  source -> transfer(a_node); //put contents of list head into new card
+
+  node * temp = new node(a_node); //create a new node with same details
+
+  temp -> set_next(NULL); //new node points to nothing
+
+  head = temp; //head now points to new node
+
+  source -> go_next(source); //source moves up
+
+  while(source) //while still nodes in list
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into it
+    temp2 -> set_next(NULL); //points at nothing
+    destination -> set_next(temp2); //point at new node
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+  }
+}
+
+
+
+//destructor releases all dynamic memory
+//INPUT: None
+//OUTPUT: None
+Library::~Library(void)
+{
+  //variable declaration
+  node * current = head; //temporary pointer to traverse
+
+  while(current) //while there are still nodes
+  {
+    head -> go_next(head); //head progresses to next node
+    delete current; //delete the node
+    current -> set_next(NULL); //set the next pointer to null
+    current = head; //current moves back up to head
+  }
+}
+
+
+
+//function reads in all cards from the data file and creates the library
+//INPUT: an ifstream object to read in files
+//OUTPUT: None
+void Library::read_in(ifstream & file_in)
+{
+  if(file_in) //if connection was successful
+  {
+    while(!file_in.eof()) //while still room in the file
+    {
+      Card a_card; //create an empty card object
+      a_card.read_in_card(file_in); //read in the card
+      node a_node(a_card); //put the information into a node
+      char * a_name = new char[2]; //create a name array for the function
+				//call to work
+      char * b_name = new char[2]; //create a name array for function call
+				//to work
+      insert(a_name, b_name, a_node); //call a function to insert the node into
+				//the list
+      num_cards = num_cards + 1;
+      a_card.~Card(); //deallocate the card
+      a_node.~node(); //deallocate the node
+      char next_char = file_in.peek(); //check to see next character
+      if(next_char == '\n') //if the next character is a newline
+      {
+        file_in.ignore(); //discard it
+        next_char = file_in.peek(); //check character after
+        if (next_char == '\n') //if the character after is a new line too
+        {
+          file_in.ignore(); //ignore it - end of file
+        }
+      }
+    }
+  
+    return; //exit
+  }
+}
+
+
+
+//function will randomly draw from the deck each time, creating a "shuffling"
+//effect, and send the information into a node class
+//INPUT: An empty node, and the name arrays to match signatures with List
+//OUTPUT: the card that was drawn, filled into a_node
+void Library::retrieve(char a_name [], char b_name [], node & a_node)
+{
+  if(num_cards == 0) //if no more cards to draw
+  {
+    cout << endl << "No more cards in the library." << endl;
+    return; //exit
+  }
+  node * current = head; //temporary pointer for traversal
+
+  int traverse = 0; //variable to hold output of rand
+
+  traverse = rand() % num_cards; //returns a random number no greater than
+				//the number of cards in the deck
+  if(!head) //if there is nothing in the deck
+  {
+    cout << endl << "There are no cards to draw." << endl;
+    return; //exit
+  }
+  else //something in the deck
+  {
+    if(traverse == 0) //if we do not need to traverse
+    {
+      current -> transfer(a_node); //transfer that card
+      current -> go_next(current); //current goes to the next node
+      head -> set_next(NULL); //set head's next pointer to null
+      delete head; //first node is deleted
+      head = current; //head moves up to the new head of list
+      num_cards = num_cards - 1; //decrement cause lost a card
+      return; //exit
+    }
+    else //we have to traverse further
+    {
+      node * previous = current; //temporary pointer for traversal
+      while (traverse > 0) //loop while traverse is greater than 0
+      {
+        previous = current; //previous catches up to current
+        current -> go_next(current); //current goes to the next node
+        traverse = traverse - 1; //traverse increments down
+      }
+      current -> transfer(a_node); //the details of this node are transferred
+				//into the empty card
+      node * temp = current; //create another temporary pointer for removal
+      temp -> go_next(temp); //temp goes to the next node
+      previous -> set_next(temp); //node before now points around node to
+				//delete
+      current -> set_next(NULL);
+      delete current; //release the memory held at that node
+      num_cards = num_cards - 1; //decrement the card count to make up for
+				//drawn card
+      return; //exit
+
+    }
+  }
+}
+
+
+
+//function returns the count of the deck
+//INPUT: Nothing
+//OUTPUT: The number of cards in the deck
+int Library::card_count(void)
+{
+  return num_cards; //return the number of cards
+}
+
+
+
+//constructor initializes the head to null
+//INPUT: None
+//OUTPUT: None
+Graveyard::Graveyard(void)
+{
+  head = NULL; //head is set to null
+  return; //exit
+}
+
+
+
+//copy constructor copies a graveyard
+//INPUT: a graveyard object to be copied
+//OUTPUT: None
+Graveyard::Graveyard(const Graveyard & a_grave)
+{
+  node * destination = head; //a pointer for destination list traversal
+  node * place = head; //pointer for pointing back at first node
+
+  node * source = a_grave.head; //source list traversal
+  node * source_place = a_grave.head; //source list holder
+
+  if(!a_grave.head) //if the list to be copied has nothing in it
+  {
+    cout << endl << "List has nothing to copy." << endl;
+    return; //exit
+  }
+
+  node a_node; //create a node for copying
+  a_grave.head -> transfer(a_node); //put contents of list head into card
+  node * temp = new node(a_node); //create new node with same details as source
+  temp -> set_next(NULL); //new node points to nothing
+  head = temp; //head now points to the new node
+  source -> go_next(source); //source moves up
+
+  while(source != source_place) //while source is not back at head
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into
+    temp2 -> set_next(NULL); //new node points to nothing
+    destination -> set_next(temp2); //point at the new node
+    head = temp2; //head points at new rear
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+  }
+  head -> set_next(place); //rear points back at front - list is circular
+				//again
+
+  return; //exit
+}
+
+
+
+//copy constructor for pointers
+//INPUT: A graveyard list to be copied
+//OUTPUT: None
+Graveyard::Graveyard(const Graveyard * & a_grave)
+{
+  node * destination = head; //original list pointer
+  node * place = head; //pointer for pointing back at first node
+  node * source = a_grave -> head; //source list traversal
+  node * source_place = a_grave -> head; //source list holder
+
+  if(!source) //if the list to be copied has nothing in it
+  {
+    cout << endl << "List has nothing to copy." << endl;
+    return; //exit
+  }
+
+  node a_node; //create new node for copying
+  source -> transfer(a_node); //put contents of list head into card
+  node * temp = new node(a_node); //create new node with same details as source
+  temp -> set_next(NULL); //new node points to nothing
+  head = temp; //head now points to new node
+  source -> go_next(source); //source moves up
+
+  while(source != source_place) //while source is not back at head
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into
+    temp2 -> set_next(NULL); //new node points to nothing
+    destination -> set_next(temp2); //point at new node
+    head = temp2; //head points at new rear
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+  }
+  head -> set_next(place); //rear points back at front - list is circular again
+}
+
+
+
+//destructor first makes the list linear and then deallocates as normal
+//INPUT: None
+//OUTPUT: None
+Graveyard::~Graveyard(void)
+{
+  //variable declarations
+  node * current = head; //set up a current pointer for traversal
+
+  node * temp = head; //set up a placeholder for comparisons
+
+  if(head) //if there is a head pointer
+  {
+    temp -> go_next(head); //can safely go to first node
+  }
+
+  //if nothing is in the list
+  if(!head)
+  {
+    return; //exit
+  }
+
+  else if(temp = head) //if the list has only one item
+  {
+    head -> set_next(NULL); //head points to nothing
+    delete head; //destroy the node
+  }
+  else //more than one item
+  {
+    head -> go_next(current); //head goes to the first node
+    current -> go_next(head); //current goes to the next node to hold
+    head -> set_next(NULL); //head's next is null
+    head = current; //head is now pointing at the first node and the list is
+				//linear
+
+    //deallocate as usual
+    while(head)
+    {
+      current -> go_next(head); //current moves to next node
+      head -> set_next(NULL); //head's next is now null
+      delete head; //node is gone
+      head = current; //head moves up to current
+    }
+  }
+  return; //exit
+}
+
+
+
+//function inserts a node into the circularly linked list
+//INPUT: a_node to be inserted and names to match signatures
+//OUTPUT: None
+void Graveyard::insert(char a_name [], char b_name [], node & a_node)
+{
+  node * current = head; //temporary for traversal
+  node * temp = new node(a_node); //new node with copied contents
+  temp -> set_next(NULL); //temp's next is null
+
+  node * place = head; //place holder for comparisons
+
+  if(head) //if there is a head
+  {
+    place -> go_next(place); //can safely go to next node
+  }
+
+  //insert based on certain cases
+  if(!head) //if there are no items
+  {
+    head = temp; //head now points at the new node
+    temp -> set_next(head); //the node points at itself
+    return; //exit
+  }
+  else if(head == place) //if there is one item
+  {
+    head = temp; //head points to new item
+    current -> set_next(head); //first item points to new item
+    head -> set_next(current); //new node points to first item
+    return; //exit
+  }
+  else //more than one item
+  {
+    current -> go_next(current); //current moves to next node
+    temp -> set_next(current); //new node points to first node
+    current = head; //current now back at head
+    head = temp; //head points at new node
+    current -> set_next(temp); //the new node points at first now
+    return; //exit
+  }
+}
+
+
+
+//function loops through the CLL and displays all items
+//INPUT: None
+//OUTPUT: The card information within the list
+void Graveyard::display(void)
+{
+  //displays based on cases
+  if(!head) //no items
+  {
+    cout << endl << "No cards are in the graveyard." << endl;
+    return; //exit
+  }
+  else //all others
+  {
+    node * current = head; //traversal pointer
+    current -> go_next(current); //current goes to first node
+
+    node * temp = current; //pointer holds the first item
+
+    //loop and display all
+    do
+    {
+      current -> display(); //display the card information
+      current -> go_next(current); //go to next node
+    }
+    while(current != temp); //loop while current does not meet back up with
+				//the first item
+
+    return; //exit
+  }
+}
+
+
+
+//function searches through the CLL to remove a node
+//INPUT: a name to be compared, and a node to match signatures
+//OUTPUT: true if successful, false if not
+bool Graveyard::removal(char a_name [], char b_name [], node & a_node)
+{
+  //variable declaration
+  node * current = head; //temporary for traversal
+  node * place = head; //placeholder
+  node * previous = head; //temporary pointer for removal
+  node * place2 = head; //placeholder for the item after first item
+
+  if(head) //if there is a head
+  {
+    place -> go_next(place); //safely goes to next node
+    place2 -> go_next(place2); //goes to next node
+    place2 -> go_next(place2); //goes to second node
+  }
+
+  if(!head) //nothing in the list
+  {
+    cout << endl << "Nothing to remove." << endl;
+    return false; //quit
+  }
+  else if ((head == place) && (!head -> compare_name(a_name))) //if there
+				//is only one node and it is not what
+				//we are looking for
+  {
+    cout << endl << "Item not found." << endl;
+    return false; //exit
+  }
+  else if((head == place) && (head -> compare_name(a_name))) //if there is
+				//only one node and it is what we are looking
+				//for
+  {
+    head -> set_next(NULL); //points to nothing
+    delete head; //get rid of the node
+    head = NULL; //head now points at nothing
+    return true; //quit
+  }
+
+  else if((head != place) && (head == place2) && (head -> compare_name(
+				a_name))) //if there are two nodes and
+				//head is what we want to remove
+  {
+    head -> set_next(NULL); //node points at nothing
+    delete head; //remove the node
+    head = place; //head is now at only node
+    head -> set_next(place); //node now points at itself
+    return true; //exit
+  }
+
+  else if((head != place) && (head != place2) && (head -> compare_name(
+				a_name))) //if more than two nodes and
+				//head is what we want to remove
+  {
+    node * previous1 = head; //another pointer for traversal
+    node * head_find = head; //pointer used to find head
+    head_find -> go_next(head_find); //moves up
+
+    while(head_find != head) //loop until pointer meets back with head
+    {
+      previous1 = head_find; //previous moves up to head
+      head_find -> go_next(head_find); //go to next node
+    }
+    head -> set_next(NULL); //item no longer points at anything
+    delete head; //get rid of the node
+    head = previous1; //head points at the now last node
+    head -> set_next(place); //head's next points back at first node
+    return true; //exit
+  }
+  else //head is not what we want
+  {
+    current -> go_next(current); //current goes to first node
+
+    bool truth = false; //holds value for comparisons
+
+    do
+    {
+      truth = current -> compare_name(a_name); //see if that node matches
+      previous = current; //previous meets with current
+      current -> go_next(current); //current progresses to next node
+    }
+    while ((current != place) && (!truth)); //loop while current is not
+				//back at the start or no match
+
+    if (current == place) //if we broke out of the loop because of no matches
+    {
+      cout << endl << "No item like that to be removed." << endl;
+      return false; //exit
+    }
+    else if(truth) //we broke out because of a match
+    {
+      node * previous_find = head; //temp pointer to find current
+      node * previous2 = head; //temp pointer to get to node behind previous
+      
+      while(previous_find != previous) //loop until previous_find finds previous
+      {
+        previous2 = previous_find; //drags pointer behind
+        previous_find -> go_next(previous_find); //progress to next node
+      }
+
+      //now that we have a pointer behind previous, continue with deletion
+      previous -> set_next(NULL); //node points to nothing
+      delete previous; //get rid of the node
+      previous2 -> set_next(current); //previous points to current now
+      return true; //exit
+    }
+  }
+  
+}
+
+
+
+//function retrieves a card based on a name passed in and copies it into
+//an empty node
+//INPUT: a name to be compared, and an empty node, b_name for signatures
+//OUTPUT: a node with filled in data members
+void Graveyard::retrieve(char a_name[], char b_name[], node & a_node)
+{
+  //displays based on cases
+  if(!head) //no items
+  {
+    cout << endl << "No cards are in the graveyard." << endl;
+    return;
+  }
+  else //all other cases
+  {
+    node * current = head; //traversal pointers
+    current -> go_next(current); //current goes to first node
+    node * temp = current; //pointer holds the first item
+
+    bool truth = false; //holds if there is a match or not
+    node * previous = current; //drag pointer behind
+
+    //look for the item
+    do
+    {
+      previous = current; //previous catches up
+      truth = current -> compare_name(a_name); //compare the names
+      current -> go_next(current); //current goes to next
+    }
+    while(current != temp && (!truth)); //loop while we havent checked
+				//everything and a match is not found
+
+    if(current == temp && !truth) //broke out because all items checked and
+				//no match
+    {
+      cout << endl << "Item not found." << endl;
+      return; //exit
+    }
+    else if(truth) //there was a match
+    {
+      previous -> transfer(a_node); //copy the card contents
+      return; //exit
+    }
+  }
+}
+
+
+
+//constructor initalizes members
+//INPUT: None
+//OUTPUT: None
+Battlefield::Battlefield(void)
+{
+  head = NULL; //set head to null
+}
+
+
+
+//copy constructor copies a battlefield
+//INPUT: A battlefield to copy
+//OUTPUT: None
+Battlefield::Battlefield(const Battlefield & a_battlefield)
+{
+
+  node a_node; //create a node for passing in
+
+  node * source = a_battlefield.head; //create a pointer to traverse the
+				//battlefield passed in
+  node * destination = head; //temporary pointer for our list
+
+  if(!source) //nothing to copy
+  {
+    return; //exit
+  }
+
+  node * temp = new node; //create a new node for head
+
+  temp -> create(); //create the new array
+
+  source -> transfer_copy(a_node); //copy the information into the node
+
+  temp -> copy_transfer(a_node); //copy the information from the node
+
+  head = temp; //head now points at the new node
+
+  head -> set_next(NULL); //set the next pointer to null
+
+  a_node.~node(); //deallocate the node
+
+  delete temp; //get rid of memory
+  temp = NULL; //set to null
+
+  while(source) //while still things to copy
+  {
+    temp = new node; //create a new node for to be put into the list
+    temp -> create(); //create the new array
+    source -> transfer_copy(a_node); //copy the information into the node
+    temp -> copy_transfer(a_node); //copy the information from the node
+    temp -> set_next(NULL); //temp points at nothing
+
+    destination -> set_next(temp); //destination points at new node
+    destination -> go_next(destination); //destination moves up
+
+    delete temp; //get rid of memory
+    temp = NULL; //set to null
+    a_node.~node(); //deallocate the node
+  }
+
+  return; //exit
+}
+
+
+
+//copy constructor for pointers
+//INPUT: Pointer to a battlefield to be copied
+//OUTPUT: None
+Battlefield::Battlefield(const Battlefield * & a_battlefield)
+{
+  node a_node; //create a node for passing in
+
+  node * source = a_battlefield -> head; //create a pointer to traverse orig
+  node * destination = head; //temp pointer for our list
+
+  if(!source) //nothing to copy
+  {
+    return; //exit
+  }
+
+  node * temp = new node; //create a new node for head
+  temp -> create(); //create the new array
+
+  source -> transfer_copy(a_node); //copy info into new node
+  temp -> copy_transfer(a_node); //copy the information from the node
+  head = temp; //head now points at new node
+  head -> set_next(NULL); //set the next pointer to null
+
+  a_node.~node(); //deallocate the node
+
+  delete temp; //get rid of memory
+  temp = NULL; //set to null
+
+  while(source) //while still things to copy
+  {
+    temp = new node; //create a new node to be put into list
+    temp -> create(); //create array
+    source -> transfer_copy(a_node); //copy the info into the node
+    temp -> copy_transfer(a_node); //copy info from node
+    temp -> set_next(NULL); //temp now points at nothing
+
+    destination -> set_next(temp); //dest points at new node
+    destination -> go_next(destination); //destination moves up
+
+    delete temp; //get rid of memory
+    temp = NULL; //set to null
+    a_node.~node(); //deallocate the node
+  }
+  return; //exit
+}
+
+
+
+//destructor deallocates the battlefield
+//INPUT: None
+//OUTPUT: None
+Battlefield::~Battlefield(void)
+{
+  //variable declaration
+  node * current; //create a temp pointer for traversal
+
+  //deallocate based on special cases
+  if(!head) //list is empty
+  {
+    return; //exit
+  }
+  else //list is not empty
+  {
+    current = head; //current is set to head
+    while (head) //loop while nodes are left
+    {
+      head -> go_next(head); //head moves up
+      delete current; //get rid of node and all its contents
+      current -> set_next(NULL); //set the next pointer to null
+      current = head; //current moves with head
+    }
+  }
+
+  return; //control back to calling routine
+}
+
+
+
+//function inserts a card onto the battlefield
+//INPUT: A node to be inserted, and a_name to match signatures
+//OUTPUT: None
+void Battlefield::insert(char a_name [], char b_name [], node & a_node)
+{
+  if(!head)
+  {
+    node * temp = new node; //create a new node
+    temp -> create(); //allocate an array of nodes within the node
+    temp -> set_next(NULL); //the node points no nothing
+    temp -> copy_nodes(a_node); //put that node into the array
+    head = temp; //return
+  }
+  else
+  {
+    bool o_success = false; //bool value to hold if the insertion was a success
+    node * current = head; //temp pointer for traversal
+    node * previous = current; //previous pointer for traversal
+
+    //loop until we run out of nodes or we have successfully inserted
+    while(current && !(o_success = current -> copy_nodes(a_node)))
+    {
+      previous = current; //previous moves up to node
+      current -> go_next(current); //current moves up
+    }
+
+    if(!current) //if we stopped because we ran out of nodes
+    {
+      node * temp = new node; //create a new node
+      temp -> create(); //allocate an array of nodes within the node
+      temp -> set_next(NULL); //the node points to nothing
+      temp -> copy_nodes(a_node); //put that node into the array
+      current = temp; //current points at the new node
+      previous -> set_next(current); //previous node now points at current
+      return; //exit
+    }
+    else if(o_success) //if we broke because of a successful operation
+    {
+      return; //exit
+    }
+  }
+}
+
+
+
+//displays every card on the battlefield
+//INPUT: None
+//OUTPUT: The contents of the battlefield
+void Battlefield::display(void)
+{
+  //variable declarations
+  node * current = head; //create a temporary pointer for traversal
+
+  if(!current) //if no nodes in the battlefield
+  {
+    cout << endl << "The battlefield is empty." << endl;
+    return; //exit
+  }
+
+  while(current) //while still nodes left
+  {
+    current -> display_all(); //display all the nodes
+    current -> go_next(current); //go to the next node
+  }
+
+  return; //exit
+}
+
+
+
+//function removes the first empty array or dead creature it finds
+//INPUT: names to match signatures and an empty node for it to be
+//       put into, and b_name to match signatures
+//OUTPUT: The filled in members of card, a true if there was anything to
+//        remove and a false if not
+bool Battlefield::removal(char a_name [], char b_name [], node & a_node)
+{
+  node * current = head; //create a temp pointer for traversal
+  node * previous = current; //trail behind current
+  if(!head) //nothing to remove
+  {
+    return false; //nothing to remove
+  }
+  else if(head && head -> is_empty()) //if head is there but its empty
+  {
+    current -> go_next(current);
+    head -> set_next(NULL); //set the next pointer to NULL
+    delete head; //get rid of the head node
+    head = current; //head moves up
+    return true; //something was removed
+  }
+
+  else if(head && head -> transfer_nodes(a_node)) //head is there but theres
+				//a node with a dead creature
+  {
+    return true; //something was removed
+  }
+  else //the head node has non-dead creatures in it, move on
+  {
+    current -> go_next(current);
+    while(current) //while there are still nodes
+    {
+      if(current -> is_empty()) //if the node is empty
+      {
+        node * temp = current; //hold currents place
+        current -> go_next(current); //current moves up
+        temp -> set_next(NULL); //node points to nothing now
+        delete temp; //get rid of the node
+        previous -> set_next(current); //previous node points around
+        return true; //something was removed
+      }
+      else if(current -> transfer_nodes(a_node)) //node is not empty but theres
+					//a node with a dead creature
+      {
+        return true; //something was removed
+      }
+      previous = current; //previous catches up to current
+      current -> go_next(current); //current moves up
+    }
+
+    return false; //if we made it all the way through without any removals
+				//then we return false
+
+  }
+}
+
+
+
+//retrieves a card from the flexible array
+//INTPUT: name of the card to be retrieved, and an empty node for it to be
+//        put into, b_name to match signatures
+//OUTPUT: The filled in members of card, and some output messages
+void Battlefield::retrieve(char a_name [], char b_name [], node & a_node)
+{
+  node * current = head; //temporary pointer for traversal
+
+  if(!head) //battlefield is empty
+  {
+    cout << endl << "The battlefield is empty." << endl;
+  }
+  while(current && !(current -> compare_names(a_name, a_node)))
+  {
+    current -> go_next(current); //current moves up
+  }
+
+  if(!current) //if we broke the loop because there are no more nodes
+  {
+    cout << endl << "Item not found." << endl;
+    return; //exit
+  }
+
+  else //the loop was broken because there was a match
+  {
+    cout << endl << "Card was found." << endl;
+    return; //exit
+  }
+}
+
+
+
+//resets all the cards still on the battlefield
+//INPUT: None
+//OUTPUT: None
+void Battlefield::reset(void)
+{
+  node * current = head; //temporary pointer for traversal
+
+  if(!head) //if the battlefield is empty
+  {
+    return; //exit
+  }
+
+  while(current) //while nodes still to traverse
+  {
+    current -> reset_all(); //reset all nodes in the array
+    current -> go_next(current); //current moves on
+  }
+
+  return; //done
+}
+
+
+
+//function taps which cards the user wants for mana
+//INPUT: None
+//OUTPUT: An integer holding the amount of mana tapped is returned
+int Battlefield::tap_mana(void)
+{
+  int c_mana = 0; //holds the amount of mana
+  node * current = head; //temporary pointer for traversal
+
+  if(!head) //if the battlefield is empty
+  {
+    return c_mana; //exit
+  }
+  while(current) //while nodes still left in the array
+  {
+    c_mana = c_mana + current -> mana_all(); //get all the mana from that
+				//array
+    current -> go_next(current); //current moves up
+  }
+
+  return c_mana; //return the amount of mana gathered
+}
+
+
+
+//function taps the attacker the user indicated and places its attack
+//value into an array of integers
+//INPUT: an empty array to hold all attack values, an integer to indicate
+//       where in this array to add them, and the name of the card the
+//       user wants to tap to attack
+//OUTPUT: the filled in array holding attack values as well as instructions
+//        to user on how to select the ones they want to attack
+void Battlefield::tap_attack(int attackers [], int & i, char a_name [])
+{
+  node * current = head; //temporary pointer for traversal
+  int atk = 0; //variable to hold the attack
+  int b_atk = 0; //variable to holds buffs to attack
+  int b_def = 0; //variable to hold buffs to defense
+
+  if(!head) //if there are no items in the list
+  {
+    return; //exit
+  }
+
+  buffs(b_atk, b_def); //get the buffs present in the battlefield
+
+  while(current && !atk) //while still items in the list, or attack is zero
+  {
+    atk = current -> t_attack(a_name, b_atk); //get the returned value if
+				//there were any matches in the array
+
+    if(atk) //if there was an attack
+    {
+      cout << endl << "Card has attacked." << endl;
+      attackers[i] = atk; //set the value at the next point in the array
+				//to the attack of card
+      i = i + 1; //increment count
+      return; //leave
+    }
+
+    current -> go_next(current); //current moves up
+  }
+
+  if(!current) //if no more items to search
+  {
+    cout << endl << "Card was either not on the battlefield or could not ";
+    cout << "attack." << endl;
+    return; //exit
+  }
+  else if(atk) //a creature was tapped to attack
+  {
+    cout << endl << "Card has attacked." << endl;
+    attackers[i] = atk; //set the value at the next point in the array
+				//to the attack that was returned
+    i = i + 1; //increment the count
+    return; //exit
+  }
+}
+
+
+
+//function determines which card the user wants to defend with and against
+//which attacker
+//INPUT: the array holding the attack values as well as the index of the
+//       array
+//OUTPUT: the total attack value of the creatures that got through defense
+int Battlefield::tap_defense(int attackers [], const int & i)
+{
+  //variable declarations
+  node * current = head; //temporary pointer for traversal
+  int atk = 0; //variable to hold attack values
+  int b_atk = 0; //variable to hold buffs to attack
+  int b_def = 0; //variable to hold buffs to defense
+  int def = 0; //variable to hold the defense
+
+  if(!head) //if nothing in the battlefield
+  {
+    cout << "There is nothing on the battlefield." << endl;
+    for (int j = 0; j <= i; j++) //add up the attack values in the array
+    {
+      atk = atk + attackers[j]; //add up the attack points at that spot
+    }
+  }
+
+  buffs(b_atk, b_def); //get the buffs present in the battlefield
+
+  cout << endl << "These are the attack values against you: " << endl;
+  for (int j = 0; j < i; j++) //loop through the contents
+  {
+    cout << attackers[j] << endl; //display the attack at that index
+  }
+
+  cout << endl << "Which would you like to block?" << endl;
+
+  int n = 0; //holds the users response
+
+  do
+  {
+    cout << "Enter an integer corresponding to the position of the attack ";
+    cout << "value displayed." << endl;
+    cin >> n; //store into n
+    cin.ignore(100, '\n'); //ignore extra input
+  }
+  while(n < 0 || n > i + 1); //loop until a valid input is given
+
+  n = n - 1; //compensate for a proper index
+
+  char * temp = new char[100]; //create a temporary array
+
+  cout << endl << "What card do you want to defend with?" << endl;
+
+  cin.get(temp, 100, '\n'); //get the user's input
+  cin.ignore(100, '\n'); //ignore extra input
+
+  char * a_name = new char[strlen(temp) + 1]; //dynamically allocate the name
+  strcpy(a_name, temp); //copy the contents over
+
+  while(current && (def == -100 || def == -102) && def != -101 && def != 0)
+				//loop while
+				//there are still items to search, there
+				//are other creatures of the same name
+				//that are not tapped to look for, or the
+				//name did not belong to a non-creature
+  {
+    def = current -> t_defense(a_name, b_def, attackers[n]); //get the returned
+				//value if there were matches
+    current -> go_next(current); //current moves up
+  }
+
+  if(!current) //if no more items to search
+  {
+    cout << endl << "The card could not be found." << endl;
+
+    for(int i = 0; i < 3; i++) //add up the attack
+    {
+      atk = atk + attackers[i]; //add up the attacks
+    }
+
+    return atk; //exit and return the attacks
+  }
+
+  else if(def == -101) //if the loop broke because the name belonged to
+				//a non creature
+  {
+    cout << endl << "That card is not a creature." << endl;
+
+    for(int i = 0; i < 3; i ++) //add up the attack
+    {
+      atk = atk + attackers[i]; //add up the attacks
+    }
+
+    return atk; //exit and return the attacks
+  }
+  else if(def == 0) //there was a match
+  {
+    attackers[n] = 0; //set the integer value of the creature that was blocked
+				//to 0
+    for(int i = 0; i < 3; i++) //add up the attack
+    {
+      atk = atk + attackers[i]; //add up the attacks
+    }
+
+    return atk; //exit and return the attacks
+  }
+}
+
+
+
+//function adds up all the enchantment buffs on the field
+//INPUT: Two integers to hold the aggregate buffs of attack and defense
+//OUTPUT: The filled in values of these two integers
+void Battlefield::buffs(int & b_atk, int & b_def)
+{
+  node * current = head; //temporary pointer for traversal
+
+  if(!head) //if no items in the battlefield
+  {
+    return; //exit
+  }
+  while(current) //while items still in the list
+  {
+    current -> add_buffs(b_atk, b_def); //add up the buffs at that location
+    current -> go_next(current); //current moves up
+  }
+
+  return; //exit
+}
+
+
+
+//constructor initalizes the hand
+//INPUT: None
+//OUTPUT: None
+Hand::Hand(void)
+{
+  head = NULL; //set head to NULL
+  cards = 0; //start off with no cards
+}
+
+
+
+//copy constructor copies a hand
+//INPUT: A hand to be copied
+//OUTPUT: None
+Hand::Hand(const Hand & a_hand)
+{
+  cards = 0; //no cards to start
+  node * destination = head; //a pointer for destination list traversal
+
+  node * source = a_hand.head; //source list traversal
+
+  if(!a_hand.head) //if the list to be copied has nothing in it
+  {
+    cout << endl << "List has nothing to copy." << endl;
+    return; //exit
+  }
+  node a_node; //create a node for copying
+
+  a_hand.head -> transfer(a_node); //put the contents of the source list head
+				//node into the new card
+
+  node * temp = new node(a_node); //create a new node with the same details as
+				//the source lists head node
+
+  temp -> set_next(NULL); //the new node points to nothing
+
+  head = temp; //head now points to the new node
+
+  source -> go_next(source); //source moves up
+
+  cards = cards + 1; //cards increments
+  
+  while(source) //while there are still nodes in the list to be copied
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into it
+    temp2 -> set_next(NULL); //new node points to nothing
+    destination -> set_next(temp2); //point at the new node
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+    cards = cards + 1; //add one to cards
+  }
+  return; //exit now
+}
+
+
+
+//copy constructor for pointers
+//INPUT: A pointer to a hand to be copied
+//OUTPUT: None
+Hand::Hand(const Hand * & a_hand)
+{
+  cards = 0; //no cards to start
+  node * destination = head; //pointer for list traversal
+  node * source = a_hand -> head; //source list traversal
+
+  if(!source) //if nothing to be copied
+  {
+    cout << endl << "List has nothing to copy." << endl;
+    return; //exit
+  }
+  node a_node; //create a node for copying
+
+  source -> transfer(a_node); //put the contents of the source list head card
+
+  node * temp = new node(a_node); //create new node with same details
+
+  temp -> set_next(NULL); //new node points at nothing
+
+  head = temp; //head points at new node
+
+  source -> go_next(source); //source moves up
+
+  cards = cards + 1; //increment
+
+  while(source) //while still items to copy
+  {
+    source -> transfer(a_node); //copy the node
+    node * temp2 = new node(a_node); //create new node and copy into it
+    temp2 -> set_next(NULL); //new node points at nothing
+    destination -> set_next(temp2); //point at new node
+    destination -> go_next(destination); //dest moves up
+    source -> go_next(source); //source moves up
+    cards = cards + 1; //increment
+  }
+  return; //exit
+}
+
+
+
+//destructor deallocates the hand
+//INPUT: None
+//OUTPUT: None
+Hand::~Hand(void)
+{
+  //variable declaration
+  node * current = head; //temporary pointer to traverse
+
+  while(current) //while there are still nodes
+  {
+    head -> go_next(head); //head progresses to next node
+    delete current; //delete the node
+    current -> set_next(NULL); //set the next pointer to null
+    current = head; //current moves back up to head
+  }
+  return; //done
+}
+
+
+
+//functions puts a drawn card into the hand from the library
+//INPUT: names to match signatures, and the node to be inserted into the hand
+//       which is filled in from a library retrieve call
+//OUTPUT: None
+void Hand::retrieve(char a_name [], char b_name [], node & a_node)
+{
+  List::insert(a_name, b_name, a_node); //now put that card into the hand
+
+  a_node.~node(); //deallocate the node
+
+  cards = cards + 1; //add one to card count
+
+  return; //done
+}
+
+
+
+//function removes a card from the hand based on which card the user wants
+//to discard or play
+//INPUT: the name of the card to play, and the empty node for this card
+//       to be put into, and b_name to match signatures
+//OUTPUT: The filled in members of node
+bool Hand::removal(char a_name [], char b_name [], node & a_node)
+{
+  if(!head) //if nothing is in the list
+  {
+    cout << endl << "Your hand is empty." << endl;
+    return false; //exit
+  }
+  else if(head -> compare_name(a_name)) //if the first node is what we want
+  {
+    node * current = head; //temporary pointer for traversal
+    current -> go_next(current); //current goes to next node
+    head -> set_next(NULL); //head's next pointer is now null
+    head -> sickness(); //if creature, summoned with sickness
+    head -> transfer(a_node); //transfer the node
+    delete head; //delete the node
+    head = current; //head now points at current
+    cards = cards - 1; //decrement the card count
+    return true; //done, return
+  }
+  else //its not the first node, time to look for it
+  {
+    node * current = head; //temporary pointer for traversal
+    node * previous = head; //previous pointer for removal
+
+    while(current && (!current -> compare_name(a_name))) //while items
+				//still and no match
+    {
+      previous = current; //previous catches up to current
+      current -> go_next(current); //current goes to next node
+    }
+
+    if(!current) //if the loop broke because no more items
+    {
+      cout << endl << "Item not found." << endl;
+      return false;
+    }
+    else if(current -> compare_name(a_name)) //if the loop broke because there
+				//is a match
+    {
+      node * temp = current; //create a temporary pointer to bridge gap
+				//between nodes
+      temp -> go_next(temp); //temp goes to next node
+      previous -> set_next(temp); //node before now points around node to
+					//delete
+      current -> set_next(NULL); //set the node's next pointer to NULL
+      current -> sickness(); //if creature, summoned with sickness
+      current -> transfer(a_node); //store the card
+      delete current; //get rid of the node
+      cards = cards - 1; //decrement the card count
+      return true; //exit
+    }
+  }
+}
+
+
+
+//function inserts a node into the hand, at the head of the list
+//INPUT: names to match signatures, and a node to insert
+//OUTPUT: None
+void Hand::insert(char a_name [], char b_name [], node & a_node)
+{
+  node * temp = new node(a_node); //create a new node and have its contents
+				//copied from the a_node pased in
+  if(!head) //if there is nothing in the list
+  {
+    head = temp; //head is set to the new node
+    temp -> set_next(NULL); //new node's next points to nothing
+    cards = cards + 1; //increment card count
+  }
+  else
+  {
+    temp -> set_next(head); //temp now points to current
+    head = temp; //head now points to temp, the new first node
+    cards = cards + 1; //increment card count
+  }
+
+  return; //exit
+}
+
+
+
+//function returns the number of cards in the hand
+//INPUT: None
+//OUTPUT: Number of cards in the hand
+int Hand::card_count(void)
+{
+  return cards; //returns the card count
+}
+
+
+
+//constructor initializes data members
+//INPUT: None
+//OUTPUT: None
+Player::Player(void)
+{
+  int health = 20; //all players start with 20 health
+  int mana = 0; //players have no mana to start
+
+  zones = new List * [4]; //dynamically allocate for all zones
+
+  zones[0] = new Library; //create a library
+
+  zones[1] = new Hand; //create a hand
+
+  zones[2] = new Battlefield; //create a battlefield
+
+  zones[3] = new Graveyard; //create a graveyard
+  
+}
+
+
+
+//copy constructor - initalizes the zones to the same as the other player
+//INPUT: A player class to be copied
+//OUTPUT: None
+Player::Player(const Player & a_player)
+{
+  zones = new List * [4]; //dynamically allocate for all zones
+
+  //call copy constructors of each zone?
+/*
+  zones[0] = new Library(a_player.zones[0]);
+  zones[1] = new Hand(a_player.zones[1]);
+  zones[2] = new Battlefield(a_player.zones[2]);
+  zones[3] = new Graveyard(a_player.zones[3];
+*/
+
+}
+
+
+
+//copy constructor properly initalizes a player
+//INPUT: An iftream class which will allow the library to be initalized
+//OUTPUT: None
+Player::Player(ifstream & file_in)
+{
+  health = 20; //players start with 20 health
+  int mana = 0; //players start with no mana
+
+  zones = new List * [4]; //dynamically allocate for all zones
+
+  zones[0] = new Library; //create a library for the player
+
+  zones[1] = new Hand; //create a hand for the player
+
+  zones[2] = new Battlefield; //create a battlefield for the player
+
+  zones[3] = new Graveyard; //create a graveyard for the player
+
+  zones[0] -> read_in(file_in); //library reads in cards it needs
+  
+}
+
+
+
+//destructor calls the destructor to all zones and then deallocates it own
+//memory
+//INPUT: None
+//OUTPUT: None
+Player::~Player(void)
+{
+  for (int i = 0; i < 4; i++) //loop through to deallocate all
+  {
+    delete zones[i]; //deallocate the zones dynamic memory
+  }
+
+  delete [] zones; //deallocate the array of pointers
+
+  zones = NULL; //set the pointer to NULL
+}
+
+
+
+//function uses dynamic binding to display contents of all list classes
+//except the library (player can not see own library)
+//INPUT: None
+//OUTPUT: The contents of all list classes except library
+void Player::display(void)
+{
+  cout << endl << "Hand: " << endl;
+  zones[1] -> display();
+
+  cout << endl << "Battlefield: " << endl;
+  zones[2] -> display();
+
+  cout << endl << "Graveyard: " << endl;
+  zones[3] -> display();
+
+  return; //exit
+}
+
+
+
+//function uses dynamic binding to insert a card from the hand into the
+//battlefield
+//INPUT: A node to be inserted as well as names to match signatures and
+//       to determine which card to play
+//OUTPUT: None
+void Player::insert(char a_name [], char b_name [], node & a_node)
+{
+  bool truth = false; //holds return value of functions
+
+  //get the cost of the card
+  int num = 0; //variable to hold the cost of the card
+
+  truth = zones[1] -> removal(a_name, b_name, a_node); //we remove the card
+				//from the hand
+
+   if(!truth) //if the operation was a failure
+   {
+     return; //exit
+   }
+
+   num = a_node.r_cost(); //get the cost of the card
+
+   if(num > mana) //if the card costs more mana than the player has
+   {
+     cout << endl << "You do not have enough mana to play that card." << endl;
+     zones[1] -> insert(a_name, b_name, a_node); //put the node back into
+				//the hand
+     return; //exit
+   }
+
+   mana = mana - num; //subtract the card cost from player mana
+
+   //determine the type of the card
+   char * new_name = new char[100]; //create a temporary char array to hold the
+				//name
+   a_node.s_type(new_name); //determine the type of the card
+
+   //determine if the user has already played a land card this turn
+   if((strcmp(new_name, "Land") == 0) && (strcmp(b_name, "Land") == 0))
+   {
+     cout << endl << "You have already played a land this turn." << endl;
+     zones[1] -> insert(a_name, b_name, a_node); //put node back into hand
+     return; //exit
+   }
+
+  zones[2] -> insert(a_name, b_name, a_node); //insert this card into the
+				//battlefield
+
+  a_node.s_type(b_name); //store the type of the card so player cant play two
+				//lands in one turn
+
+  a_node.~node(); //deallocate the node
+}
+
+
+
+//function discards a card from the hand and places it into the graveyard, 
+//using dynamic binding
+//INPUT: a name to decide what card to remove from the hand, and a node to
+//       store it into for transfer, and b_name to match signatures
+//OUTPUT: The filled in members of a_node
+bool Player::removal(char a_name [], char b_name [], node & a_node)
+{
+  bool truth = false; //holds return value of functions
+
+  truth = zones[1] -> removal(a_name, b_name, a_node); //we remove the desired
+				//card from the hand and place it into a node
+  if(!truth) //if the operation failed
+  {
+    return truth; //return the fail
+  }
+
+  zones[3] -> insert(a_name, b_name, a_node); //put that node into the graveyard
+  a_node.~node(); //deallocate the node
+
+  return true; //exit
+}
+
+
+
+//function retrieves a card from the library and inserts into into the hand,
+//using dynamic binding
+//INPUT: names to match signatures, and a_node to store the information being
+//       transferred
+//OUTPUT: The filled in members of a_node
+void Player::retrieve(char a_name [], char b_name [], node & a_node)
+{
+  zones[0] -> retrieve(a_name, b_name, a_node); //randomly draw a card from
+				//the library
+				//and place it into the node
+  zones[1] -> insert(a_name, b_name, a_node); //place that drawn card into
+				//the hand
+  a_node.~node(); //deallocate the node
+
+  return; //quit
+}
+
+
+
+//resets the player's mana and their cards at the end of the turn
+//INPUT: names to match signatures, and a node to copy into
+//OUTPUT: None
+void Player::reset(char a_name [], char b_name [], node & a_node)
+{
+  a_node.~node(); //deallocate the node for now
+
+  bool k_cont = true; //keep track of if we still need the battlefield
+
+  mana = 0; //set mana back to zero
+
+  do
+  {
+    k_cont = zones[2] -> removal(a_name, b_name, a_node); //remove garbage
+				//from the battlefield
+    if(a_node.n_empty()) //if the node has something to put in the graveyard
+    {
+      zones[3] -> insert(a_name, b_name, a_node); //insert it into graveyard
+      a_node.~node(); //deallocate the node for now
+    }
+  }
+  while(k_cont); //continue removing until we are done
+
+  zones[2] -> reset(); //reset the cards on the battlefield
+}
+
+
+
+//function subtracts from the players health how much damage they took
+//INPUT: The total attack that got through defenses
+//OUTPUT: None
+void Player::take_damage(const int & attack)
+{
+  health = health - attack; //determine how much damage the player took
+}
+
+
+
+//function returns a player's life total at the end of the turn
+//INPUT: None
+//OUTPUT: An integer value representing the players life total
+int Player::life_total(void)
+{
+  return health; //return the players health at the end of the turn
+}
+
+
+
+//wrapper function to call battlefield's tap_mana function
+//INPUT: None
+//OUTPUT: None
+void Player::tap_mana()
+{
+  int num = 0; //variable to hold mana returned
+
+  num = zones[2] -> tap_mana(); //calls battlefield's tap mana function
+
+  mana = num + mana; //add to mana count
+}
+
+
+
+//wrapper function to call battlefield's tap_attack function
+//INPUT: All input is for the battlefield's function
+//OUTPUT: None
+void Player::tap_attack(int attackers [], int & i)
+{
+  int con = 0; //hold if the user wants to continue or not
+  do
+  {
+    char * temp = new char[100]; //create a temporary char array
+
+    cout << endl << "What is the name of the card you want to attack?" << endl;
+
+    cin.get(temp, 100, '\n'); //get the name from the user
+    cin.ignore(100, '\n'); //ignore extra input
+
+    char * a_name = new char[strlen(temp) + 1]; //dynamically allocate forname
+    strcpy(a_name, temp); //copy the name
+
+    zones[2] -> tap_attack(attackers, i, a_name); //calls
+				//battlefield's tap attack function
+
+    cout << endl << "Keep attacking?" << endl;
+    cout << "1: Yes." << endl << "2: No." << endl;
+    cin >> con; //read in user response
+    cin.ignore(100, '\n'); //ignore extra input
+  }
+  while(con == 1); //continue while the user wants to
+
+  return; //exit
+}
+
+
+
+//wrapper function calls battlefield's tap_defense function
+//INPUT: All input is for the battlefield's function
+//OUTPUT: the amount of attack that got through
+int Player::tap_defense(int attackers [], const int & i)
+{
+  int cont = 0; //hold if the user wants to continue or not
+  int num = 0; //catches the amount of attack coming this way
+
+  do
+  {
+
+    num = zones[2] -> tap_defense(attackers, i); //calls battlefield
+				//tap defense function
+
+     cout << endl << "Keep defending?" << endl;
+     cout << "1: Yes." << endl << "2: No." << endl;
+     cin >> cont; //read in user response
+     cin.ignore(100, '\n'); //ignore extra input
+  }
+  while(cont == 1); //continue while the user wants to
+
+  return num; //return the amount of damage that got through
+}
+
+
+
+//function call's hand's count function
+//INPUT: None
+//OUTPUT: The number of cards in the hand
+int Player::num_cards(void)
+{
+  return zones[1] -> card_count(); //return the number of cards
+}
+
+
+
+//prototypes
+
+//function determines the action the user wants to take
+//INPUT: An integer corresponding to a user's choice
+//OUTPUT: Instructions to user and the user's choice
+int menu_choice(void)
+{
+  //variable declarations
+  int choice = 0; //to be used to return the user's choice
+
+  //displays the choices to the user
+  cout << "1: Play a card." << endl;
+  cout << "2: Attack." << endl;
+  cout << "3: View zones." << endl;
+  cout << "4: Pass." << endl;
+
+  //get the user's choice, and loops until a valid choice is entered
+  do
+  {
+    cout << "Enter a number corresponding to the above choices: ";
+    cin >> choice; //get the user's choice
+    cin.ignore(100, '\n'); //ignores extra input
+  }
+  while (choice <= 0 || choice > 4); //loops until a valid choice
+
+  return choice; //returns the user's choice to the calling function
+}
+
+//function displays welcoming instructions to user on how to use the program
+//INPUT: None
+//OUTPUT: A message with instructions on how to use the program
+void welcome(void)
+{
+  //displays instructions to the user on how to use the program
+  cout << endl << "Welcome! This is intended to be a minimally functioning "
+               << "and stripped down Magic game. Two players will face of "
+               << "in a game of skill and luck using two different decks with "
+               << "the same cards. Instructions will be displayed as you go "
+               << "on how to play the game.";
+  cout << endl;
+  return;
+}

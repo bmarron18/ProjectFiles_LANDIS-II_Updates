@@ -1,0 +1,235 @@
+Title:						Project Work Log1
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:
+Author:						bmarron
+Origin Date:				12 Oct 2016
+Revision Date:					
+
+##############
+URLs
+#############
+https://github.com/premake/premake-4.x/wiki/A-Bit-Of-Meta
+
+
+
+#######
+Log
+######
+
+	a. Deleted GitHub-tracked Fork2 of the Core-Model in bmarron18 repo
+
+	b. Re-forked Core-Model from https://github.com/LANDIS-II-Foundation
+
+	c. Deleted  C:\Users\bmarr\Documents\GitHub\Core-Model
+
+	d. Deleted Landis-II.sln file from Visual Studio
+
+	e. checked config in GitShell
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub
+$ git config --list
+alias.c=commit
+alias.co=checkout
+alias.dt=difftool
+alias.mt=mergetool
+alias.praise=blame
+alias.ff=merge --ff-only
+alias.st=status
+alias.sync=!git pull && git push
+
+apply.whitespace=nowarn
+
+core.symlinks=false
+core.autocrlf=true
+core.editor=gitpad
+core.preloadindex=true
+core.fscache=true
+
+color.diff=auto
+color.status=auto
+color.branch=auto
+color.interactive=true
+color.ui=true
+
+pack.packsizelimit=2g
+help.format=html
+http.sslcainfo=/ssl/certs/ca-bundle-ghfw.crt
+diff.astextplain.textconv=astextplain
+rebase.autosquash=true
+credential.helper=!github --credentials
+filter.ghcleansmudge.clean=cat
+filter.ghcleansmudge.smudge=cat
+push.default=upstream
+
+diff.tool=vs2013
+diff.algorithm=histogram
+difftool.prompt=false
+difftool.bc4.cmd="c:/program files (x86)/beyond compare 3/bcomp.exe" "$LOCAL" "$REMOTE"
+difftool.p4.cmd="c:/program files/Perforce/p4merge.exe" "$LOCAL" "$REMOTE"
+difftool.vs2012.cmd="c:/program files (x86)/microsoft visual studio 11.0/common7/ide/devenv.exe" '//diff' "$LOCAL" "$REMOTE"
+difftool.vs2013.cmd="c:/program files (x86)/microsoft visual studio 12.0/common7/ide/devenv.exe" '//diff' "$LOCAL" "$REMOTE"
+
+merge.tool=bc3
+mergetool.prompt=false
+mergetool.keepbackup=false
+mergetool.bc3.cmd="c:/program files (x86)/beyond compare 3/bcomp.exe" "$LOCAL" "$REMOTE" "$BASE" "$MERGED"
+mergetool.bc3.trustexitcode=true
+mergetool.p4.cmd="c:/program files/Perforce/p4merge.exe" "$BASE" "$LOCAL" "$REMOTE" "$MERGED"
+mergetool.p4.trustexitcode=false
+
+filter.lfs.clean=git-lfs clean -- %f
+filter.lfs.smudge=git-lfs smudge -- %f
+filter.lfs.required=true
+
+user.name=Bruce Marron
+user.email=bmarron@pdx.edu
+
+	e2. changed editor, user, added alias (last)
+$ git config --global core.editor "Cream"
+$ git config --global user.name "bmarron18"
+$ git config --global alias.last 'log -1 HEAD'
+
+	f. Opened VisualStudio
+	f1. from 'Start Page' ==> Open from Source Control...
+	f2. This opens Team Explorer-Connect tab
+	f3. Under Local Git Repositories ==> Clone
+		This requires two fields	1)"Enter the the URL of a Git repo to clone "
+									 https://github.com/bmarron18/Core-Model.git
+									2) "Enter a path for the cloned Git repo"
+									C:\Users\bmarr\Documents\GitHub\Core-Model
+	f4.Hit 'Clone'
+
+	g. check in GitShell
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git remote -v
+origin  https://github.com/bmarron18/Core-Model.git (fetch)
+origin  https://github.com/bmarron18/Core-Model.git (push)
+
+
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git last
+commit 0b68e8df0a21713c1082df528f6691bd140c43e8
+Merge: 3ac15c8 3139065
+Author: Robert Scheller <rmscheller@gmail.com>
+Date:   Thu Aug 18 13:40:55 2016 -0700
+
+    Merge pull request #7 from jealie/master
+
+    Resolve compatibility issues on Linux
+
+
+	h. setup sync to original repo
+	h1. specify a new local remote named 'upstream' that links to the ORIGINAL_OWNER/REPOSITORY
+	h2. check
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git remote add upstream https://github.com/LANDIS-II-Foundation/Core-Model.git
+
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git remote -v
+origin  https://github.com/bmarron18/Core-Model.git (fetch)
+origin  https://github.com/bmarron18/Core-Model.git (push)
+upstream        https://github.com/LANDIS-II-Foundation/Core-Model.git (fetch)
+upstream        https://github.com/LANDIS-II-Foundation/Core-Model.git (push)
+	
+	h3.
+
+	h3. update local (on box) repo from original LANDIS-II-Foundation repo 
+	h4. if changes from original repo, push to forked repo on GitHub (eg https://github.com/bmarron18/Core-Model)
+	h5. The push to the forked repo is what keeps the forked repo in sync
+	h6. the sequence 
+fetch changes from ORIGINAL repo ==> merge changes from ORIGINAL repo to local (on box) repo ==> push changes to forked GitHub repo
+	h7. git push [forked repo remote name] [local repo branch name]
+
+$ git fetch upstream
+From https://github.com/LANDIS-II-Foundation/Core-Model
+ * [new branch]      Widgets    -> upstream/Widgets
+ * [new branch]      master     -> upstream/master
+bmarron@bmarron-HP-Compaq-6710b-RM406UT-ABA:~/Desktop/PSU/PhD_EES/2016SoE021_LANDIS_Upgrades/Works_InProgress/LANDIS-II-Foundation_ClonedRepos/Core-Model
+
+
+
+$ git push origin master
+Username for 'https://github.com': bmarron18
+Password for 'https://bmarron18@github.com': 
+Everything up-to-date
+
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git checkout master
+Already on 'master'
+Your branch is up-to-date with 'origin/master'.
+
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git merge upstream/master
+Already up-to-date.
+
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git push origin master
+Everything up-to-date
+
+
+	i.  copied premake4.exe to C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk>
+	i2. ran the following
+C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk>premake4 vs2010
+	i3. this created a number of new (untracked) files, including 7 .csproj files (Projects)
+	i4. these 7 Projects show up under the LANDIS-II.sln file in the Solution Explorer tab (VisualStudio)
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        model/trunk/LANDIS-II.sln
+        model/trunk/console/Console.csproj
+        model/trunk/core/src/Core.csproj
+        model/trunk/core/src/Implementation/Core_Implementation.csproj
+        model/trunk/core/test/ecoregions/Ecoregions_Tests.csproj
+        model/trunk/core/test/species/Species_Tests.csproj
+        model/trunk/ext-admin/Extension_Admin.csproj
+        model/trunk/ext-dataset/src/Extension_Dataset.csproj
+        model/trunk/third-party/LSML/WinPkgTools/Info-ZIP-LICENSE.txt
+        model/trunk/third-party/LSML/WinPkgTools/checksum-LICENSE.txt
+        model/trunk/third-party/LSML/WinPkgTools/checksum.exe
+        model/trunk/third-party/LSML/WinPkgTools/unzip.exe
+        model/trunk/third-party/LSML/download/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+
+	j. in VirtualStudio ==> Build ==> Build Solution
+54 errors in Errors List ==> no build!!
+
+	j1. Nothing new added post-build (per GitHub):
+bmarr@DESKTOP-1KEFDDQ  ~/Documents/GitHub/Core-Model (master)
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        model/trunk/LANDIS-II.sln
+        model/trunk/console/Console.csproj
+        model/trunk/core/src/Core.csproj
+        model/trunk/core/src/Implementation/Core_Implementation.csproj
+        model/trunk/core/test/ecoregions/Ecoregions_Tests.csproj
+        model/trunk/core/test/species/Species_Tests.csproj
+        model/trunk/ext-admin/Extension_Admin.csproj
+        model/trunk/ext-dataset/src/Extension_Dataset.csproj
+        model/trunk/third-party/LSML/WinPkgTools/Info-ZIP-LICENSE.txt
+        model/trunk/third-party/LSML/WinPkgTools/checksum-LICENSE.txt
+        model/trunk/third-party/LSML/WinPkgTools/checksum.exe
+        model/trunk/third-party/LSML/WinPkgTools/unzip.exe
+        model/trunk/third-party/LSML/download/
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+
+	k. tried Build for many of the Projects -- ALL FAILED!
+
+
+	l. Team Explorer has a request for installation of 3rd party tools
+	(WebPlatform Installer)
+	Download Git again!
+	You are downloading the latest (2.10.1) 64-bit version of Git for Windows. This is the most recent maintained build. It was released 8 days ago, on 2016-10-04
+	C:\Program Files\Git
+	
+

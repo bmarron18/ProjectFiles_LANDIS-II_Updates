@@ -1,0 +1,54 @@
+Title:				Mtg Notes Supplement
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021_LANDIS_Upgrades/
+Author:				bmarron
+Origin Date:			3 Oct 2016
+Revision Date:			5 Oct 2016	
+
+
+
+#######
+to do 
+#######
+
+* Go to LANDIS-II Foundation homepage (http://www.landis-ii.org/) and	
+	-- become a member of the LANDIS-II Users Group (under Install)
+	-- become a memebr of the LANDIS-II Developers Group (under Developers)
+
+* Install VisualStudio (and/or MonoDevelop)
+
+* Install git (and your favorite interface TortoiseGit?)
+
+* Download your timesheet template
+
+* Remember to start tracking your hours! (round to the nearest 0.5 hr)
+
+
+#####################
+options for the week
+#####################
+
+* do a test run of LANDIS-II and checkout some of the output (see QuikStart)
+
+* test out Pull Requests with some dummy changes to the Core-Model
+
+* think about your prefered method for team use of GitHub 
+
+
+###############################
+notes / questions
+(mostly reflecting my ignorance)
+#################################
+
+* How does git interface with VisualStudio and MonoDevelop? Clone the repo 
+directly into IDE?
+
+* Does a call to "Build"  compiles .cs files to a .dll?
+
+* How does one interface the Core-Model files with Solutions and Projects 
+under Mono? Must open ALL .cs files b/c cross-correlated?
+
+* Slack looks very cool! (Thanks Dakota!) Should we use this (or perhaps 
+Basecamp3?) as a team communication tool?
+ 
+

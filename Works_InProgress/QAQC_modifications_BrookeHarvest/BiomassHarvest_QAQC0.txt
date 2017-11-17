@@ -1,0 +1,73 @@
+LandisData  "Biomass Harvest"
+
+Timestep    10
+
+ManagementAreas 	"./management.img"
+
+Stands      		"./standmap.img"
+
+>> -----------------------------------------
+>> PRESCRIPTIONS
+>>--------------------------------------------
+Prescription	FS-PIPO  	<<includes Rx fire following harvest & after 10 years
+	StandRanking	Random
+	MaximumAge	100 		<<for example
+>>	MinimumTimeSinceLastHarvest	10	
+	
+	ForestTypeTable	
+ 
+    	>> For each inclusion rule, >30% of the sites in a stand MUST contain at least one cohort 
+   	>> of the given age range & spp. for a rule to be true.
+   	>> InclusionRule	ageRange	percentCells	species 
+    	>>----------------	---------	------------	--------   
+	Required 		1-600		(30%)		pinupond
+    	
+	SiteSelection	Complete	
+	CohortsRemoved	SpeciesList
+	>> Species	Selection
+        >> -------      ----------
+	   pinupond	1-10 (99%) 20-60(50%) 70-140(60%)
+	   abiegran	1-10 (99%) 20-140(90%)
+	   juniocci	1-10 (99%) 20-140(90%)
+	   pinucont	1-10 (99%) 20-140(90%)
+	   pseumenz	1-10 (99%) 20-60(60%) 70-140(90%)
+           lariocci	1-10 (99%) 20-60(20%) 70-140(60%)
+	   piceenge	1-10 (99%) 20-30(5%)
+	   pinualbi	1-10 (99%) 20-30(5%)
+	   poputrem	1-10 (99%) 20-30(5%)
+ 
+	
+	SingleRepeat	10 << RxBurn after 10 years
+	CohortsRemoved	SpeciesList
+	>> Species	Selection
+        >> -------      ----------
+	   pinupond	1-10(50%) 20-30(5%) 40-50(2%)
+	   abiegran	1-20(60%) 30-50(5%) 60-80(2%)
+	   juniocci	1-50(60%) 60-80(2%)
+	   pinucont	1-10(70%) 20-30(20%) 40-60(2%) 
+	   pseumenz	1-10(60%) 20-30(5%) 40-50(2%)
+           lariocci	1-10(50%) 20-30(5%) 40-50(2%)
+   	   piceenge	1-10(70%) 20-30(5%)
+ 	   pinualbi	1-10(70%) 20-30(5%)
+	   poputrem	1-10(70%) 20-30(10%)
+
+
+
+
+
+
+>>-----------------------------------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+
+    HarvestImplementations
+>>  Mgmt Area   Prescription    		Harvest Area    Begin Time  End Time
+>>  ---------   ------------    		------------    ----------  --------
+	3	FS-PIPO				3%		0	    90
+>>	7	FS-PIPO				10%		0	    90	 << Riparian Treatment Scenario only
+>>-----------------------------------------------------------------
+>> OUTPUTS
+
+PrescriptionMaps    harvest/prescripts-{timestep}.img
+BiomassMaps         harvest/biomass-removed-{timestep}.img
+EventLog            biomass-harvest-event-test-log.csv
+SummaryLog	    biomass-harvest-summary-log.csv

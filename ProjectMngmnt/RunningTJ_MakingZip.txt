@@ -1,0 +1,62 @@
+Title:			Running TJ and zipping weekly results
+Project Descriptor:	LANDIS-II Upgrades and Corrections
+Project ID:		
+Author:			bmarron
+Origin Date:		25 Sep 2016
+Revusion Date:		
+
+###########
+running TJ
+############
+
+	a. go to Project Mngmnt directory
+	a1. open with .tjp files with "Cream"
+	a2. make changes and run TJ
+	
+$ cd /home/bmarron/Desktop/PSU/PhD_EES/2016SoE021_LANDIS_Upgrades_Project/ProjectMngmnt/TJ_ProjectManagement/ && tj3 LANDIS*.tjp
+
+
+##########
+TJ Manual
+###########
+
+http://www.taskjuggler.org/tj3/manual/
+
+
+######################
+zip file
+for weekly reports
+#######################
+
+	a. change name of week
+
+$ cd /home/bmarron/Desktop/PSU/PhD_EES/2016SoE021_LANDIS_Upgrades_Project/FinalsDeliverables/Submitted_Weekly_Reports/
+$ ls 
+$ cd <current week>
+
+$ zip -9yrq ~/Desktop/PSU/PhD_EES/2016SoE021_LANDIS_Upgrades_Project/FinalsDeliverables/Submitted_Weekly_Reports/LANDIS_Updates_Project_<current week>.zip ./
+
+
+
+##############
+html to .pdf
+#############
+
+$ wkhtmltopdf file:///home/bmarron/Desktop/PSU/PhD_EES/2016SoE021_LANDIS_Upgrades_Project/ProjectMngmnt/TJ_ProjectManagement/LANDIS_Project_Status.html ~/Desktop/test.pdf
+
+
+
+############
+common error
+#############
+
+	a. actually missing a '}' WAY BACK -- probably associated with a newly inserted task
+
+LANDIS_ProjectTracking_Wk10.tjp:844: Error: Unexpected token 'navigator' found. Expecting '}'
+navigator
+
+
+
+
+
+

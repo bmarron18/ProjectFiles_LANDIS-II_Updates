@@ -1,0 +1,158 @@
+Title:				PWL_RepoStd-BaseWind
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			24 Mar 2017
+Final Date:			24 Mar 2017
+
+
+############
+QAQC Summary
+#############
+
+	a. A set of general standardizations, cleanups, and restructurings was performed
+	   (see below).
+
+	b. The "Landis.Extension.BaseWind.dll" extension and the 
+	   "LANDIS-II Base Wind 2.1.3-setup.exe" installer were scratch-built.
+
+	c. The newly-minted installer was used to freshly install Base Wind on a Windows 10 box
+	   and the example "scenario.txt" was run.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. Base Wind has passed QAQC.
+
+
+
+##########################
+general RepoStd actions
+##########################
+
+* add/modify README_<RepoName.version>.txt file
+* restructure repo:
+
+	deploy\
+	  examples\
+	  installer\
+	  past-releases\
+
+	docs\
+	  calibration\
+
+	src\
+	  WinPkgTools\
+
+	testings\
+	  unit-tests\
+ 	 version-tests\
+
+
+*remove .config files
+*remove .sln file
+*remove directory src\Properties
+*move AssemblyInfo.cs to \src
+*add Austen's Support-Library-Dll scripts
+*update .csproj file
+*update examples\ files
+*update and standardize .iss file
+*update installer\
+
+ 
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. add and modify "README_BaseWind2.1.txt"
+
+	b. move "Assembly.cs" to \src; remove \Properites
+
+	c. add Austen's lib scripts
+		==> add src\WinPkgTools
+		==> add src\install-libs.cmd
+
+	d. remove src\base-wind.sln
+
+	e. modify "base-wind.csproj"
+		==> simplify <Reference Include=...> statements
+		==> add <SpecificVersion>False</SpecificVersion> statements
+     		==> add <Private>False</Private> statements
+		==> add <PropertyGroup>
+			  <PreBuildEvent>call $(SolutionDir)\install-libs.cmd</PreBuildEvent>
+			</PropertyGroup>
+
+	f. update all deploy\examples\ files
+		==> modify "scenario.txt" to run Base Wind
+
+	g. modify "Base Wind 2.1.iss"
+		==> remove ""J:\Scheller\LANDIS-II\deploy\..." references
+		==> remove .pdf inclusion into installer
+		==> add code documentation
+
+	h. modify installer\
+		==> add "package (Setup section) v6.0.iss"
+		==> add "package (Code section) v3.iss"
+		==> add "LANDIS-II_Binary_license.rtf"
+		==> add "EnsureLandisIIDirsUC.iss"
+
+
+
+###############
+QAQC Base Wind
+###############
+
+	a. VS build of "base-wind.csproj"
+base-wind -> C:\Users\bmarr\Desktop\Working_BaseWind\Extension-Base-Wind\src\bin\Debug\Landis.Extension.BaseWind.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+	b. Inno Setup installer build
+Starting compile.  [Friday, March 24 2017 at 23:20:36]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+....
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+....
+Compile finished.  [Friday, March 24 2017 at 23:20:38]
+Total compile time: 00:01.531
+
+
+
+	c. install most recent "Age-Only Succession" directly from repo 
+https://github.com/LANDIS-II-Foundation/Extension-Age-Only-Succession/blob/master/deploy/LANDIS-II%20Age-only%20Succession%204.1-setup.exe
+
+
+	d. install freshly-minted Base Wind extension.
+
+
+	d. run the example scenario
+		==> "Base Wind", "Base Harvest", "Base BDA" are active extensions
+		==> "Output Max Species Age", "Output Cohort Statistics" are active extensions
+ 
+C:\Program Files\LANDIS-II\v6\examples\Base BDA>call landis-ii scenario.txt
+LANDIS-II 6.1 (official release)
+Loading scenario from file "scenario.txt" ...
+Initialized random number generator with seed = 2,316,586,381
+Loading species data from file "./species.txt" ...
+Loading ecoregions from file "./ecoregions.txt" ...
+.....
+dataset created: basic-stats/age-all-spp/AGE-COUNT-100.img
+   Writing RICH site map to basic-stats/spp-counts/SPP-RICH-100.img ...
+dataset created: basic-stats/spp-counts/SPP-RICH-100.img
+Model run is complete.
+
+
+!! QAQC PASSED !!
+
+
+

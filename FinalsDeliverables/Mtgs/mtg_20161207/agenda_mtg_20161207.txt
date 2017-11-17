@@ -1,0 +1,62 @@
+Title:			Team Mtg Agenda 
+Project Descriptor:	LANDISII Corrections/Upgrades
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		06 Dec 2016
+Revision Date:		
+
+
+############
+Mtg Agenda
+############
+
+	a. Welcome Vincent (timesheet and sig, HR ok?, GitHub protocols)
+
+	b. New team config options
+		-- tag team it to start (on Core-Model)
+		-- solo
+
+	c. Dakota materials 
+
+	d. Report out Core-Model (Austen)
+
+	e. Report out QAQCL2 BiomassHarvest (Bruce)
+
+	f. Issues BaseHarvest
+		Widgets replicator fails after initial run #5
+			Widgets still in use? 
+			Scenario to reproduce the stack trace given?
+
+		Add metadata library to extension #4
+			Add Metadata.dll to extension
+			Done yes?
+
+		Plant only prescription in biomass harvest #3
+			lbross, "Matthew, can you provide a sample scenario"
+
+		Add Salvage Logging to Base Harvest? #1
+ 			add a sort type parameter for standing snag biomass, 
+			allow simulation of salvage harvesting
+
+	g. Issues BiomassHarvest
+		AdjacencyType Input error #10
+			2016-08-30 16:16:46,612 - Error at line 38 of file 
+			"HARVEST_sib.txt":
+			Error with the input value for AdjacencyType:
+			Scenario to reproduce error?
+
+		Biomass Harvest Spray Treatment #1
+			Mark stand as sprayed so that the BDA extension can access 
+			that info starts with the harvest extension providing the 
+			info needed by BDA
+
+	h. holiday work schedule
+		Bruce ==> Mexico (12 Dec - 30 Dec)
+		Austen ==> 
+		Vincent ==> 
+		Dr. Scheller ==> 
+
+		Holiday week between Christmas and New Year's? 
+		Start fresh 2 Jan?
+
+	i. 

@@ -1,0 +1,330 @@
+/* Austen Ruzicka
+The application file for a game of Magic
+*/
+
+//Preprocessor directives
+#include "Ruzicka_Header2.h"
+
+int main()
+{
+  //variable declarations
+  cout << endl << "Initalizing players..." << endl;
+  srand(time(0)); //seeds random number generator
+
+  int choice = 0; //holds the user's choice for menu options
+  int o_success = 0; //holds the result of functions
+  ifstream file_in; //create an object to work with the files
+  ifstream file_inb; //create an object to work with files
+  file_in.open("Ruzicka_Deck.txt"); //open the deck file
+  file_inb.open("Ruzicka_Deck2.txt"); //open the second deck file
+  Player player_one(file_in); //create the first player
+  Player player_two(file_inb); //create the second player
+
+  char * a_name = new char[100]; //holds names
+
+  char * b_name = new char[100]; //also holds names
+
+  node a_node; //create a node for passing into classes
+
+  int * attackers = new int[30]; //create an array for integer values
+  for(int j = 0; j < 30; j++) //initalize them to zero
+  {
+    attackers[j] = 0; //set each to zero
+  }
+  int i = 0; //create an index into this array
+
+  int atk = 0; //variable to hold attack
+  int def = 0; //variable to hold defense
+  int life_total_a = 0; //player one's life total
+  int life_total_b = 0; //player two lifes total
+
+  life_total_a = player_one.life_total(); //get the life total of player one
+  life_total_b = player_two.life_total(); //get the life total of player two
+
+  cout << endl << "Drawing seven cards each..." << endl;
+
+  for(int i = 1; i < 7; i++) //draw starting cards each to start
+  {
+    player_one.retrieve(a_name, b_name, a_node);
+    player_two.retrieve(a_name, b_name, a_node);
+  }
+
+  cout << endl << "Players start with: " << endl;
+
+  cout << "Player 1: " << endl;
+  player_one.display(); //display player one's start
+
+  cout << "Player 2: " << endl;
+  player_two.display(); //display player two's start
+
+  //display a message with instructions to the user
+  welcome();
+
+  //offers choices to the user on what they would like the program to do and
+  //it will repeat allowing the user to do more until one player wins
+  do
+  {
+    if(life_total_a > 0) //player one gets a turn if they have life
+    {
+      cout << endl << "Player one's turn: " << endl;
+      cout << endl << "Drawing a card from the library: " << endl;
+
+      //perform start of turn actions
+      player_one.reset(a_name, b_name, a_node); //reset everything
+      player_one.retrieve(a_name, b_name, a_node); //draw a card from the deck
+      a_node.~node(); //reset the node
+
+      do
+      {
+        o_success = menu_choice(); //determine players choice of action
+
+        if(o_success == 1) //they chose to play a card
+        {
+          player_one.tap_mana(); //tap all mana
+
+          cout << endl << "Enter the name of the card from your hand you ";
+          cout << "want to play: " << endl;
+
+          delete a_name; //clear name
+          a_name = NULL; //set to null
+          char * temp = new char[100]; //create a temp
+          cin.get(temp, 100, '\n'); //get the user's choice
+          cin.ignore(100, '\n'); //ignore extra input
+          a_name = new char[strlen(temp) + 1]; //size the array
+          strcpy(a_name, temp); //copy the name
+
+          a_node.~node(); //reset the node
+
+          player_one.insert(a_name, b_name, a_node); //put onto battlefield
+
+          delete temp; //delete temp
+          temp = NULL; //set it to null
+        }
+        else if(o_success == 2) //they chose to attack
+        {
+          player_one.tap_attack(attackers, i);
+
+          cout << "Player two, defend?" << endl;
+
+          do
+          {
+            cout << "1: Yes." << endl << "2: No." << endl;
+            cin >> def; //get their response
+            cin.ignore(100, '\n'); //ignore extra input
+          }
+          while(def < 1 || def > 2); //loop til valid input
+
+          if(def == 1) //if they chose to defend
+          {
+            atk = player_two.tap_defense(attackers, i); //defend
+            player_two.take_damage(atk); //take damage
+          }
+          else if(def == 2) //if they chose not to defend
+          {
+            for(int j = 0; j <= i; j++) //add up attack
+            {
+              atk = atk + attackers[j]; //add up all attack
+            }
+            player_two.take_damage(atk); //take damage
+          }
+          atk = 0; //reset attack
+          def = 0; //reset defense choice
+          for (int j = 0; j <= i; j++) //empty out attacker array
+          {
+            attackers[j] = 0; //set all to zero
+          }
+          i = 0; //set index to zero as well
+        }
+        else if(o_success == 3) //they chose to view zones
+        {
+          player_one.display(); //show zones
+        }
+      }
+      while (o_success != 4); //loop until they pass
+
+      life_total_b = player_two.life_total(); //get player two's life
+
+      if(player_one.num_cards() > 7) //if the player has more than 7 cards
+      {
+        do
+        {
+          player_one.display(); //display to the player what they have
+          cout << endl << "You have more than seven cards in your hand.";
+          cout << endl << "You must discard to seven cards." << endl;
+          cout << endl << "Enter the name of a card from your hand to ";
+          cout << "discard: " << endl;
+          delete a_name; //clear name
+          char * temp = new char[100]; //create a temp
+          cin.get(temp, 100, '\n'); //get the user's choice
+          cin.ignore(100, '\n'); //ignore extra input
+          a_name = new char[strlen(temp) + 1]; //size the array
+          strcpy(a_name, temp); //copy the name
+          player_one.removal(a_name, b_name, a_node); //remove that card
+
+          delete temp; //get rid of temp
+          temp = NULL; //set to null
+        }
+        while(player_one.num_cards() > 7); //continue until they discard
+      }
+      if(a_name) //reset names
+      {
+        delete a_name; //clear it
+        a_name = new char[100]; //reallocate
+      }
+      if(b_name) //reset names
+      {
+        delete b_name; //clear it
+        b_name = new char[100]; //reallocate
+      }
+      a_node.~node(); //reset the node
+    }
+    if(life_total_b > 0) //player two gets a turn if they have life
+    {
+      cout << endl << "Player two's turn: " << endl;
+      cout << endl << "Drawing a card from the library: " << endl;
+
+      //perform start of turn actions
+      player_two.reset(a_name, b_name, a_node); //reset everything
+      player_two.retrieve(a_name, b_name, a_node); //draw a card from the deck
+      a_node.~node(); //reset the node
+
+      do
+      {
+        o_success = menu_choice(); //determine players choice of action
+
+        if(o_success == 1) //they chose to play a card
+        {
+          player_two.tap_mana(); //tap all mana
+
+          cout << endl << "Enter the name of the card from your hand you ";
+          cout << "want to play: " << endl;
+
+          delete a_name; //clear name
+          a_name = NULL; //set to null
+          char * temp = new char[100]; //create a temp
+          cin.get(temp, 100, '\n'); //get the user's choice
+          cin.ignore(100, '\n'); //ignore extra input
+          a_name = new char[strlen(temp) + 1]; //size the array
+          strcpy(a_name, temp); //copy the name
+
+          a_node.~node(); //reset the node
+
+          player_two.insert(a_name, b_name, a_node); //put onto battlefield
+
+          delete temp; //delete temp
+          temp = NULL; //set it to null
+        }
+        else if(o_success == 2) //they chose to attack
+        {
+          player_two.tap_attack(attackers, i);
+
+          cout << "Player one, defend?" << endl;
+
+          do
+          {
+            cout << "1: Yes." << endl << "2: No." << endl;
+            cin >> def; //get their response
+            cin.ignore(100, '\n'); //ignore extra input
+          }
+          while(def < 1 || def > 2); //loop til valid input
+
+          if(def == 1) //if they chose to defend
+          {
+            atk = player_one.tap_defense(attackers, i); //defend
+            player_two.take_damage(atk); //take damage
+          }
+          else if(def == 2) //if they chose not to defend
+          {
+            for(int j = 0; j <= i; j++) //add up attack
+            {
+              atk = atk + attackers[j]; //add up all attack
+            }
+            player_one.take_damage(atk); //take damage
+          }
+          atk = 0; //reset attack
+          def = 0; //reset defense choice
+          for(int j = 0; j <= i; j++) //empty out attacker array
+          {
+            attackers[j] = 0; //set all to zero
+          }
+          i = 0; //set index to zero as well
+        }
+        else if(o_success == 3) //they chose to view zones
+        {
+          player_two.display(); //show zones
+        }
+      }
+      while (o_success != 4); //loop until they pass
+
+      if(player_two.num_cards() > 7) //if the player has more than 7 cards
+      {
+        do
+        {
+          player_two.display(); //display to the player what they have
+          cout << endl << "You have more than seven cards in your hand.";
+          cout << endl << "You must discard to seven cards." << endl;
+          cout << endl << "Enter the name of a card from your hand to ";
+          cout << "discard: " << endl;
+          delete a_name; //clear name
+          char * temp = new char[100]; //create a temp
+          cin.get(temp, 100, '\n'); //get the user's choice
+          cin.ignore(100, '\n'); //ignore extra input
+          a_name = new char[strlen(temp) + 1]; //size the array
+          strcpy(a_name, temp); //copy the name
+          player_two.removal(a_name, b_name, a_node); //remove that card
+
+          delete temp; //get rid of temp
+          temp = NULL; //set to null
+        }
+        while(player_two.num_cards() > 7); //continue until they discard
+      }
+      if(a_name) //reset names
+      {
+        delete a_name; //clear it
+        a_name = new char[100]; //reallocate
+      }
+      if(b_name) //reset names
+      {
+        delete b_name; //clear it
+        b_name = new char[100]; //reallocate
+      }
+      a_node.~node(); //reset the node
+    }
+    life_total_a = player_one.life_total(); //get player one's life
+    life_total_b = player_two.life_total(); //get player two's life
+
+    cout << endl << "Player one has: " << life_total_a << " life." << endl;
+    cout << endl << "Player two has: " << life_total_b << " life." << endl;
+  }
+  while (life_total_a > 0 && life_total_b > 0); //loop while a winner has
+				//not been decided
+
+  if(life_total_a < 0) //if we broke the loop because player one died
+  {
+    cout << endl << "Player one has been defeated!" << endl;
+    cout << "Player two is victorious!" << endl;
+  }
+  else if(life_total_b < 0) //if we broke the loop because player two died
+  {
+    cout << endl << "Player two has been defeated!" << endl;
+    cout << "Player one is victorious!" << endl;
+  }
+
+  file_in.close(); //close the file
+  file_inb.close(); //close the file
+
+  if(a_name) //if a_name was allocated
+  {
+    delete a_name; //get rid of temporary memory
+    a_name = NULL; //points to null now
+  }
+
+  if(b_name) //if b_name was allocated
+  {
+    delete b_name; //get rid of temporary memory
+    a_name = NULL; //points to null now
+  }
+
+
+  return 0; //program terminates
+}

@@ -1,0 +1,60 @@
+Title:				Harvest Task Assignmnts
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			22 Oct 2016
+Revision Date:					
+
+
+
+Hi Austen!
+
+According to Rob, the Harvest updates are the most convoluted and will probably take
+quite a bit of time. You've got the lead on this one and ideally, both Dakota and Armaan
+will be able to jump in once their work the Core and LANDVIZ is done.
+
+Looks like we will have to spend a bit of time deciphering the Issues list (I may even need 
+to check in with Rob). In the meantime, however, I discovered the first major piece of the 
+upgrade: getting rid of the SDK interface. Rob very much dislikes the need for 
+SDK to be able to fire up a VirtualStudio solution and begin reprogramming to create a new
+extension. He sees it as definitely not 'scientist friendly.' Sounds like you had trouble
+with the first step (running the .cmd file). 
+
+I was able to get a functional run of the Base Harvest extension using materials Melissa Lucash 
+(research scientist in Rob's lab) presented at a LANDIS training last year. I will send you a 
+.zip file with all of the materials plus my log of the successful run. At least the extension 
+currently works to some level!
+
+OK thanks so much Austen!!
+
+
+##################
+task items
+###################
+
+	a. duplicate the Lucash training example run on LANDIS-II (see my run log)
+
+	b. restructure/reconfigure Extension-Base-Harvest/src/ so that SDK is NOT
+	required to build the extension
+	b1. Rebuilding the Base Harvest extension should require ONLY that a single
+	VisualStudio .sln file be uploaded to VS (or MonDevelop)
+
+	c. check to see if the extension will run given the current set of files
+	in the Extension-Base-Harvest/tests/v6.0-2.0
+	c1. I tried running these and it was a 'no go.' We may end up replacing this
+	set of files with the ones from Melissa's training.    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

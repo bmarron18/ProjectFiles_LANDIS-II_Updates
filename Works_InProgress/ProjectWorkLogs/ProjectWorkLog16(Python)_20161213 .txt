@@ -1,0 +1,207 @@
+Title:				Project Work Log16
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			13 Dec 2016
+Revision Date:					
+
+
+#############
+websites
+#############
+
+	a. Standard Library
+https://docs.python.org/2/library/index.html
+
+
+	b. Standard Language Reference
+https://docs.python.org/2/reference/index.html#reference-index	
+
+	c. Package Index
+https://pypi.python.org/pypi
+https://pypi.python.org/pypi?%3Aaction=search&term=ecology&submit=search
+http://ecopy.readthedocs.io/en/latest/index.html
+https://pypi.python.org/pypi/nlmpy/0.1.3
+
+
+#########################################################################
+Log:
+Python
+#########################################################################
+
+
+	a. clone LANDVIZ repo
+$ cd ~/Desktop/LANDVIZ_20161213
+$ git clone https://github.com/LANDIS-II-Foundation/LANDVIZ.git
+
+
+	b. running --help on ANY module!!
+
+$ python main.py --help
+Traceback (most recent call last):
+  File "main.py", line 10, in <module>
+    import l2data as landis, l2utils as utils
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/__init__.py", line 2, in <module>
+    from l2utils.collector import Collector
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py", line 4, in <module>
+    from osgeo import osr
+ImportError: No module named osgeo
+
+	c. *args and **kwargs
+http://stackoverflow.com/questions/3394835/args-and-kwargs
+
+use *args when you're not sure how many arguments might be passed to your function, 
+i.e. it allows you pass an arbitrary number of arguments to your function
+
+ **kwargs allows you to handle named arguments that you have not defined in advance:
+
+
+
+	d. what are .pyc files?
+http://stackoverflow.com/questions/3918689/what-is-the-difference-between-py-and-pyc-files
+
+.pyc contain the compiled bytecode of Python source files. 
+The Python interpreter loads .pyc files before .py files, so if they're present, it can save some time 
+by not having to re-compile the Python source code. You can get rid of them if you want, 
+but they don't cause problems, they're not big, and they may save some time when running programs.
+
+
+
+
+	e. if __name__ == '__main__':
+    	        main()
+http://stackoverflow.com/questions/419163/what-does-if-name-main-do
+http://stackoverflow.com/questions/4117530/sys-argv1-meaning-in-script
+
+
+Standard boilerplate to call the main() function to begin the program.
+
+
+__name__ is a global variable (in Python, global actually means on the module level) 
+that exists in all namespaces. It is typically the module's (* .py) name as a 'str' type.
+
+As the only special case, however, in whatever Python process you run, as in
+>>> python mycode.py
+the otherwise anonymous global namespace is assigned the value of '__main__' to its __name__. 
+
+
+
+
+	f. __init__.py
+http://stackoverflow.com/questions/448271/what-is-init-py-for
+
+Files named __init__.py are used to mark directories on disk as Python package directories. 
+If you have the files,
+	mydir/spam/__init__.py
+	mydir/spam/module.py
+and mydir is on your path, you can import the code in module.py as
+>>> import spam.module
+or
+>>>from spam import module
+
+If you remove the __init__.py file, Python will no longer look for submodules inside 
+that directory, so attempts to import the module will fail.
+
+The __init__.py file is usually empty, but can be used to export selected portions of 
+the package under more convenient name, hold convenience functions, etc. 
+
+
+
+	g. import argparse
+https://docs.python.org/2/library/argparse.html
+http://www.programcreek.com/python/example/20098/argparse.ArgumentError 	<== Example 5
+https://pyformat.info/								<== ("{0} does not exist".format(x))
+
+
+	h. import logging
+https://docs.python.org/2/howto/logging.html
+
+
+	i. import os.path
+https://docs.python.org/2/library/os.path.html
+
+
+	j. EAFP vs LBYL programming styles
+https://docs.python.org/2/glossary.html#term-eafp
+http://stackoverflow.com/questions/6167127/how-to-put-multiple-statements-in-one-line
+
+Easier to ask for forgiveness than permission. This common Python coding style assumes the existence of 
+valid keys or attributes and catches exceptions if the assumption proves false. This clean and fast style is 
+characterized by the presence of many "try" and "except" statements.
+
+As for the "try ... except" thing: It would be totally useless without the "except". 
+"try" says "I want to run this code, but it might throw an exception". If you don't care about the exception, 
+leave away the try. But as soon as you put it in, you're saying "I want to handle a potential exception". 
+The "pass" then says you wish to not handle it specifically. But that means your code will continue running, which it wouldn't otherwise.
+
+
+	k. sys.exc_info()
+https://docs.python.org/2/library/sys.html
+
+This function returns a tuple of three values that give information about the exception that is currently being handled. 
+
+
+	l. os.path.realpath(<name_of_file/folder>)
+http://stackoverflow.com/questions/37863476/why-use-both-os-path-abspath-and-os-path-realpath
+
+
+
+	m. PyInstaller
+www.pyinstaller.org
+
+PyInstaller bundles a Python application and all its dependencies into a single package. The user can run the packaged
+app without installing a Python interpreter or any modules.
+
+PyInstaller supports Python 2.7 and Python 3.3+, and correctly bundles the major Python packages such as numpy, PyQt, Django, wxPython, and others.
+PyInstaller is tested against Windows, Mac OS X, and Linux. However, it is not a cross-compiler: to make a Windows app  you  run PyInstaller
+in  Windows;  to  make  a  Linux  app  you  run  it  in  Linux,  etc.
+
+
+	n. import a module
+http://stackoverflow.com/questions/4383571/importing-files-from-different-folder-in-python
+
+
+	o. working directory
+https://www.tutorialspoint.com/python/os_getcwd.htm
+
+
+	p. trace: tracing a program as it runs
+https://docs.python.org/2/library/trace.html
+https://pymotw.com/2/trace/
+https://pymotw.com/2/sys/tracing.html
+
+
+
+
+	q. sys.argv
+https://docs.python.org/2/library/sys.html
+http://stackoverflow.com/questions/4117530/sys-argv1-meaning-in-script
+
+
+For every invocation of Python, sys.argv is automatically a list of strings representing the arguments (as separated by spaces)
+on the command-line. The name comes from the C programming convention in which argv and argc represent the command line arguments.
+(i.e., The list of command line arguments passed to a Python script)
+
+ sys.argv[0] is the name of the script.
+
+sys.argv[1] represents the first command-line argument (as a string) supplied to the script in question. 
+It will not prompt for input, but it will fail with an IndexError if no arguments are supplied on the command-line following the script name.
+
+
+
+	r. py - script extensions
+.py3 - (rarely used) Python3 script. Python3 scripts usually end with ".py" not ".py3", but I have seen that a few times
+.pyc - compiled script (Bytecode)
+.pyo - optimized pyc file (As of Python3.5, Python will only use pyc rather than pyo and pyc)
+.pyw - Python script for Windows. It is executed with pythonw.exe
+.pyx - Cython src to be converted to C/C++
+.pyd - Python script made as a Windows DLL
+.pxd - Cython script which is equivalent to a C/C++ header
+.pxi - MyPy stub
+.pyi - Stub file (PEP 484)
+.pyz - Python script archive (PEP 441); this is a script containing compressed Python scripts (ZIP) in binary form after the standard Python script header
+.pywz - Python script archive for MS-Windows (PEP 441); this is a script containing compressed Python scripts (ZIP) in binary form after the standard Python script header
+.py[cod] - wildcard notation in ".gitignore" that means the file may be ".pyc", ".pyo", or ".pyd".
+
+
+

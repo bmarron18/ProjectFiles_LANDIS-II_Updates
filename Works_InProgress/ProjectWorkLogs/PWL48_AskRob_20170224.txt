@@ -1,0 +1,75 @@
+Title:				Ask Rob
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			24 Feb 2017
+Final Date:			
+
+
+
+#########
+Ask Rob
+########
+
+	a. Write up step-by-step for new installer creation? That is,
+
+1. uninstall extension from LANDIS (using Windows Control Panel)
+2. clone repo
+3. make changes to .csproj and ,cs files, as appropriate
+4. re-build the repo's .dll 
+5. open the extension's .iss file in Inno Script Studio; modify names as appropriate
+6. compile .iss file to generate a new extension
+7. re-install extension
+
+
+
+	b. proper LANDISII plugins directory?
+	b1. Both these directories hold ExtInfo.txt files; current installers 
+	   send ExtInfo.txt only the first directory
+		==> C:\Program Files\LANDIS-II\plug-ins
+		==> C:\Program Files\LANDIS-II\v6\ext-info
+
+	b2. if installer not properly set, LANDISII throws the following error b/c
+		==> ExtInfo.txt file not found
+		==> ExtInfo.txt file has incorrect info
+
+LANDIS-II 6.2 (beta release 1)
+Loading scenario from file "scenario.txt" ...
+....
+Error while loading the plug-in:
+  Cannot get the data type that implements the plug-in:
+    Data type:  Landis.Extension.BaseHarvest.PlugIn,Landis.Extension.BaseHarvest-3.0
+    Error:      No data type with that name is installed.
+
+
+
+	c. correct Domingo legacy in .csproj files?
+
+For example ==>
+ </Reference>
+    <Reference Include="Landis.Library.HarvestManagement-v1, Version=1.1.5833.19078, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Landis.Library.HarvestManagement.1.2.0\lib\net35\Landis.Library.HarvestManagement-v1.dll</HintPath>
+    </Reference>
+
+
+modified ==>
+    </Reference>
+    <Reference Include="Landis.Library.HarvestManagement-v2">
+     <HintPath>>bin\Debug\Landis.Library.HarvestManagement-v2.dll</HintPath>
+    </Reference>
+
+
+
+###########
+Rob Notes
+##########
+
+	a. Rob 
+		==> better to do separate tests for salvage logging and the dead biomass 
+		    (aka Japan) issue
+		==> BaseHarvest: move one of the examples into the Installer sub-directory 
+		    and rename it examples\.
+		==> re-built BaseHarvest (had to completely redo the .iss)
+
+

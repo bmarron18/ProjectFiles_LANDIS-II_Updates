@@ -1,0 +1,645 @@
+/* Austen Ruzicka
+Header file for a program which will allow several users to play a simplified version of Magic the Gathering.
+This file provides the prototypes for functions used and implements inheritance with several different classes to provide the game with functionality. Some of these classes implement certain data structures in order to provide functionality for features such as a library, the graveyard, et cetera. This file also includes certain libraries. A card is a base class, and the node class inherits from it and a list class inherits from that and the classes that use data structures inherit from the generic list class.
+*/
+
+//Preprocessor Directives
+#include <iostream>
+#include <fstream>
+#include <cctype>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
+using namespace std;
+
+//Classes
+
+//base class card
+class Card
+{
+  public:
+    //constructor, initializes all data members to zero or null
+    Card();
+
+
+
+    //copy constructor - allows client to initialize a card with certain
+    //values
+    Card(const Card & a_card);
+
+
+
+    //copy constructor
+    Card(char a_name [], char a_type [], int a_cost, int a_power, 
+         int a_toughness, int a_damage, int a_epow, int a_e_tough,
+         bool a_tap);
+
+
+
+    //destructor, deallocates all dynamic memory
+    ~Card();
+
+
+
+    //displays the contents of the card
+    void display();
+
+
+
+    //function reads in the data to a card
+    void read_in_card(ifstream & file_in);
+
+
+
+    //function prepares the card to be moved to another zone
+    void transfer(Card & a_card);
+
+
+
+    //resets members to initial state at end of turn
+    void reset();
+
+
+
+    //function returns the value of the card's attack and taps it
+    int attack(int b_atk);
+
+
+
+    //function returns the value of the card's defense and taps it
+    int defend(int card_attack, int b_def); 
+
+
+
+    //function is called instead of defend if the creature is already tapped
+    int take_damage(int card_attack, int b_def);
+
+
+
+    //taps land cards for mana
+    int mana();
+
+
+
+    //function compares the name with a name passed in
+    bool compare_name(char a_name []);
+
+
+
+    //function allows a user to create a certain kind of card
+    void user_card();
+
+
+
+    //function copies a card
+    void copy_card(const Card & a_card);
+
+
+
+    //function adds up buffs from enchantments
+    void buff(int & b_atk, int & b_def);
+
+
+
+    //if the card is a creature, its tapped status is set to true because
+    //creatures come into play tapped with summoning sickness
+    void sickness();
+
+
+
+    //function returns the cost of the card
+    int r_cost();
+
+
+
+    //function sets a_name to the type of the card
+    void s_type(char a_name []);
+
+
+
+    //function returns the tap status of the card
+    bool is_tapped();
+ 
+  protected:
+
+    char * name; //will dynamically allocate a card's name
+    char * type; //will dynamically allocate a card's type
+    int cost; //will hold how much mana it costs to play card
+    int power; //will hold the attack power of a card
+    int toughness; //will hold the defense of a card
+    int damage; //keeps track of how much damage is on the creature for
+                //that turn
+    int effect_pow; //keep track of any buffs to power
+    int effect_tough; //keep track of buffs to toughness
+    bool tap; //determines if the card has been tapped or not
+};
+
+
+
+//node class, derived from card, used in list classes
+class node : public Card
+{
+  public:
+    //constructor - initializes data members to null or zero
+    node();
+
+
+
+    //copy constructor - allows client to initialize a node to a certain card
+    node(const Card & a_card);
+
+
+
+    //copy constructor - allows a client to copy over something from another
+    //node
+    node(const node & a_node);
+
+
+
+    //destructor - deletes dynamic memory
+    ~node();
+
+
+
+    //function sets the node's next pointer
+    void set_next(node * pointer);
+
+
+
+    //function goes to the next node
+    void go_next(node * & current);
+
+
+
+    //function creates node array
+    void create();
+
+
+
+    //function creates a copy of the node
+    void copy_node(const node & a_node);
+
+
+
+    //function copies a card
+    void transfer(node & a_node);
+
+
+
+    //function displays all nodes if it is an array
+    void display_all();
+
+
+
+    //function copies a node into the array
+    bool copy_nodes(const node & a_node);
+
+
+
+    //function takes a node from the array
+    bool transfer_nodes(node & a_node);
+
+
+
+    //function resets all nodes within the array
+    void reset_all();
+
+
+
+    //function determines if an array of nodes is empty or not
+    bool is_empty();
+
+
+
+    //tap all land cards in the array for mana
+    int mana_all();
+
+
+
+    //function compares the names of the nodes in the array to the one passed
+    //in
+    bool compare_names(char a_name [], node & a_node);
+
+
+
+    //function adds up the buffs present in the array
+    void add_buffs(int & b_atk, int & b_def);
+
+
+
+    //function taps the node in the array with the name of the card the user
+    //wants to tap to attack
+    int t_attack(char a_name [], int & b_atk);
+
+
+
+    //function taps the node in the array with the name of the card the user
+    //wants to tap to defend
+    int t_defense(char a_name [], int & b_def, int & attack);
+
+
+
+    //function determines if one node is empty or not
+    bool n_empty();
+
+
+
+    //function transfers the nodes from the array
+    void transfer_copy(node & a_node);
+
+
+
+    //function copies the nodes from a passed in node
+    void copy_transfer(node & a_node);
+
+  protected:
+    node * next; //pointer to another node
+    node * nodes; //to dynamically allocate multiple nodes in case of flexible
+				//array
+};
+
+
+
+//List class, has a node
+class List
+{
+  public:
+    //constructor - initializes data members to null
+    List();
+
+
+
+    //copy constructor - allows a user to copy an existing list
+    List(const List & a_list);
+
+
+
+    //destructor - deallocates all dynamic memory, and the whole list
+    virtual ~List();
+
+
+
+    //function inserts a node into the list
+    virtual void insert(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function displays all nodes
+    virtual void display();
+
+
+
+    //function removes a node
+    virtual bool removal(char a_name [], char b_name[], node & a_node);
+
+
+
+    //function retrieves a card from the list
+    virtual void retrieve(char a_name [], char b_name [], node & a_node);
+
+
+
+    //to be implemented in a certain derived class
+    virtual void read_in(ifstream & file_in);
+
+
+
+    //to be implemented in a certain derived class
+    virtual void reset();
+
+
+
+    //to be implemented in a certain derived class
+    virtual int tap_mana();
+
+
+
+    //to be implemented in a certain derived class
+    virtual void tap_attack(int attackers [], int & i, char a_name []);
+
+
+
+    //to be implemented in a certain derived class
+    virtual int tap_defense(int attackers [], const int & i);
+
+
+
+    //to be implemented in derived classes
+    virtual int card_count();
+
+  protected:
+    node * head; //head pointer to the lists
+};
+
+
+
+//A library is a kind of list
+class Library : public List
+{
+  public:
+
+    //constructor initializes members
+    Library();
+
+
+
+    //constructor copies an existing library
+    Library(const Library & a_library);
+
+
+
+    //copy constructor for pointers
+    Library(const Library * & a_library);
+
+
+
+    //destructor releases all dynamic memory
+    ~Library();
+
+
+
+    //functions reads in all the cards to the list
+    void read_in(ifstream & file_in);
+
+
+
+    //function draws from the deck
+    void retrieve(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function returns the number of cards in the deck
+    int card_count();
+
+  protected:
+    int num_cards; //keeps track of how many cards are in the library
+};
+
+
+
+//graveyard class - is a list
+class Graveyard : public List
+{
+  public:
+
+    //constructor - initializes data members
+    Graveyard();
+
+
+
+    //copy constructor - allows a user to copy an existing Graveyard
+    Graveyard(const Graveyard & a_grave);
+
+
+
+    //copy constructor for pointers
+    Graveyard(const Graveyard * & a_grave);
+
+
+
+    //destructor - deallocates all memory
+    ~Graveyard();
+
+
+
+    //function inserts a node into the list
+    void insert(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function displays all nodes in a list
+    void display();
+
+
+
+    //function removes a node
+    bool removal(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function retrieves a card from the list
+    void retrieve(char a_name [], char b_name [], node & a_node);
+};
+
+
+
+//battlefield class - is a list and functions as a flexible array
+class Battlefield : public List
+{
+  public:
+
+    //constructor initializes the battlefield's members
+    Battlefield();
+
+
+
+    //copy constructor - copies a battlefield
+    Battlefield(const Battlefield & a_battlefield);
+
+
+
+    //copy constructor for pointers
+    Battlefield(const Battlefield * & a_battlefield);
+
+
+
+    //destructor - deallocates a battlefield
+    ~Battlefield();
+
+
+
+    //inserts a node into the flexible array
+    void insert(char a_name [], char b_name [], node & a_node);
+
+
+
+    //displays all nodes in the flexible array
+    void display();
+
+
+
+    //removes a card from the array
+    bool removal(char a_name [], char b_name [], node & a_node);
+
+
+
+    //retrieves a card from the flexible array
+    void retrieve(char a_name [], char b_name [], node & a_node);
+
+
+
+    //resets all cards on the battlefield to untapped
+    void reset();
+
+
+
+    //taps all land cards for mana
+    int tap_mana();
+
+
+
+    //determines which cards to attack
+    void tap_attack(int attackers [], int & i, char a_name []);
+
+
+
+    //determines which cards to defend
+    int tap_defense(int attackers [], const int & i);
+
+
+
+    //function determines buffs active on battlefield
+    void buffs(int & b_atk, int & b_def);
+};
+
+
+
+//hand class - is a list
+class Hand : public List
+{
+  public:
+
+    //constructor initializes data members
+    Hand();
+
+
+
+    //copy constructor - copies an existing hand
+    Hand(const Hand & a_hand);
+
+
+
+    //copy constructor for pointers
+    Hand(const Hand * & a_hand);
+
+
+
+    //destructor deallocates all memory
+    ~Hand();
+
+
+
+    //draws a card into the hand from the library
+    void retrieve(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function removes a card from the hand, effectively a discard or play
+    bool removal(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function inserts a card into the hand
+    void insert(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function returns the number of cards
+    int card_count();
+
+  protected:
+
+    int cards; //holds the number of cards in the hand
+};
+
+
+
+//Player class - has lists
+/*
+Uses an array of dynamically allocated list pointers instead of doubly linked lists - got permission from Karla to do so, see files attached with this one for details
+*/
+class Player
+{
+  public: 
+
+    //constructor initializes data members
+    Player();
+
+
+
+    //copy constructor - copies a player
+    Player(const Player & a_player);
+
+
+
+    //copy constructor uses file_in to create a proper library
+    Player(ifstream & file_in);
+
+
+
+    //deallocates dynamic memory
+    ~Player();
+
+
+
+    //displays the contents of all zones
+    void display();
+
+
+
+    //inserts a node into the battlefield - effectively a play function
+    void insert(char a_name [], char b_name [], node & a_node);
+
+
+
+    //discards a card from the hand and places into the graveyard
+    bool removal(char a_name [], char b_name [], node & a_node);
+
+
+
+    //retrieves a card from the library and places it into the hand
+    void retrieve(char a_name [], char b_name [], node & a_node);
+
+
+
+    //function resets the players mana and cards
+    void reset(char a_name [], char b_name [], node & a_node);
+
+
+
+    //the total attack of the monsters that got through is taken from life
+    void take_damage(const int & attack);
+
+
+
+    //function returns the life of the player at the end of each turn
+    int life_total();
+
+
+
+    //function calls battlefield's tap_mana function
+    void tap_mana();
+
+
+
+    //function calls battlefield's tap attack function
+    void tap_attack(int attackers [], int & i);
+
+
+
+    //function calls battlefield's tap defense function
+    int tap_defense(int attackers [], const int & i);
+
+
+
+    //function calls hand's card count function
+    int num_cards(); //return the player's number of cards
+
+  protected:
+
+    List ** zones; //will be dynamically allocated and will use dynamic
+				//binding for a player to have all zones - 
+				//graveyard, hand, etc
+    int health; //keeps track of players current health
+    int mana; //keeps track of a players mana
+};
+
+
+//prototypes
+
+//function has no input and outputs a message to the user at the start
+//of the program explaining how to use the program
+void welcome();
+
+//function determines what action the player wants to take during their turn
+int menu_choice();

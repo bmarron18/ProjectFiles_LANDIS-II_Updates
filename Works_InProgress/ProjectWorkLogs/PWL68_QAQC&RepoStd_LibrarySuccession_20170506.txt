@@ -1,0 +1,91 @@
+Title:				PWL68_QAQC&RepoStd_LibrarySuccession
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			07 May 2017
+Final Date:			10 May 2017
+
+
+############
+QAQC Summary
+#############
+
+	a. A set of general standardizations, cleanups, and restructurings was performed.
+
+	b. The "Landis.Library.Succession.dll" extension was scratch-built.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. No QAQC tests were performed on the freshly-built, Landis.Library.Succession.dll.
+
+
+##########################
+general RepoStd actions
+##########################
+
+* restructure repo:
+
+	deploy\
+	  current-release\
+	  past-releases\
+
+	src\
+	  WinPkgTools\
+
+	testings\
+	  unit-tests\
+ 	 version-tests\
+
+*add/modify README_<RepoName.version>.txt file
+*remove .config files
+*remove .sln file
+*remove directory src\Properties
+*move AssemblyInfo.cs to \src
+*add Austen's Support-Library-Dll scripts
+*update .csproj file
+ 
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. create "README_LibrarySuccession4.0.txt"
+		==> need to add brief description of the purpose/fxn of this library
+
+		
+	b. modify src\"library-succession.csproj" 
+		==> simplify <Reference Include=...> statements
+		==> delete reference to .config files
+		==> remove strange target refs
+		==> delete Properties\; all files moved to \src
+			* Assembly.cs
+
+		==> delete \initial-communities; all files moved to \src
+			* Community.cs
+			* Dataset.cs
+			* DatasetParser.cs
+			* ICommunity.cs
+			* IDataset.cs
+			* Pixel.cs
+
+	c. delete references/files to SDK build including *.nupkg, *.nuspec, and scripts for
+	   a .zip file.
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a1. VS build of "library-succession.csproj"
+1>  library-succession -> C:\Users\bmarr\Desktop\working_LibrarySuccession\Library-Succession\src\bin\Debug\Landis.Library.Succession.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+

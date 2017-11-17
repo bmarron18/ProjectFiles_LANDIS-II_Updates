@@ -1,0 +1,108 @@
+Title:				PWL62b_QAQC&RepoStd_Biomass-Insect
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			01 May 2017
+Final Date:			01 May 2017
+
+
+############
+QAQC Summary
+#############
+
+	a. The "Landis.Extension.BiomassInsects.dll" extension and the 
+	   "LANDIS-II Biomass Insects 2.0-setup.exe" installer were re-built following
+	   the removal of Landis.Extension.Sucession.Biomass.dll as build prerequisite.
+
+	b. The newly-minted installer was used to freshly install Extension-Biomass-Insect on 
+	   a Windows 10 box and the example "scenario_s2e2.txt" was run.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. Biomass Insect has passed QAQC.
+
+
+
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. VS build of "biomass-insects.csproj"
+1>C:\Users\bmarr\Desktop\working_BiomassInsect\Extension-Biomass-Insect\src\PlugIn.cs(20,46,20,50): warning CS0108: 'PlugIn.Type' hides inherited member 'ExtensionMain.Type'. Use the new keyword if hiding was intended.
+1>  Biomass-Insects -> C:\Users\bmarr\Desktop\working_BiomassInsect\Extension-Biomass-Insect\src\bin\Debug\Landis.Extension.BiomassInsects.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Monday, May 01 2017 at 09:51:11]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+
+.... 
+
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Monday, May 01 2017 at 09:51:13]
+Total compile time: 00:02.218
+
+
+
+
+
+
+	c. install the freshly-minted Extension-Biomass-Insect
+
+
+
+
+
+
+	d. run the example scenario w/ the following active extensions:
+
+   	"Biomass Succession"     	biomass-succession_SetUp_s2e2.txt
+	"Biomass Insects"		biomass-insects_SetUp_s2e2.txt
+   	"Output Biomass"		output_Biomass.txt
+
+
+C:\Program Files\LANDIS-II\v6\examples\Biomass Insects>call landis-ii scenario_s2e2.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_s2e2.txt" ...
+Initialized random number generator with seed = 3,627,945,255
+Loading species data from file "./species_s2e2.txt" ...
+Loading ecoregions from file "./ecoregions_s2e2.txt" ...
+
+....
+
+dataset created: biomass/biomass-TILIAMER-20.img
+   Writing ULMUAMER biomass map to biomass/biomass-ULMUAMER-20.img ...
+dataset created: biomass/biomass-ULMUAMER-20.img
+Model run is complete.
+
+
+!! QAQC PASSED !!
+
+
+
+
+
+
+
+
+
+

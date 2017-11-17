@@ -1,0 +1,42 @@
+Title:				PWL75c_QAQC&RepoStd_ReleasePartyAlgorithms
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			11 Jun 2017
+Final Date:			16 Jun 2017
+ 
+
+
+#################################
+Modified .iss
+#################################
+
+----old versions looks like this ----------------------------------------------------------------
+
+;User Guides are no longer shipped with installer
+;Source: docs\LANDIS-II Net Ecosystem CN Succession v4.1 User Guide.pdf; DestDir: {#AppDir}\docs
+;Source: docs\LANDIS-II Climate Library v1.0 User Guide.pdf; DestDir: {#AppDir}\docs
+
+
+
+;Complete example for testing
+Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\NECN Succession
+Source: ..\examples\*.txt; DestDir: {#AppDir}\examples\NECN Succession
+Source: ..\examples\*.csv; DestDir: {#AppDir}\examples\NECN Succession
+Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\NECN Succession
+Source: ..\examples\*.img; DestDir: {#AppDir}\examples\NECN Succession
+
+
+
+---------- new versions looks like this ---------------------------------------------------------------------
+
+
+
+;Complete example for testing
+Source: ..\examples\*.bat; DestDir: {#AppDir}\examples\NECN Succession; Flags: replacesameversion
+Source: ..\examples\*.txt; DestDir: {#AppDir}\examples\NECN Succession; Flags: replacesameversion
+Source: ..\examples\*.csv; DestDir: {#AppDir}\examples\NECN Succession; Flags: replacesameversion
+Source: ..\examples\*.gis; DestDir: {#AppDir}\examples\NECN Succession; Flags: replacesameversion
+Source: ..\examples\*.img; DestDir: {#AppDir}\examples\NECN Succession; Flags: replacesameversion
+
+

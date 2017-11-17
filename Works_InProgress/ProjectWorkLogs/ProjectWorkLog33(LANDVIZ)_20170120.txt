@@ -1,0 +1,305 @@
+Title:				LANDVIZ rebuild w/o Anaconda
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			20 Jan 2017
+Revision Date:		
+
+
+
+###################################################
+Install an independent Python and dependecies
+(ie development env for PreProcTool)
+###################################################
+
+	a. uninstall Anaconda w/ Wizard:
+Anaconda 4.2.0 will be uninstalled from the following folder:
+C:\Users\bmarr\Anaconda2\
+
+	a1. Robert's conda virtual (if decided NOT to uninstall Anaconda)
+$ conda create --name landvis18 python=2.7 lxml=3.3.5 gdal=1.11.0 PyYaml=3.11 Pillow=2.4.0 Numpy=1.9 Scipy=0.14.0
+
+
+
+	b. JLiem's "Guide for Developer's" lists development env for PreProcTool
+	b1. Robert's list for pip install of dependencies
+#get prebuilt online GDAL==2.0.3
+#scipy==0.18.1
+lxml==3.3.5
+numpy==1.9.0
+Pillow==2.4.0
+PyInstaller==2.1
+pypiwin32==219
+PyYAML==3.11
+regex==2014.5.23
+
+
+
+
+	c. reccommendations for Python install in Windows
+http://docs.python-guide.org/en/latest/starting/install/win/
+http://stackoverflow.com/questions/24785562/why-wouldnt-i-want-to-add-python-exe-to-my-system-path-at-install-time
+http://pythoncentral.io/add-python-to-path-python-is-not-recognized-as-an-internal-or-external-command/
+
+
+
+	d. Python downloads and checks
+
+
+	d1 install Python 2.7.13 (32-bit)
+https://www.python.org/downloads/	<== python-2.7.13.msi (includes pip)
+
+C:\Users\bmarr\Desktop>python
+Python 2.7.13 (v2.7.13:a06454b1afa1, Dec 17 2016, 20:42:59) [MSC v.1500 32 bit (Intel)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+>>>
+<Ctrl>C to quit
+
+
+
+	d2. gdal 2.0.3
+		==> must download -win32.whl version and point to \Downloads for install
+		==> NB. Cannot use "GDAL‑1.11.4‑cp27‑none‑win_amd64.whl" (have 32bit Python)
+
+https://pypi.python.org/pypi/GDAL/1.11.1
+http://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal		<== per Developr's Guide
+**http://gis.stackexchange.com/questions/2276/installing-gdal-with-python-on-windows
+https://pip.pypa.io/en/latest/user_guide/#installing-from-wheels
+
+w/ cmd.exe shell:
+C:\Python27\Scripts\pip.exe install GDAL-1.11.4-cp27-none-win_amd64.whl
+Requirement 'GDAL-1.11.4-cp27-none-win_amd64.whl' looks like a filename, but the file does not exist
+GDAL-1.11.4-cp27-none-win_amd64.whl is not a supported wheel on this platform.
+
+
+C:\Python27\Scripts> pip install C:\Users\bmarr\Downloads\GDAL-2.0.3-cp27-cp27m-win32.whl
+Processing c:\users\bmarr\downloads\gdal-2.0.3-cp27-cp27m-win32.whl
+Installing collected packages: GDAL
+Successfully installed GDAL-2.0.3
+
+
+
+	d3. NumPy 1.9.0 (even though says 1.8.1) 
+		==> installed 1.8.1 to C:\Python27\Lib\site-packages\ w/ Wizard
+			*tried re-build with this but may be error:
+RuntimeError: module compiled against API version 0xa but this version of numpy is 0x9
+		==> downloaded and installed 1.9.0 (just in case)
+
+https://sourceforge.net/projects/numpy/files/NumPy/1.8.1/numpy-1.8.1-win32-superpack-python2.7.exe/download
+https://sourceforge.net/projects/numpy/files/NumPy/1.9.0/numpy-1.9.0-win32-superpack-python2.7.exe/download
+
+
+
+
+	d4. lxml 3.3.5
+
+C:\Python27\Scripts\pip install lxml==3.3.5
+Collecting lxml==3.3.5
+  Downloading lxml-3.3.5-cp27-none-win32.whl (3.0MB)
+    100% |################################| 3.0MB 305kB/s
+Installing collected packages: lxml
+Successfully installed lxml-3.3.5
+
+
+
+	d5. PyYaml 3.11
+
+C:\Python27\Scripts\pip install PyYaml==3.11
+Collecting PyYaml==3.11
+  Downloading PyYAML-3.11.zip (371kB)
+    100% |################################| 378kB 602kB/s
+Installing collected packages: PyYaml
+  Running setup.py install for PyYaml ... done
+Successfully installed PyYaml-3.11
+
+
+
+	d6a. VCForPython27 (BEFORE Regex)
+		==> installed w/ VCForPython27.msi
+
+C:\Python27\Scripts\pip install Regex==2014.5.23
+ error: Microsoft Visual C++ 9.0 is required. Get it from http://aka.ms/vcpython27
+
+
+
+	d6b. Regex 2014.5.23
+
+C:\Python27\Scripts\pip install Regex==2014.5.23
+Collecting Regex==2014.5.23
+  Using cached regex-2014.05.23.tar.gz
+Installing collected packages: Regex
+  Running setup.py install for Regex ... done
+Successfully installed Regex-2014.5.23
+
+
+
+	d7. Pillow 2.4.0
+
+C:\Python27\Scripts\pip install Pillow==2.4.0
+Collecting Pillow==2.4.0
+  Downloading Pillow-2.4.0-cp27-none-win32.whl (1.2MB)
+    100% |################################| 1.2MB 559kB/s
+Installing collected packages: Pillow
+Successfully installed Pillow-2.4.0
+
+
+
+	d8. scipy 0.14.0
+		==> scipy install scipy==0.18.1 gives errors
+		(C:\Python27\Scripts\pip install scipy==0.18.1  (<==NO GO!)
+		==> installed scipy 0.14.0 at C:\Python27\Lib\site-packages\
+
+https://sourceforge.net/projects/scipy/files/scipy/0.14.0/scipy-0.14.0-win32-superpack-python2.7.exe/download
+
+
+
+	d9. pywin32 Build 219
+	 	=> downloaded but errors w/ install:
+close failed in file object destructor:
+sys.excepthook is missing
+lost sys.stderr
+
+https://sourceforge.net/projects/pywin32/files/pywin32/Build%20219/pywin32-219.win32-py2.7.exe/download
+
+
+
+
+	d10. setuptools 19.2
+		==> o/w get a pyInstaller problem; fixed here:
+https://github.com/pyinstaller/pyinstaller/issues/1773
+
+		==> Downgrading to setuptools==19.2 fixed this issue for me.
+
+C:\Python27\Scripts> pip install setuptools==19.2
+Collecting setuptools==19.2
+  Downloading setuptools-19.2-py2.py3-none-any.whl (463kB)
+    100% |################################| 471kB 882kB/s
+Installing collected packages: setuptools
+  Found existing installation: setuptools 28.8.0
+    Uninstalling setuptools-28.8.0:
+      Successfully uninstalled setuptools-28.8.0
+Successfully installed setuptools-19.2
+
+
+
+
+
+###########################
+test re-built PreProcTool
+###########################
+
+	a. get a fresh LANDVIZ clone
+		==> unzip 1) gdal-data.zip, 2) pyinstaller.zip
+		==> delete redunant (nested) pyinstaller and gdal-data directories
+		(o/w get error python: can't open file 'pyinstaller\pyinstaller.py':)
+
+	b. run "build_preproctool.bat"
+	b1. BUILT!!! seems ok; only two real ERRORS
+		==> created new build at: 
+C:\Users\bmarr\Desktop\New_folder\LANDVIZ\PreProcTool\build\dist\PreProcTool>
+
+
+C:\Users\bmarr\Desktop\New_folder\LANDVIZ\PreProcTool\build> build_preproctool
+....
+57798 ERROR: Assembly x86_Microsoft.VC90.CRT_1fc8b3b9a1e18e3b_9.0.30729.6161_none not found
+....
+18277 ERROR: Assembly x86_Microsoft.VC90.CRT_1fc8b3b9a1e18e3b_9.0.30729.6161_none not found
+......
+
+
+	c. test the new build
+		==> copy ..\build\dist\PreProcTool  to  C:\Program Files (x86)\LANDIS-II>
+		==> re-name "PreProcTool" to "LandisPreProcTool" 
+		(name given when install LANDVIZ from LANDIS-II website)
+
+	c1. run with the test case example (EXACTLY AS IS)
+C:\Users\bmarr\Desktop\LANDVIZ_example1> run_preproctool
+Traceback (most recent call last):
+  File "<string>", line 11, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\pkg_resources", line 48, in <module>
+  File "build\PreProcTool\out00-PYZ.pyz\pkg_resources.extern", line 61, in load_module
+ImportError: The 'six' package is required; normally this is bundled with this package so if you get this warning, consult the packager of your distribution.
+Press any key to continue . . .
+
+
+	c2. try again after downgrading setuptools (==19.2)
+C:\Users\bmarr\Desktop\New_folder\LANDVIZ\deploy\examples\example_project>run_preproctool_example
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.239000082016 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 10
+RuntimeError: module compiled against API version 0xa but this version of numpy is 0x9
+No module named _gdal_array
+Traceback (most recent call last):
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 861, in emit
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 734, in format
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 465, in format
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 329, in getMessage
+TypeError: not all arguments converted during string formatting
+Logged from file l2utils.mapworker, line 190
+Press any key to continue . . .
+
+
+	c3. try again after installing NumPy 1.9.0
+		==> NO GO!  same error
+C:\Users\bmarr\Desktop\New_folder\LANDVIZ\deploy\examples\example_project> run_preproctool_example
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.239000082016 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Base Wind
+output: severity
+prepair year = 0 [year not available]
+prepair year = 10
+RuntimeError: module compiled against API version 0xa but this version of numpy is 0x9
+No module named _gdal_array
+Traceback (most recent call last):
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 861, in emit
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 734, in format
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 465, in format
+  File "build\PreProcTool\out00-PYZ.pyz\logging", line 329, in getMessage
+TypeError: not all arguments converted during string formatting
+Logged from file l2utils.mapworker, line 190
+Press any key to continue . . .
+
+
+	d. test Robert Kramer's PreProcTools re-build 
+	d1. NB. He didn't test his re-build; just put it on thumb-drive
+	d2. NB. He got the same "setuptools" error!! (as fixed above)
+C:\Users\bmarr\Desktop\LANDVIZ_example1> run_preproctool
+Traceback (most recent call last):
+  File "<string>", line 11, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\pkg_resources", line 48, in <module>
+  File "build\PreProcTool\out00-PYZ.pyz\pkg_resources.extern", line 61, in load_module
+ImportError: The 'six' package is required; normally this is bundled with this package so if you get this warning, consult the packager of your distribution.
+Press any key to continue . . .
+
+
+
+
+========= DONE w/ LANDVIZ!! A never-ending-blackhole. ===============================
+	

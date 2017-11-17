@@ -1,0 +1,101 @@
+Title:				Project Work Log15
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			11 Dec 2016
+Revision Date:					
+
+
+#########################################################################
+Log:
+LANDVIZ
+#########################################################################
+
+
+	a. .bat file for running LANDVIZ preproc (Charles)
+@echo off
+preproctool.exe -p preproc_VizTool.xml -o BAU_10-14 %*
+pause
+
+	b. preproc_VizTool.xml (Charles)
+ <landisPreProcProject projectName="BAU_10-14">
+    <input>
+        <scenarios>
+<scenario inputPath="BAU_10-14" displayName="Base Climate"/>  
+</scenarios>
+        <spatialRefernce>
+            <projection proj4="+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=23 +lon_0=-96 +x_0=0 +y_0=0 +dat
+um=NAD83 +units=m +no_defs "/>
+	    <extent ulx="-2318138.84151" uly="2580563.5926" lrx="-2155598.84151" lry="2257373.5926" />
+        </spatialRefernce>
+    </input>
+    <output>
+        <map> 
+            <zoom min="7" max="11" init="9" />
+            <baseMap source="osm" brightness="0" contrast="1" saturation="0" />
+            <legend initClassCount="3" sequentialCol="Reds" divergingCol="PiYG" qualitativeCol="Paired"/>
+        </map>
+    </output>
+</landisPreProcProject>
+
+
+
+
+	c. download LANDIS PreProcTool Setup (64-bit box)
+
+
+	d. downloaded example files
+	d1. from 'run_preproctool_example.bat'
+@echo off
+preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Example_LinearWind %*
+pause
+
+	d2. from 'preproc_VizTool_example.xml'
+ <landisPreProcProject projectName="Chippewa National Forest Landscape">
+    <input>
+        <scenarios>
+<scenario inputPath="CNF_Landscape_Historic-LinearWind" displayName="Baseline Climate, BaseWind"/>  
+<scenario inputPath="CNF_Landscape_CSIRO_85-Wind" displayName="Climate Change, BaseWind"/>  
+</scenarios>
+        <spatialRefernce>
+            <projection proj4="+proj=utm +zone=15 +ellps=GRS80 +datum=NAD83 +units=m +no_defs" />
+            <extent ulx="373434.717985773" uly="5300017.52204077" lrx="466234.717985773" lry="5202717.52204077" />
+        </spatialRefernce>
+    </input>
+    <output>
+        <map> 
+            <zoom min="7" max="11" init="9" />
+            <baseMap source="osm" brightness="0" contrast="1" saturation="0" />
+            <legend initClassCount="3" sequentialCol="Reds" divergingCol="PiYG" qualitativeCol="Paired"/>
+        </map>
+    </output>
+</landisPreProcProject>
+
+
+	e. run fr regular command-line
+	e1. No GO!
+preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Historic-LinearWind 
+
+	e2. run as cmd (admin)
+	e3. Works!!
+preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Historic-LinearWind
+
+.....
+.....
+End prepairing Map Output [time: 232.733999968 sec]
+Save Metadata as JSON files
+Copy webbase to output directory
+Update web settings file
+End of LANDIS-II PreProcTool.
+
+
+	f. installed Wine (Linux 32-bit)
+\home\bmarron\.wine
+
+$ wine cmd
+
+C:\Program Files\LANDIS-II\LandisPreProcTool\
+
+preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Historic-LinearWind
+
+preproctool.exe -p preproc_example_project.xml -o webvisoutput

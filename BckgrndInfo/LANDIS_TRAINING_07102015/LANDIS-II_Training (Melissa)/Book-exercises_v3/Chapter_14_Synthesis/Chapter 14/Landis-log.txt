@@ -1,0 +1,6 @@
+2015-07-11 14:14:22,795 - LANDIS-II 6.0 (official release)
+2015-07-11 14:14:22,819 - 
+2015-07-11 14:14:23,139 - Loading scenario from file "scenario.txt" ...
+2015-07-11 14:14:23,278 - Error at line 19 of file "scenario.txt":
+  Error reading input value for Extension:
+    No extension with the name "Biomass Succession".

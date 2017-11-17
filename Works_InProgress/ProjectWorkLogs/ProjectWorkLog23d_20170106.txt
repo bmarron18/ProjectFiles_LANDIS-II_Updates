@@ -1,0 +1,88 @@
+Title:				Project Work Log23d
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			06 Jan 2017
+Revision Date:		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run a build test w/ pyinstaller (Windows)
+#########################################################################
+
+
+	a. trial4: try original pyinstaller w/ build_preproctool.bat file
+http://ss64.com/nt/start.html
+
+	a1. go to C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>start /B build_preproctool.bat
+
+	b.
+	c.
+	d.
+	e.
+	f.
+
+
+
+	g. replace original LANDVIZ files with trial4 files 
+	g1. copy C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool;
+	   paste into C:\Program Files (x86)\LANDIS-II>
+	g2. rename folder C:\Program Files (x86)\LANDIS-II\PreProcTool;
+	   to C:\Program Files (x86)\LANDIS-II\LandisPreProcTool 			<== the name of the original LANDVIZ
+	g3. look at dir structure
+
+Directory of C:\Program Files (x86)\LANDIS-II
+
+01/06/2017  11:46    <DIR>          .
+01/06/2017  11:46    <DIR>          ..
+01/06/2017  11:42    <DIR>          LandisPreProcTool		<== my rebuild (_bm4) w/ pyinstaller and build_preproctool.bat
+01/04/2017  23:21    <DIR>          LandisPreProcTool_bm2	<== my rebuild w/ PyInstaller 3.2
+01/06/2017  09:42    <DIR>          LandisPreProcTool_bm3	<== my rebuild (_bm3) w/ pyinstaller-pyinstaller-8892e11 (named EXACTLY as original fr LANDIS-II website)
+01/04/2017  23:33    <DIR>          LandisPreProcTool_original	<== the original download from LANDIS-II website
+
+
+
+
+	h. try running my rebuild (_bm4) on the example project downloaded from LANDIS-II website (in Downloads)
+	h1. save a copy of the original example_project as "example_project_original"
+C:\Users\bmarr\Downloads\LANDVIZ_example_project>dir
+Directory of C:\Users\bmarr\Downloads\LANDVIZ_example_project
+01/04/2017  23:02    <DIR>          .
+01/04/2017  23:02    <DIR>          ..
+01/04/2017  23:33    <DIR>          example_project
+01/04/2017  23:01    <DIR>          example_project_original
+
+
+	h2. run it
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Example_LinearWind
+Traceback (most recent call last):
+  File "<string>", line 10, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils", line 4, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\l2utils.mapworker", line 6, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats", line 344, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.stats.stats", line 173, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special", line 638, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.basic", line 19, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.special.orthogonal", line 101, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 270, in load_module
+  File "build\PreProcTool\out00-PYZ.pyz\scipy.linalg", line 190, in <module>
+  File "C:\LandisVisualizationDevel\PreProcTool\build\pyinstaller\PyInstaller\loader\pyi_importers.py", line 409, in load_module
+  File "scipy/linalg/_decomp_update.pyx", line 1, in init scipy.linalg._decomp_update (scipy\linalg\_decomp_update.c:37677)
+ImportError: No module named cython_blas
+
+
+
+
+
+
+

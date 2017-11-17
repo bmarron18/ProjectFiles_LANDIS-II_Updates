@@ -1,0 +1,66 @@
+Title:				Core-Model Task Items
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			20 Oct 2016
+Final Date:					
+
+
+Hi Dakota!
+
+Based on your efforts so far (which I consider amazing!), Rob has authorized configuration and process 
+changes to the Core-Model. These are in addition to the pending Issues listed on GitHub.
+
+I've listed out my translation of Rob's intentions below; often in question form because in many cases,
+you will need to make the call and decide what works best. The big picture here is that the Core-Model
+gets updated maybe every two years or so and it is expected that a knowledgable programmer (not a 
+scientist) will do the upgrades. That said, making updates straightforward with good documentation is 
+a must. Once you figure out the best reconfiguration, I will be updating the L.Bross Developer's Quik
+Guide.
+
+pues, ¡mil gracias!, eh?
+
+
+#########
+task items
+##########
+
+	a. Rob wants VisualStudio to be the 'standard' IDE.
+	a1. MonoDevelop is considered secondary but I would like to see helpful hints for Linux folks 
+
+	b. provide a ready-to-go, LANDIS-II.sln file along with the appropriate *.csproj files. Having
+	to build these with 'premake' from the .lua files every time seems silly. 
+	b1. keep the 'premake'machinery but put in a separate directory, for an "if needed" situation
+	b2. upgrade to 'premake5'and change the .lua files accordingly?
+
+	c. eliminate the need to pull ANYTHING from Google code repos
+	c1. add the .dll files directly from the Google repo (you miraculously found!) to GitHub in the 
+	'third-party directory
+
+	d. possible to eliminate the use of NUnit?
+
+	e. make it clear how the current directory structure relates to a Core-Model upgrade
+	e1. I interpret this as configuring the directory structure so that it represents a clear 
+	'how-to' or 'step-by-step' sequence. Thus, a 'newbie' would easily figure that first you load 
+	LANDIS-II.sln into VisualStudio, build it, and then ....??    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,21 @@
+Title:			Mtg 12 Oct 2016
+Project Descriptor:	LANDIS Programming Updates Project
+Project ID:		2016SoE021
+Author:			bmarron
+Origin Date:		10 Oct 2016
+Revision Date:		
+
+
+
+
+
+##########
+Agenda
+##########
+
+* What is Lua and why we are using it (Rob)
+
+* Timesheet details (Bruce)
+
+
+

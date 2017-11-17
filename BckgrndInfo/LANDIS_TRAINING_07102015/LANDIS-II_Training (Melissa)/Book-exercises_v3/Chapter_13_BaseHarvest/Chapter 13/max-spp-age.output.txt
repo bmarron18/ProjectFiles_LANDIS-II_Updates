@@ -1,0 +1,14 @@
+LandisData  "Output Max Species Age"
+
+
+Timestep   20
+
+MapNames   output/max-spp-age/{species}-{timestep}.img
+
+Species    
+	acersacc	
+	betualle	
+	pinustro	
+	fraxamer	
+	querrubr	
+	thujocci

@@ -1,0 +1,96 @@
+Title:				Project Work Log4
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			15 Oct 2016
+Revision Date:					
+
+
+#######
+Log
+######
+
+	a. add in suggestions from Dakota and Austen (from Slack)
+	a1. download NUnit-2.6.4.msi (MSI is an installer package file format used by Windows)
+
+http://www.nunit.org/
+
+	a2. find nunit.framework.dll
+
+Directory of C:\Program Files (x86)\NUnit 2.6.4\bin\framework
+
+10/15/2016  10:59 PM    <DIR>          .
+10/15/2016  10:59 PM    <DIR>          ..
+12/16/2014  07:26 PM           151,552 nunit.framework.dll
+12/16/2014  07:26 PM           584,600 nunit.framework.xml
+12/16/2014  07:26 PM            11,264 nunit.mocks.dll
+               3 File(s)        747,416 bytes
+               2 Dir(s)  203,282,329,600 bytes free
+
+
+	a3. unzip LSML-1.0.zip and move files to LSML directory
+Directory of C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk\third-party\LSML
+
+10/15/2016  11:40 PM    <DIR>          .
+10/15/2016  11:40 PM    <DIR>          ..
+10/15/2016  11:17 PM    <DIR>          download
+03/08/2013  07:05 PM            13,824 Landis.Landscapes.dll
+03/08/2013  07:05 PM             6,656 Landis.RasterIO.dll
+03/08/2013  07:05 PM            25,600 Landis.RasterIO.Gdal.dll
+03/08/2013  07:05 PM            14,336 Landis.SpatialModeling.dll
+03/08/2013  07:05 PM            51,558 Landis.SpatialModeling.xml
+10/15/2016  08:05 PM             3,815 LSML-admin.cmd
+10/15/2016  07:50 PM             5,453 LSML-admin.sh
+10/15/2016  07:50 PM                46 version.txt
+10/15/2016  08:12 PM    <DIR>          WinPkgTools
+               8 File(s)        121,288 bytes
+               4 Dir(s)  203,278,413,824 bytes free
+
+
+
+	a4. try premake4 again
+	a3i. No errors!
+C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk>premake4 vs2010
+Building configurations...
+Running action 'vs2010'...
+Generating LANDIS-II.sln...
+Generating core/src/Core.csproj...
+Generating core/src/Core.csproj.user...
+Generating core/src/Implementation/Core_Implementation.csproj...
+Generating core/src/Implementation/Core_Implementation.csproj.user...
+Generating core/test/species/Species_Tests.csproj...
+Generating core/test/species/Species_Tests.csproj.user...
+Generating core/test/ecoregions/Ecoregions_Tests.csproj...
+Generating core/test/ecoregions/Ecoregions_Tests.csproj.user...
+Generating ext-dataset/src/Extension_Dataset.csproj...
+Generating ext-dataset/src/Extension_Dataset.csproj.user...
+Generating ext-admin/Extension_Admin.csproj...
+Generating ext-admin/Extension_Admin.csproj.user...
+Generating console/Console.csproj...
+Generating console/Console.csproj.user...
+Modifying core/src/Core.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+  Enabled the generation of XML documentation file
+Modifying core/src/Implementation/Core_Implementation.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying core/test/species/Species_Tests.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying core/test/ecoregions/Ecoregions_Tests.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying ext-dataset/src/Extension_Dataset.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying ext-admin/Extension_Admin.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying console/Console.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+  Changed <AssemblyName> element to "Landis.Console-6.1"
+Done.
+
+

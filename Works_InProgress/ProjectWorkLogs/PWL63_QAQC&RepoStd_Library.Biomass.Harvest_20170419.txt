@@ -1,0 +1,106 @@
+Title:				PWL63_QAQC&RepoStd_Library.Biomass.Harvest
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			19 Apr 2017
+Final Date:			24 Apr 2017
+
+
+
+############
+QAQC Summary
+#############
+
+	a. Re-build "Library.Biomass.Harvest-v2.dll". 
+
+	b. Use newly-built "Library.Biomass.Harvest-v2.dll" to re-build Extension 
+	   Biomass Harvest, "Landis.Extension.BiomassHarvest.dll" and its installer
+
+	c. QAQC test Extension Biomass Harvest for 100% cohort removal (ie parsing a 
+	    prescription w/ a string such as: 
+			cohorts 1-20 50-80 (50%)
+
+	d. Re-build "Landis.Extension.BiomassHarvest.dll" and its installer in the LANDIS-II
+	   repository, [LANDIS-II-Foundation/Extension-Biomass-Harvest]
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. Library Biomass Harvest (and subsequently, Biomass Harvest) has passed QAQC.
+
+
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. remove /deploy folder to LANDIS-SDK
+
+	b. modify src\"library-biomass-harvest.csproj"
+		==> basic revisions (check GitHub for details)
+
+
+###############
+QAQC Sequence
+################
+
+
+	a1. VS build of "library-biomass-harvest.csproj"
+1>  library-biomass-harvest -> C:\Users\bmarr\Desktop\workin_LibraryBiomassHarvest\Library-Biomass-Harvest\src\bin\Debug\Landis.Library.BiomassHarvest-v2.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+	a2. VS build of "biomass-harvest.csproj"
+1>  biomass-harvest -> C:\Users\bmarr\Desktop\working_BiomassHarvest\Extension-Biomass-Harvest\src\bin\Debug\Landis.Extension.BiomassHarvest.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+	b. Inno Setup installer build Extension-Biomass-Harvest
+Starting compile.  [Monday, April 24 2017 at 15:35:28]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+....
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Monday, April 24 2017 at 15:35:30]
+Total compile time: 00:02.218
+
+
+
+
+
+	c. install the freshly-minted Extension Biomass Harvest
+
+
+
+
+	d. run the example scenario w/ the following active extensions:
+		==> "Base Wind"
+		==> "Biomass Harvest"
+			*PRESCRIPTION_3 had acerrubr removed at 100% (ie left blank; no %)
+		==> "Output Biomass"
+		==> "Output Biomass Reclass"
+
+
+C:\Program Files\LANDIS-II\v6\examples\Biomass Insects>call landis-ii scenario_s2e2.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_s2e1.txt" ...
+....
+Writing tiliamer biomass map to outputs/biomass/biomass-tiliamer-100.img ...
+dataset created: outputs/biomass/biomass-tiliamer-100.img
+Model run is complete.
+
+
+
+!! QAQC PASSED !!
+
+
+

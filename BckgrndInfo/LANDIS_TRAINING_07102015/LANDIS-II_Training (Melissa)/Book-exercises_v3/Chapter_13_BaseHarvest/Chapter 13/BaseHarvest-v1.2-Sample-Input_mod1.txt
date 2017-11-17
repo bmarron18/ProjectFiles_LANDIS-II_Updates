@@ -1,0 +1,71 @@
+LandisData  "Base Harvest"
+
+
+Timestep    10
+
+ManagementAreas "./management.gis"
+
+Stands      "./stand.gis"
+
+>> -----------------------------------------
+>> PRESCRIPTIONS
+
+Prescription    MaximizeHarvest
+    StandRanking    Economic
+
+>> Species   	Economic Rank   Minimum Age    
+>>  ---------   ------------    ------------    
+	acersacc	50	70
+	betualle	50	70
+	pinustro	50	70
+	fraxamer	50	70
+	querrubr	50	70
+	thujocci	50	70
+
+
+
+    SiteSelection   Complete
+
+
+    CohortsRemoved  SpeciesList
+>> Species   		Cohorts Removed     	
+>>  ---------   	------------     
+	acersacc	70-500
+	betualle	70-500
+	pinustro	70-500
+	fraxamer	70-500
+	querrubr	70-500
+	thujocci	70-500
+  "abiebals"      	All            
+   "acerrubr"  		All
+   "betupapy"   	All
+   "piceglau"           All       
+   "pinubank"           All       
+   "pinuresi"    	All
+   "poputrem"        	All        
+   "querelli"    	All
+   "tiliamer"           All       
+   "tsugcana"           All      
+    queralba		All      
+    carycord		All
+
+
+
+>>-----------------------------------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+
+
+
+    HarvestImplementations
+>>  Mgmt Area   Prescription    Harvest Area    Begin Time  End Time
+>>  ---------   ------------    ------------    ----------  --------
+	1	MaximizeHarvest	100%
+
+	3	MaximizeHarvest	100%
+	
+>>-----------------------------------------------------------------
+>> OUTPUTS
+
+PrescriptionMaps    harvest/prescripts-{timestep}.gis
+EventLog            harvest-event-test-log.csv
+SummaryLog	    harvest/summary-log_mod1.csv

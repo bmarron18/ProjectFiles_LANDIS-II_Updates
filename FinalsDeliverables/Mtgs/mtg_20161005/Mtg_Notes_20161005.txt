@@ -1,0 +1,34 @@
+Title:				Mtg Notes
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021_LANDIS_Upgrades/
+Author:				bmarron
+Origin Date:			3 Oct 2016
+Revision Date:			5 Oct 2016	
+
+
+
+##############
+Mtg Notes
+#############
+
+
+* Go to LANDIS-II Foundation homepage (http://www.landis-ii.org/) and	
+	become a member of the LANDIS-II Users Group (under Install)
+	become a memebr of the LANDIS-II Developers Group (under Developers)
+
+* Install VisualStudio (or MonoDevelop)
+
+* Install git (and your favorite interface TortoiseGit?)
+
+* git with VisualStudio and MonoDevelop
+	-- .cs compiles to .dll?
+	-- Solution and Projects under Mono
+	-- clone repo directly into IDE?
+	-- must open ALL .cs files b/c cross-correlated?
+
+* testing Pull Requests and Model Testing with dummy changes
+ 
+* Timesheets (Signatures on file)
+
+* https://landisdev.slack.com/messages/@slackbot/
+* https://landisdev.slack.com/signout/done

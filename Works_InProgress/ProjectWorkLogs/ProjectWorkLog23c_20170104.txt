@@ -1,0 +1,144 @@
+Title:				Project Work Log23c
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			04 Jan 2017
+Revision Date:			06 Jan 2017		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run a build test w/ pyinstaller (Windows)
+#########################################################################
+
+
+	a. try developer's branch PyInstaller
+
+	a1. download ==> pyinstaller-pyinstaller-v3.2-267-g8892e11.zip (http://www.pyinstaller.org/)
+	a2. move to .zip to C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\> ==> unzip
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\pyinstaller-pyinstaller-8892e11>
+
+	a3. delete pyinstaller-created folders/files in C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\
+	a4. check have clean slate for new pyinstaller session
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        deleted:    PreProcTool/build/installer/LandisPreProcToolInstaller.aip		<== oops!
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        PreProcTool/build/PyInstaller-3.2.zip
+        PreProcTool/build/PyInstaller-3.2/
+        PreProcTool/build/pyinstaller-pyinstaller-8892e11/
+        PreProcTool/build/pyinstaller-pyinstaller-v3.2-267-g8892e11.zip
+
+
+	b.
+	c.
+	d.
+
+
+
+	
+	e. trial3 build: sequential commands (originally) from build_preproctool.bat (modified)
+	e1. open command-line (admin); cd C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>
+	e2. execute 1st build command
+	e3. execute 2nd build command
+	e4. execute 3rd build command
+	e5. execute 4th build command
+	e6. execute 5th build command
+	e7. check git changes
+
+
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python pyinstaller-pyinstaller-8892e11\pyinstaller.py --workpath=build_output_logs -y --clean --name=PreProcTool_bm --distpath=..\dist --hidden-import=scipy.special._ufuncs_cxx ..\source\main.py
+
+4613 INFO: PyInstaller: 3.3.dev0+8892e11
+4613 INFO: Python: 2.7.12
+4613 INFO: Platform: Windows-10-10.0.14393
+....
+
+
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python pyinstaller-pyinstaller-8892e11\pyinstaller.py --onefile --workpath=build_output_logs -y --clean --name=Proj4Extent_bm --distpath=..\dist ..\source\Proj4Extent.py
+
+4613 INFO: PyInstaller: 3.3.dev0+8892e11
+4613 INFO: Python: 2.7.12
+4613 INFO: Platform: Windows-10-10.0.14393
+...
+
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "..\source\config" "dist\preproctool_bm\config" /MIR /NFL /NDL /NP /NJH /NJS
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "..\..\WebVisTool\build\dist" "dist\preproctool_bm\webbase" /MIR /NFL /NDL /NP /NJH /NJS
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "gdal-data" "dist\preproctool_bm\gdal-data" /NFL /NDL /NP /NJH /NJS
+
+
+
+	f. combine the output from trial3
+	f1. get Proj4Extent_bm.exe (in C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist>);
+	    paste into C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool_bm3
+	f2. get \config, \gdal-data, \webbase (in \C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\dist\preproctool_bm>);
+	    paste into C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool_bm3
+
+
+
+
+	g. replace original LANDVIZ files with trial3 files 
+	g1. copy C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool_bm3;
+	   paste into C:\Program Files (x86)\LANDIS-II>
+	g2. rename folder C:\Program Files (x86)\LANDIS-II\PreProcTool_bm3;
+	   to C:\Program Files (x86)\LANDIS-II\LandisPreProcTool 			<== the name of the original LANDVIZ
+	g3. rename PreProcTool_bm3.exe ==> PreProcTool.exe
+	g4. rename Proj4Extent_bm.exe ==> Proj4Extent.exe
+	g5. rename PreProcTool_bm3.exe.manifest ==> PreProcTool.exe.manifest
+	g6. look at dir structure
+
+C:\Program Files (x86)\LANDIS-II>dir
+Directory of C:\Program Files (x86)\LANDIS-II
+01/06/2017  09:17    <DIR>          .
+01/06/2017  09:17    <DIR>          ..
+01/06/2017  09:22    <DIR>          LandisPreProcTool		<== my rebuild (_bm3) w/ pyinstaller-pyinstaller-8892e11 (named EXACTLY as original fr LANDIS-II website)
+01/04/2017  23:21    <DIR>          LandisPreProcTool_bm2	<== my rebuild w/ PyInstaller 3.2
+01/04/2017  23:33    <DIR>          LandisPreProcTool_original	<== the original download from LANDIS-II website
+
+
+
+
+
+	h. try running my rebuild (_bm3) on the example project downloaded from LANDIS-II website (in Downloads)
+	h1. save a copy of the original example_project as "example_project_original"
+C:\Users\bmarr\Downloads\LANDVIZ_example_project>dir
+Directory of C:\Users\bmarr\Downloads\LANDVIZ_example_project
+01/04/2017  23:02    <DIR>          .
+01/04/2017  23:02    <DIR>          ..
+01/04/2017  23:33    <DIR>          example_project
+01/04/2017  23:01    <DIR>          example_project_original
+
+
+	h2. run it
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>preproctool.exe -p preproc_VizTool_example.xml -o CNF_Landscape_Example_LinearWind
+Traceback (most recent call last):
+  File "source\main.py", line 10, in <module>
+ImportError: No module named l2data
+Failed to execute script main
+
+	h3. go back and look at warnPreProcTool_bm3.txt in
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\build_output_logs\PreProcTool_bm3>
+
+...
+missing module named l2utils - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+missing module named l2data - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+
+
+
+
+
+
