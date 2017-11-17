@@ -1,0 +1,70 @@
+Title:				QAQC followed?
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			01 Feb 2017
+Revision Date:		
+
+
+
+
+##############
+QAQC missed
+##############
+
+1. Issue #10 Extension-Biomass-Harvest:
+AdjacencyType Input error #10 
+
+2. Austen determined the problem was actually in Library-Biomass-Harvest:
+Problem with allowing 100% thinning
+
+3. Austen changed code in Library-Biomass-Harvest/trunk/src/PartialThinning.cs:
+if (percentage.Value < 0.0 || percentage.Value > 0.99)
+ throw MakeInputValueException(valueAsStr.ToString(),
+  string.Format("{0} is not between 0% and 99%.  100% is indicated by leaving out the %.", word));
+  
+
+4. Austen generated a pull request in Library-Biomass-Harvest directly to Rob; Rob merged:
+Pull request #1 in Library-Biomass-Harvest
+Merge pull request #1 from aruzicka555/master
+Fix for allowing total thinning
+Slightly altered percentage check to explicitly compare the percentage's
+value to ensure it is between 0-99%. Also rearranged unreachable code to
+throw an exception if a percentage is not specified.
+
+5. Bruce thought Extension-Base-Harvest rebuilds Landis.Library.BiomassHarvest-v2.dll but this
+incorrect ==> just pulls in Landis.Library.BiomassHarvest-v2.dll from Support-Library-DLLs
+just like all other required .dlls
+
+6. Bruce sent Pull request to Support-Library-Dlls for an updated Landis.Library.BiomassHarvest-v2.dll 
+to be added (thinking that a re-build of Extension-Biomass-Harvest also re-built
+Landis.Library.BiomassHarvest-v2.dll). This Pull request did nothing more than replace 
+Landis.Library.BiomassHarvest-v2.dll with itself; Rob merged
+
+
+
+
+##############
+QAQC missed
+##############
+
+	a. Austen to Rob direct ==> Extension-Biomass-Succession
+https://github.com/LANDIS-II-Foundation/Extension-Biomass-Succession
+rmscheller committed on GitHub Merge pull request #6 from aruzicka555/master
+
+
+
+#############
+QAQC missed
+##############
+
+	a. Austen to Rob direct ==> in Extension-PnET-Succession
+https://github.com/LANDIS-II-Foundation/Extension-PnET-Succession
+aruzicka555  wants to merge 1 commit into LANDIS-II-Foundation:master from aruzicka555:master
+
+
+
+
+
+
+

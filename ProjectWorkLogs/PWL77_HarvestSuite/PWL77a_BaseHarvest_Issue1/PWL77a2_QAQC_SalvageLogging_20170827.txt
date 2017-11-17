@@ -1,0 +1,795 @@
+Title:				PWL77a2_QAQC_SalvageLogging
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			27 Aug 2017
+Final Date:			
+
+
+
+###################################################################################
+The Harvest Suite:
+	Extension-Base-Harvest		==> Landis.Extension.BaseHarvest-3.1.dll
+	Extension-Biomass-Harvest	==> Landis.Extension.BiomassHarvest-3.2.dll
+	Library-Harvest-Mgmt		==> Landis.Library.HarvestManagement-v2.dll
+	Library-Biomass-Harvest		==> Landis.Library.BiomassHarvest-v2.dll
+	Library-Site-Harvest		==> Landis.Library.SiteHarvest-v1.dll	(v2 w/ Vincent changes?)
+
+https://github.com/LANDIS-II-Foundation/Libraries-Archived/wiki/HarvestLibraries
+##################################################################################
+
+
+
+####################################
+Harvest Suite Outstanding Issues
+####################################
+
+	a. Salvage logging enhancement
+https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest/issues/1
+https://github.com/LANDIS-II-Foundation/Library-Harvest-Mgmt/pull/6
+
+
+############
+QAQC Summary
+#############
+
+	1. Rebuilt and pushed to GitHub				What these SHOULD be named (given xyz convention)
+		Landis.Library.HarvestManagement-v2.dll 	==> Landis.Library.HarvestManagement-v2.1.0.dll
+		Landis.Library.SiteHarvest-v1.dll 		==> Landis.Library.SiteHarvest-v1.2.0.dll
+		Landis.Library.BiomassHarvest-v2.dll		==> Landis.Library.BiomassHarvest-v2.1.0.dll
+		Landis.Extension.BaseHarvest-3.1.dll		==> Landis.Extension.BaseHarvest-3.2.0.dll
+		Landis.Extension.BiomassHarvest-3.2.dll		==> Landis.Extension.BiomassHarvest-3.3.0.dll
+
+	2. A total of five, (5) QAQC runs were made. The first run used a prescription with stand ranking
+	   given by maximum cohort age (StandRanking MaxCohortAge). The remaining four (4) runs all used stand 
+	   ranking based on time since last disturbance, specifically TimeSinceLastFire. Variations in the 
+	   TimeSinceLastFire ranged from 1 to 50.
+
+	3. HARVEST DATA was obtained with Extension-Biomass-Harvest for any of the salvage logging prescriptions
+
+
+
+
+#############
+QAQC Results
+#############
+
+	1. Extension-Biomass-Harvest (running Biomass succession and Base Fire) DOES recognize 
+	    the new StandRanking prescription, "TimeSinceDisturbance" set with the 
+	    "TimeSinceLastFire" parameter. No LANDIS-II runtime errors were encountered.
+
+
+
+	2. The new StandRanking prescription, "TimeSinceDisturbance" set with the 
+	   "TimeSinceLastFire" parameter outputs NO HARVEST DATA with Extension-Biomass-Harvest. 
+	    The parameter, "TimeSinceLastFire" was run with 
+		==> TimeSinceLastFire 50
+		==> TimeSinceLastFire 25
+		==> TimeSinceLastFire 10
+		==> TimeSinceLastFire 1
+
+	   NO HARVEST DATA was obtained with any of these parameter settings. Presence or absence
+	   of post-run data output was performed by checking the contents of 
+		==> harvest_summary_log.csv
+		==> harvest-biomass-event-test-log.csv
+		==> Biomass-succession-v3-log
+		==> base-fire-summary-log.csv
+		
+
+
+
+	3. To verify that LANDIS-II was correctly processing runs using Extension-Biomass-Harvest
+	   (running Biomass succession and Base Fire), the first QAQC run was realized with
+		==> StandRanking MaxCohortAge 
+	    Harvest data was obtained.
+
+
+
+
+###################
+QAQC algorithm
+###################
+
+	a. rebuild and reinstall the entire Harvest Suite; push to GitHub
+
+		Landis.Library.HarvestManagement-v2.dll 	
+		Landis.Library.SiteHarvest-v1.dll 	(Vincent's changes)
+		Landis.Library.BiomassHarvest-v2.dll		
+		Landis.Extension.BaseHarvest-3.1.dll		
+		Landis.Extension.BiomassHarvest-3.2.dll		
+
+
+	b. build hierarchy of dependecies ==> build in sequence!
+
+	Landis.Library.SiteHarvest-v1.dll
+
+		Landis.Library.HarvestManagement-v2.dll 	
+		Landis.Library.BiomassHarvest-v2.dll
+		
+			Landis.Extension.BaseHarvest-3.1.dll		
+			Landis.Extension.BiomassHarvest-3.2.dll	
+
+	b1. build SiteHarvest ==> substitute the freshly-built Landis.Library.SiteHarvest-v1.dll into the 
+	    builds of HarvestManagement and BiomassHarvest ==> substitute all three now freshly-built libraries
+	    inro BaseHarvest and BiomassHarvest
+
+	NB. had to turn on/turn off <PreBuildEvent>call $(SolutionDir)\install-libs.cmd</PreBuildEvent> in .csproj files
+	    in order to add freshly built libraries
+	NB. BaseHarvest will not even build w/o new libraries!
+
+
+		
+
+
+
+
+
+
+
+
+
+
+	b. use a modified BiomassSuccession_s2e1 with active extensions
+			"Base Fire"
+			"Biomass Harvest"
+			"Output Biomass"
+
+		==> create and manipulate combinations of three, (3) Biomass Harvest precriptions:
+			*MaxAgeClearcut
+			*SalvageLogger1
+			*SalvageLogger2
+
+		==> evaluate outcome data 
+
+	
+	
+######################
+a2_QAQC sequence
+######################
+
+---- a2_QAQC runs ----------------------------------------------------------------------
+	a. a2_QAQC1 -- scenario_s2e1_QAQC1.txt				<< same as a1_QAQC1
+	"Base Fire"		base-fire_SetUp_s2e1.txt
+	"Biomass Harvest"	biomass-harvest_SetUp_s2e1_QAQC1.txt
+	"Output Biomass"	output_Biomass.txt
+
+
+	b. a2_QAQC2 -- scenario_s2e1_QAQC2.txt				<< same as a1_QAQC1
+	"Base Fire"		base-fire_SetUp_s2e1.txt
+	"Biomass Harvest"	biomass-harvest_SetUp_s2e1_QAQC2.txt
+	"Output Biomass"	output_Biomass.txt
+
+
+	c. a2_QAQC3 -- scenario_s2e1_QAQC3.txt				<< same as a1_QAQC1
+	"Base Fire"		base-fire_SetUp_s2e1.txt
+	"Biomass Harvest"	biomass-harvest_SetUp_s2e1_QAQC3.txt
+	"Output Biomass"	output_Biomass.txt
+
+
+	d. a2_QAQC4 -- scenario_s2e1_QAQC4.txt				<< same as a1_QAQC1
+	"Base Fire"		base-fire_SetUp_s2e1.txt
+	"Biomass Harvest"	biomass-harvest_SetUp_s2e1_QAQC4.txt
+	"Output Biomass"	output_Biomass.txt
+
+
+	e. a2_QAQC5 -- scenario_s2e1_QAQC5.txt				<< same as a1_QAQC1
+	"Base Fire"		base-fire_SetUp_s2e1.txt
+	"Biomass Harvest"	biomass-harvest_SetUp_s2e1_QAQC5.txt
+	"Output Biomass"	output_Biomass.txt
+
+
+
+---- a2_QAQC1 outputs ----------------------------------------------------------------------------
+	a1. a2_QAQC1 "harvest/harvest_summary_log.csv" in R		<< exactly equal to a1_QAQC1
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+
+> as.matrix(setNames(harvest_summary_log[, c(1:5,7)], NULL))
+     [,1] [,2] [,3]             [,4]  [,5]   [,6]      
+[1,] " 5" "1"  "MaxAgeClearcut" "313" " 520" "13598.53"
+[2,] " 5" "2"  "MaxAgeClearcut" " 37" " 153" " 5488.27"
+[3,] "10" "1"  "MaxAgeClearcut" "352" " 847" "10490.12"
+[4,] "15" "1"  "MaxAgeClearcut" "302" "1004" "19286.61"
+[5,] "15" "2"  "MaxAgeClearcut" "268" " 761" "14507.25"
+
+> as.matrix(setNames(harvest_summary_log[, c(1,2,4,5,7)], NULL))
+     [,1] [,2] [,3] [,4]     [,5]
+[1,]    5    1  313  520 13598.53
+[2,]    5    2   37  153  5488.27
+[3,]   10    1  352  847 10490.12
+[4,]   15    1  302 1004 19286.61
+[5,]   15    2  268  761 14507.25
+
+
+
+	a2. a2_QAQC1 "harvest-biomass-event-test-log.csv" in R		<< exactly equal to a1_QAQC1
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==Stand
+Col5==EventID
+Col6==StandAge
+Col7==StandRank
+Col10==MgBiomassRemoved
+Col11==MgBioRemovedPerDamagedHa
+
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1:7,10,11)], NULL))
+      [,1] [,2] [,3]             [,4] [,5] [,6]  [,7]  [,8]       [,9]    
+ [1,] " 5" "1"  "MaxAgeClearcut" " 2" " 3" " 81" " 81" "  377.16" " 26.94"
+ [2,] " 5" "1"  "MaxAgeClearcut" " 8" " 1" "178" "178" " 2257.65" " 33.70"
+ [3,] " 5" "1"  "MaxAgeClearcut" " 3" " 8" " 30" " 30" "  474.61" " 52.73"
+ [4,] " 5" "1"  "MaxAgeClearcut" " 9" " 4" " 62" " 62" " 1273.93" " 50.96"
+ [5,] " 5" "1"  "MaxAgeClearcut" "12" " 2" "101" "101" " 1396.71" " 31.74"
+ [6,] " 5" "1"  "MaxAgeClearcut" "18" "11" " 22" " 22" "  753.10" " 68.46"
+ [7,] " 5" "1"  "MaxAgeClearcut" "16" " 9" " 27" " 27" "  323.28" " 26.94"
+ [8,] " 5" "1"  "MaxAgeClearcut" "20" " 6" " 45" " 45" "  404.10" " 26.94"
+ [9,] " 5" "1"  "MaxAgeClearcut" "26" "12" " 22" " 22" " 1077.36" " 67.34"
+[10,] " 5" "1"  "MaxAgeClearcut" "24" " 7" " 35" " 35" "  803.67" " 42.30"
+[11,] " 5" "1"  "MaxAgeClearcut" "65" "10" " 23" " 23" " 2455.83" " 66.37"
+[12,] " 5" "1"  "MaxAgeClearcut" "66" " 5" " 49" " 49" " 2001.13" " 45.48"
+[13,] " 5" "2"  "MaxAgeClearcut" "68" "13" "  4" "  4" " 5488.27" "148.33"
+[14,] "10" "1"  "MaxAgeClearcut" " 4" "15" " 21" " 21" "  661.40" " 55.12"
+[15,] "10" "1"  "MaxAgeClearcut" " 7" "18" " 10" " 10" "  765.89" " 23.21"
+[16,] "10" "1"  "MaxAgeClearcut" "11" "16" " 17" " 17" "  620.21" " 68.91"
+[17,] "10" "1"  "MaxAgeClearcut" "21" "17" " 13" " 13" " 1751.03" " 28.71"
+[18,] "10" "1"  "MaxAgeClearcut" "30" "14" " 21" " 21" " 3285.58" " 29.34"
+[19,] "10" "1"  "MaxAgeClearcut" "34" "19" " 10" " 10" " 3406.01" " 27.25"
+[20,] "15" "1"  "MaxAgeClearcut" "38" "21" " 13" " 13" " 4192.56" " 64.50"
+[21,] "15" "1"  "MaxAgeClearcut" "41" "20" " 13" " 13" " 4831.02" " 58.91"
+[22,] "15" "1"  "MaxAgeClearcut" "46" "23" " 13" " 13" " 4562.79" " 57.76"
+[23,] "15" "1"  "MaxAgeClearcut" "55" "22" " 13" " 13" " 5700.24" " 75.00"
+[24,] "15" "2"  "MaxAgeClearcut" "68" "24" "  6" "  6" "14507.25" " 54.13"
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1,2,4:7,10,11)], NULL))
+      [,1] [,2] [,3] [,4] [,5] [,6]     [,7]   [,8]
+ [1,]    5    1    2    3   81   81   377.16  26.94
+ [2,]    5    1    8    1  178  178  2257.65  33.70
+ [3,]    5    1    3    8   30   30   474.61  52.73
+ [4,]    5    1    9    4   62   62  1273.93  50.96
+ [5,]    5    1   12    2  101  101  1396.71  31.74
+ [6,]    5    1   18   11   22   22   753.10  68.46
+ [7,]    5    1   16    9   27   27   323.28  26.94
+ [8,]    5    1   20    6   45   45   404.10  26.94
+ [9,]    5    1   26   12   22   22  1077.36  67.34
+[10,]    5    1   24    7   35   35   803.67  42.30
+[11,]    5    1   65   10   23   23  2455.83  66.37
+[12,]    5    1   66    5   49   49  2001.13  45.48
+[13,]    5    2   68   13    4    4  5488.27 148.33
+[14,]   10    1    4   15   21   21   661.40  55.12
+[15,]   10    1    7   18   10   10   765.89  23.21
+[16,]   10    1   11   16   17   17   620.21  68.91
+[17,]   10    1   21   17   13   13  1751.03  28.71
+[18,]   10    1   30   14   21   21  3285.58  29.34
+[19,]   10    1   34   19   10   10  3406.01  27.25
+[20,]   15    1   38   21   13   13  4192.56  64.50
+[21,]   15    1   41   20   13   13  4831.02  58.91
+[22,]   15    1   46   23   13   13  4562.79  57.76
+[23,]   15    1   55   22   13   13  5700.24  75.00
+[24,]   15    2   68   24    6    6 14507.25  54.13
+
+
+
+
+	a3. a2_QAQC1 "Biomass-succession-v3-log" in R			<< exactly equal to a1_QAQC1
+
+Col1==Time
+Col2==EcoName
+Col3==ActiveCount
+Col4==AvgLiveB
+
+
+> as.matrix(setNames(Biomass_succession_v3_log[, 1:4], NULL))
+      [,1] [,2]    [,3]   [,4]       
+ [1,] " 5" "MN101" "1881" " 3026.069"
+ [2,] " 5" "MN102" "7920" " 2606.317"
+ [3,] "10" "MN101" "1881" " 5431.999"
+ [4,] "10" "MN102" "7920" " 5672.343"
+ [5,] "15" "MN101" "1881" " 4886.178"
+ [6,] "15" "MN102" "7920" " 4846.456"
+ [7,] "20" "MN101" "1881" " 9199.089"
+ [8,] "20" "MN102" "7920" " 7712.233"
+ [9,] "25" "MN101" "1881" " 8289.465"
+[10,] "25" "MN102" "7920" " 6715.300"
+[11,] "30" "MN101" "1881" "11679.260"
+[12,] "30" "MN102" "7920" " 8169.855"
+
+> as.matrix(setNames(Biomass_succession_v3_log[, c(1,3,4)], NULL))
+      [,1] [,2]      [,3]
+ [1,]    5 1881  3026.069
+ [2,]    5 7920  2606.317
+ [3,]   10 1881  5431.999
+ [4,]   10 7920  5672.343
+ [5,]   15 1881  4886.178
+ [6,]   15 7920  4846.456
+ [7,]   20 1881  9199.089
+ [8,]   20 7920  7712.233
+ [9,]   25 1881  8289.465
+[10,]   25 7920  6715.300
+[11,]   30 1881 11679.260
+[12,]   30 7920  8169.855
+
+
+
+	a4. a2_QAQC1 "fire/base-fire-summary-log.csv" in R			<< exactly equal to a1_QAQC1
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==NumberFires
+Col4==EcoCounts_MN101
+Col5==EcoCounts_MN102
+
+
+> as.matrix(setNames(base_fire_summary_log[ ,1:5], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9148  329 1664 7484
+[2,]   10  807  523   64  743
+[3,]   15 1904  801  160 1744
+[4,]   20 2462  892  217 2245
+[5,]   25 2683  922  313 2370
+[6,]   30 2722  858  330 2392
+
+
+
+
+
+
+---- a2_QAQC2 outputs ---------------------------------------------------------------------
+
+	a1. a2_QAQC2 "harvest/harvest_summary_log.csv" in R		<< exactly equal to a1_QAQC1
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+
+> as.matrix(setNames(harvest_summary_log[, c(1:5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6]
+
+> as.matrix(setNames(harvest_summary_log[, c(1,2,4,5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+
+
+	a2. QAQC2 "harvest-biomass-event-test-log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==Stand
+Col5==EventID
+Col6==StandAge
+Col7==StandRank
+Col10==MgBiomassRemoved
+Col11==MgBioRemovedPerDamagedHa
+
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1,2,4:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+
+
+
+
+	a3. QAQC2 "Biomass-succession-v3-log" in R
+
+Col1==Time
+Col2==EcoName
+Col3==ActiveCount
+Col4==AvgLiveB
+
+
+> as.matrix(setNames(Biomass_succession_v3_log[, 1:4], NULL))
+      [,1] [,2]    [,3]   [,4]       
+ [1,] " 5" "MN101" "1881" " 3091.244"
+ [2,] " 5" "MN102" "7920" " 2941.755"
+ [3,] "10" "MN101" "1881" " 5675.733"
+ [4,] "10" "MN102" "7920" " 6187.678"
+ [5,] "15" "MN101" "1881" " 5139.758"
+ [6,] "15" "MN102" "7920" " 5626.380"
+ [7,] "20" "MN101" "1881" " 9888.368"
+ [8,] "20" "MN102" "7920" " 8500.846"
+ [9,] "25" "MN101" "1881" " 9208.614"
+[10,] "25" "MN102" "7920" " 7495.073"
+[11,] "30" "MN101" "1881" "12518.400"
+[12,] "30" "MN102" "7920" " 8826.931"
+
+> as.matrix(setNames(Biomass_succession_v3_log[, c(1,3,4)], NULL))
+       [,1] [,2]      [,3]
+ [1,]    5 1881  3091.244
+ [2,]    5 7920  2941.755
+ [3,]   10 1881  5675.733
+ [4,]   10 7920  6187.678
+ [5,]   15 1881  5139.758
+ [6,]   15 7920  5626.380
+ [7,]   20 1881  9888.368
+ [8,]   20 7920  8500.846
+ [9,]   25 1881  9208.614
+[10,]   25 7920  7495.073
+[11,]   30 1881 12518.400
+[12,]   30 7920  8826.931
+
+
+
+	a4. QAQC2 "fire/base-fire-summary-log.csv" in R
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==NumberFires
+Col4==EcoCounts_MN101
+Col5==EcoCounts_MN102
+
+
+> as.matrix(setNames(base_fire_summary_log[ ,1:5], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9148  329 1664 7484
+[2,]   10  828  478   85  743
+[3,]   15 1767  792  175 1592
+[4,]   20 2637  874  220 2417
+[5,]   25 2569  873  267 2302
+[6,]   30 2648  913  317 2331
+
+
+
+
+
+
+---- QAQC3 outputs ---------------------------------------------------------------------
+
+	a1. QAQC3 "harvest/harvest_summary_log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+
+> as.matrix(setNames(harvest_summary_log[, c(1:5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6]
+
+> as.matrix(setNames(harvest_summary_log[, c(1,2,4,5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+
+
+	a2. QAQC3 "harvest-biomass-event-test-log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==Stand
+Col5==EventID
+Col6==StandAge
+Col7==StandRank
+Col10==MgBiomassRemoved
+Col11==MgBioRemovedPerDamagedHa
+
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1,2,4:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+
+
+
+
+	a3. QAQC3 "Biomass-succession-v3-log" in R
+
+Col1==Time
+Col2==EcoName
+Col3==ActiveCount
+Col4==AvgLiveB
+
+
+> as.matrix(setNames(Biomass_succession_v3_log[, 1:4], NULL))
+      [,1] [,2]    [,3]   [,4]       
+ [1,] " 5" "MN101" "1881" " 3091.244"
+ [2,] " 5" "MN102" "7920" " 2941.755"
+ [3,] "10" "MN101" "1881" " 5675.733"
+ [4,] "10" "MN102" "7920" " 6187.678"
+ [5,] "15" "MN101" "1881" " 5139.758"
+ [6,] "15" "MN102" "7920" " 5626.380"
+ [7,] "20" "MN101" "1881" " 9888.368"
+ [8,] "20" "MN102" "7920" " 8500.846"
+ [9,] "25" "MN101" "1881" " 9208.614"
+[10,] "25" "MN102" "7920" " 7495.073"
+[11,] "30" "MN101" "1881" "12518.400"
+[12,] "30" "MN102" "7920" " 8826.931"
+
+> as.matrix(setNames(Biomass_succession_v3_log[, c(1,3,4)], NULL))
+      [,1] [,2]      [,3]
+ [1,]    5 1881  3091.244
+ [2,]    5 7920  2941.755
+ [3,]   10 1881  5675.733
+ [4,]   10 7920  6187.678
+ [5,]   15 1881  5139.758
+ [6,]   15 7920  5626.380
+ [7,]   20 1881  9888.368
+ [8,]   20 7920  8500.846
+ [9,]   25 1881  9208.614
+[10,]   25 7920  7495.073
+[11,]   30 1881 12518.400
+[12,]   30 7920  8826.931
+
+
+
+	a4. QAQC3 "fire/base-fire-summary-log.csv" in R
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==NumberFires
+Col4==EcoCounts_MN101
+Col5==EcoCounts_MN102
+
+
+> as.matrix(setNames(base_fire_summary_log[ ,1:5], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9148  329 1664 7484
+[2,]   10  828  478   85  743
+[3,]   15 1767  792  175 1592
+[4,]   20 2637  874  220 2417
+[5,]   25 2569  873  267 2302
+[6,]   30 2648  913  317 2331
+
+
+
+
+---- QAQC4 outputs ---------------------------------------------------------------------
+
+	a1. QAQC4 "harvest/harvest_summary_log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+
+> as.matrix(setNames(harvest_summary_log[, c(1:5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6]
+
+> as.matrix(setNames(harvest_summary_log[, c(1,2,4,5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+
+
+	a2. QAQC4 "harvest-biomass-event-test-log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==Stand
+Col5==EventID
+Col6==StandAge
+Col7==StandRank
+Col10==MgBiomassRemoved
+Col11==MgBioRemovedPerDamagedHa
+
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1,2,4:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+
+
+
+
+	a3. QAQC4 "Biomass-succession-v3-log" in R
+
+Col1==Time
+Col2==EcoName
+Col3==ActiveCount
+Col4==AvgLiveB
+
+
+> as.matrix(setNames(Biomass_succession_v3_log[, 1:4], NULL))
+      [,1] [,2]    [,3]   [,4]       
+ [1,] " 5" "MN101" "1881" " 3091.244"
+ [2,] " 5" "MN102" "7920" " 2941.755"
+ [3,] "10" "MN101" "1881" " 5675.733"
+ [4,] "10" "MN102" "7920" " 6187.678"
+ [5,] "15" "MN101" "1881" " 5139.758"
+ [6,] "15" "MN102" "7920" " 5626.380"
+ [7,] "20" "MN101" "1881" " 9888.368"
+ [8,] "20" "MN102" "7920" " 8500.846"
+ [9,] "25" "MN101" "1881" " 9208.614"
+[10,] "25" "MN102" "7920" " 7495.073"
+[11,] "30" "MN101" "1881" "12518.400"
+[12,] "30" "MN102" "7920" " 8826.931"
+
+> as.matrix(setNames(Biomass_succession_v3_log[, c(1,3,4)], NULL))
+      [,1] [,2]      [,3]
+ [1,]    5 1881  3091.244
+ [2,]    5 7920  2941.755
+ [3,]   10 1881  5675.733
+ [4,]   10 7920  6187.678
+ [5,]   15 1881  5139.758
+ [6,]   15 7920  5626.380
+ [7,]   20 1881  9888.368
+ [8,]   20 7920  8500.846
+ [9,]   25 1881  9208.614
+[10,]   25 7920  7495.073
+[11,]   30 1881 12518.400
+[12,]   30 7920  8826.931
+
+
+
+	a4. QAQC4 "fire/base-fire-summary-log.csv" in R
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==NumberFires
+Col4==EcoCounts_MN101
+Col5==EcoCounts_MN102
+
+
+> as.matrix(setNames(base_fire_summary_log[ ,1:5], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9148  329 1664 7484
+[2,]   10  828  478   85  743
+[3,]   15 1767  792  175 1592
+[4,]   20 2637  874  220 2417
+[5,]   25 2569  873  267 2302
+[6,]   30 2648  913  317 2331
+
+
+
+---- QAQC5 outputs ---------------------------------------------------------------------
+
+	a1. QAQC5 "harvest/harvest_summary_log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+
+> as.matrix(setNames(harvest_summary_log[, c(1:5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6]
+
+> as.matrix(setNames(harvest_summary_log[, c(1,2,4,5,7)], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+
+
+	a2. QAQC5 "harvest-biomass-event-test-log.csv" in R
+
+No data available in table
+
+Col1==Time
+Col2==ManagementArea
+Col3==Prescription
+Col4==Stand
+Col5==EventID
+Col6==StandAge
+Col7==StandRank
+Col10==MgBiomassRemoved
+Col11==MgBioRemovedPerDamagedHa
+
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9]
+
+> as.matrix(setNames(harvest_biomass_event_test_log[, c(1,2,4:7,10,11)], NULL))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+
+
+
+
+	a3. QAQC5 "Biomass-succession-v3-log" in R
+
+Col1==Time
+Col2==EcoName
+Col3==ActiveCount
+Col4==AvgLiveB
+
+
+> as.matrix(setNames(Biomass_succession_v3_log[, 1:4], NULL))
+      [,1] [,2]    [,3]   [,4]       
+ [1,] " 5" "MN101" "1881" " 3091.244"
+ [2,] " 5" "MN102" "7920" " 2941.755"
+ [3,] "10" "MN101" "1881" " 5675.733"
+ [4,] "10" "MN102" "7920" " 6187.678"
+ [5,] "15" "MN101" "1881" " 5139.758"
+ [6,] "15" "MN102" "7920" " 5626.380"
+ [7,] "20" "MN101" "1881" " 9888.368"
+ [8,] "20" "MN102" "7920" " 8500.846"
+ [9,] "25" "MN101" "1881" " 9208.614"
+[10,] "25" "MN102" "7920" " 7495.073"
+[11,] "30" "MN101" "1881" "12518.400"
+[12,] "30" "MN102" "7920" " 8826.931"
+
+> as.matrix(setNames(Biomass_succession_v3_log[, c(1,3,4)], NULL))
+      [,1] [,2]      [,3]
+ [1,]    5 1881  3091.244
+ [2,]    5 7920  2941.755
+ [3,]   10 1881  5675.733
+ [4,]   10 7920  6187.678
+ [5,]   15 1881  5139.758
+ [6,]   15 7920  5626.380
+ [7,]   20 1881  9888.368
+ [8,]   20 7920  8500.846
+ [9,]   25 1881  9208.614
+[10,]   25 7920  7495.073
+[11,]   30 1881 12518.400
+[12,]   30 7920  8826.931
+
+
+
+	a4. QAQC5 "fire/base-fire-summary-log.csv" in R
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==NumberFires
+Col4==EcoCounts_MN101
+Col5==EcoCounts_MN102
+
+
+> as.matrix(setNames(base_fire_summary_log[ ,1:5], NULL))
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9148  329 1664 7484
+[2,]   10  828  478   85  743
+[3,]   15 1767  792  175 1592
+[4,]   20 2637  874  220 2417
+[5,]   25 2569  873  267 2302
+[6,]   30 2648  913  317 2331
+
+
+
+
+
+##############
+QAQC map checks
+#################
+
+	Not done this time
+
+
+######################
+QAQC consistency/change tests
+#######################
+
+	Done by eye
+
+
+
+
+
+
+
+
+
+
+
+
+
+

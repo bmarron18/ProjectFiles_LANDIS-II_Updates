@@ -1,0 +1,169 @@
+Title:				QAQC & RepoStd NECN
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			25 Feb 2017
+Final Date:			27 Mar 2017
+
+
+
+############
+QAQC Summary
+#############
+
+	a. A set of general standardizations, cleanups, and restructurings was performed
+	   (see below). Major revisions to files in deploy\examples were made.
+
+	b. The "Landis.Extension.Succession.NetEcosystemCarbonNitrogen.dll" extension and the 
+	   "LANDIS-II NECN Succession 4.2-setup.exe" installer were scratch-built.
+
+	c. The newly-minted installer was used to freshly install NECN Succession on a 
+	    Windows 10 box and the example "scenario_MN.txt" was run.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. NECN Succession has passed QAQC.
+
+ 
+
+
+
+##########################
+general RepoStd actions
+##########################
+
+* add/modify README_<RepoName.version>.txt file
+* restructure repo:
+
+	deploy\
+	  examples\
+	  installer\
+	  past-releases\
+
+	docs\
+	  calibration\
+
+	src\
+	  WinPkgTools\
+
+	testings\
+	  unit-tests\
+ 	 version-tests\
+
+
+*remove .config files
+*remove .sln file
+*remove directory src\Properties
+*move AssemblyInfo.cs to \src
+*add Austen's Support-Library-Dll scripts
+*update .csproj file
+*update examples\ files
+*update and standardize .iss file
+*update installer\
+
+ 
+
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+NB. NECN is now the standard source for the test run examples\ files for extensions
+that use PRISM weather data
+
+
+	a. modify "NECN-succession.csproj"
+		==>  add <SpecificVersion>False</SpecificVersion>
+      			 <Private>False</Private>
+		==> remove extended info in <Reference Include="<name>" lines
+
+
+	b. modify/rename "scenario_MN.txt"
+		==> update for use of *_SetUp.txt files
+		==> add disturbance extension options
+		==> add output extension options 
+		==> set random number seed
+		==> standardize
+
+
+	c. modify examples\ files
+		==> rename "ecoregions_MN.gis", "ecoregions_MN.txt", "species_MN.txt"
+		==> modify "biomass-harvest_SetUp.txt"
+			*Error at Line 62
+			*change percentages in "Prescription SelectiveNorthernHardwood"
+			*change the "PRESCRIPTION IMPLEMENTATION" schedule
+
+
+	c. modify "LANDIS-II_NECN_Succession_v4.2.iss"
+		==> restructure to std template
+		==> add *.gis
+		==> add *.csv
+		==> add *.img
+		==> add
+;Supporting files
+Source: ..\calibration\*.csv; DestDir: {#AppDir}\examples\NECN-succession\calibration
+		
+
+
+###############
+QAQC Sequence
+################
+
+	a. VS re-build of NECN
+1>  NECN-succession -> C:\Users\bmarr\Desktop\Working_NECN\Extension-NECN-Succession\src\bin\debug\Landis.Extension.Succession.NetEcosystemCarbonNitrogen.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Monday, March 27 2017 at 09:45:40]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+
+Debug Information Start
+CurrentPath = C:\Program Files (x86)\Inno Script Studio
+Params.SourcePath = C:\Users\bmarr\Desktop\Working_NECN\Extension-NECN-Succession\deploy\installer\
+....
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Monday, March 27 2017 at 09:45:42]
+Total compile time: 00:02.594
+
+
+
+
+	c. install latest-version ofBiomass Harvest and the freshly-minted 
+	   NECN Succession extension
+
+
+
+
+	d. run the example "scenario_MN.txt"; w/ the following
+	   active extensions:
+		==> "NetEcosystemCN Succession"
+		==> "Base Wind"
+		==> "Biomass Harvest"
+		==> "Output Max Species Age"
+		==> "Output Cohort Statistics"
+		
+C:\Program Files\LANDIS-II\v6\examples\NECN Succession>call landis-ii scenario_MN.txt
+LANDIS-II 6.1 (official release)
+Loading scenario from file "scenario_MN.txt" ...
+......
+  Writing RICH site map to basic-stats/spp-counts/SPP-RICH-30.img ...
+dataset created: basic-stats/spp-counts/SPP-RICH-30.img
+Model run is complete.
+
+
+
+!! QAQC passed !!

@@ -1,0 +1,80 @@
+﻿Title:				PWL82_QAQC_DynamicFire_20170928
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			28 Sept 2017
+Final Date:			
+
+
+
+
+
+############
+QAQC Summary
+#############
+
+	1. The input file, dynamic-fire_WeatherData_s1e2.csv was modified to include 1) NAs
+	   and 2) blanks and the scenario, scenario_s1e2.txt was run
+
+	2. In each case the run was halted and an error msg supplied,
+		Loading Weather Data...
+		Internal error occurred within the program:
+  		Input string was not in a correct format.
+
+
+
+#############
+QAQC Results
+#############
+
+	1. QAQC passed
+
+	
+######################
+QAQC sequence
+######################
+
+	a. reported that,
+		If you run Dynamic Fire and you don't supply wind speed/ wind direction, 
+		then the extension should trigger an error. Right now it runs but produces no fire.
+
+
+	b1. Open dynamic-fire_WeatherData_s1e2.csv in R and change some WSV and WindDir values to NA
+library(readr)
+dynamic_fire_WeatherData_s1e2 <- 
+read_csv("C:/Users/bdmarron/Desktop/DynamicFire/Extension-Dynamic-Fire-System/deploy/examples/dynamic-fire_WeatherData_s1e2.csv")
+QAQCtest_weatherData <- dynamic_fire_WeatherData_s1e2
+QAQCtest_weatherData[1:10,3:4]<-NA
+ write.csv(QAQCtest_weatherData, "C:\\Users\\bdmarron\\Desktop\\QAQCtest_weatherData.csv")
+
+
+	b2. Run scenario
+C:\Users\bdmarron\Desktop\DynamicFire\Extension-Dynamic-Fire-System\deploy\examples>call landis-ii scenario_s1e2.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s1e2.txt" ...
+
+  Loading Weather Data...
+Internal error occurred within the program:
+  Input string was not in a correct format.
+
+
+
+
+	c1. Change NA to blank
+QAQCtest_weatherData[1:10,3:4]<-" "
+write.csv(QAQCtest_weatherData, "C:\\Users\\bdmarron\\Desktop\\QAQCtest2_weatherData.csv")
+
+
+	c2. Run scenario
+C:\Users\bdmarron\Desktop\DynamicFire\Extension-Dynamic-Fire-System\deploy\examples>call landis-ii scenario_s1e2.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s1e2.txt" ...
+
+  Loading Weather Data...
+Internal error occurred within the program:
+  Input string was not in a correct format.
+
+	d. QAQC passed -- Not a very descriptive error msg but program halts and exception thrown
+

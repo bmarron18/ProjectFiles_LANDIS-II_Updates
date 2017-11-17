@@ -1,0 +1,110 @@
+Title:				PWL66b_QAQC&RepoStd_Extension-Dynamic-Fire
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			31 May 2017
+Final Date:			31 May 2017
+
+
+
+############
+QAQC Summary
+#############
+
+	a. The "Landis.Extension.DynamicFire.dll" extension, the 
+	   "Landis.Extension.DynamicFuels.dll" extension and the 
+	   installer were scratch-built.
+
+	b. The newly-minted installer was used to freshly install the Dynamic Fire Fuels System
+	   on a Windows 10 box and the example "scenario_s1e2.txt" was run.
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. The Dynamic Fire Fuels System has passed QAQC.
+
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. modify "dynamic-fire.csproj"
+		==> comment out debugger
+		==> add pre-build back
+<PreBuildEvent>call $(SolutionDir)\install-libs.cmd</PreBuildEvent>
+
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a1. VS build of "dynamic-fire.csproj"
+1>  dynamic-fire -> C:\Users\bmarr\Desktop\working_DynamicFire\Extension-Dynamic-Fire\src\bin\Debug\Landis.Extension.DynamicFire.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+	a2. VS build of "dynamic-fuels.csproj"
+1>  dynamic-fuels -> C:\Users\bmarr\Desktop\working_DynamicFuels\Extension-Dynamic-Fuels\src\bin\Debug\Landis.Extension.DynamicFuels.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+	a3. Add copy of fresh-built Landis.Extension.DynamicFuels.dll to Extension-Dynamic-Fire repo
+C:\Users\bmarr\Desktop\working_DynamicFire\Extension-Dynamic-Fire\src\bin\Debug
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Wednesday, May 31 2017 at 3:04:33 PM]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+
+....
+
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Wednesday, May 31 2017 at 3:04:34 PM]
+Total compile time: 00:01.094
+
+
+
+	c. install the freshly-minted Dynamic Fire Fuel System extension
+
+
+
+	d. run "scenario_s1e2.txt" w/ the following active extensions:
+
+	 "Dynamic Fuel System"		dynamic-fire_SetUpFuel_s1e2.txt
+ 	 "Dynamic Fire System"		dynamic-fire_SetUpFire_s1e2.txt 
+	 "Base Wind"			base-wind_SetUp_s1e2.txt
+	 "Base Harvest"			base-harvest_SetUp_s1e2.txt
+	 "Output Max Species Age"	output_MaxSppAge.txt
+	 "Output Cohort Statistics"	output_CohortStats.txt
+
+
+
+C:\Program Files\LANDIS-II\v6\examples\Dynamic Fire Fuel System>call landis-ii scenario_s1e2.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_s1e2.txt" ...
+....
+   Writing RICH site map to outputs/spp-counts/SPP-RICH-100.img ...
+dataset created: outputs/spp-counts/SPP-RICH-100.img
+Model run is complete.
+
+C:\Program Files\LANDIS-II\v6\examples\Dynamic Fire Fuel System>
+
+
+QAQC Passed!!
+
+
+
+
+

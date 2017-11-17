@@ -1,0 +1,201 @@
+Title:				Project Work Log23a
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			03 Jan 2017
+Revision Date:			06 Jan 2017		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run a build test w/ pyinstaller (Windows)
+
+(PyInstaller is not a cross-compiler: to make a Windows app  you  run PyInstaller in  Windows;  
+to  make  a  Linux  app  you  run  it  in  Linux,  etc.)
+#########################################################################
+
+https://mborgerson.com/creating-an-executable-from-a-python-script
+http://pythoncentral.io/pyinstaller-package-python-applications-windows-mac-linux/
+https://irwinkwan.com/2013/04/29/python-executables-pyinstaller-and-a-48-hour-game-design-compo/
+
+
+
+	a. install Anaconda
+	a1. upgrade Anaconda (spyder, gdal, regex, pefile, appdirs)
+https://docs.continuum.io/anaconda/install#anaconda-for-windows-install
+https://anaconda.org/anaconda/gdal
+https://anaconda.org/conda-forge/regex
+https://github.com/spyder-ide/spyder/releases
+http://redino.net/blog/2016/07/no-module-named-pefile/
+
+
+conda install -c anaconda gdal=2.1.0
+conda install -c conda-forge regex=2016.11.18
+conda update qt pyqt
+conda update spyder
+
+
+use Anaconda's pip to install. Go to the Script folder in Anaconda and execute:
+C:\Users\bmarr\Anaconda2\Scripts>pip.exe install pefile
+C:\Users\bmarr\Anaconda2\Scripts>pip.exe install appdirs
+
+
+
+	b. clone copy of LANDVIZ
+	b1. extract 1)gdal-data.zip and 2)pyinstaller.zip
+$ git clone https://github.com/bmarron18/LANDVIZ.git
+
+
+
+	c. make sure spyder can "import main" [tried a prelim build w/o gdal and regex. lots of WARNINGS!! when 
+	   compared output to C:\Program Files (x86)\LANDIS-II\LandisPreProcTool>]
+	c1. run temp3.py
+
+
+
+	d. from manual, "Landis-II Visualization Tool v1.0 Developer Guide.pdf"
+
+(p. 17)
+After you made changes in the source of the WebVisTool and/or the PreProcTool the
+following building steps have to be executed:
+
+1. Run the build-landis-webbase.bat (WebVisTool\build\build-lanids-webbase.bat)
+2. Run the build_preproctool batch-file (PreProcTool\build\build_preproctool.bat)
+3. In case of errors, try:
+◦
+Delete the folders/file:
+▪ PreProcTool/build/build
+▪ PreProcTool/build/dist
+▪ PreProcTool/preproctool.spec
+
+run build_preproctool.bat again
+
+
+	e.  the build_preproctool batch-file (PreProcTool\build\build_preproctool.bat)
+
+@echo off
+echo ==============================
+echo build landis2 vis preproc tool
+echo ==============================
+echo run pyinstaller ...
+python pyinstaller\pyinstaller.py --workpath=build -y --clean --name=PreProcTool --hidden-import=scipy.special._ufuncs_cxx ..\source\main.py %*
+:--log-level=WARN
+:--distpath=..\dist
+echo ==============================
+echo build Proj4Extent
+echo ==============================
+echo run pyinstaller
+python pyinstaller\pyinstaller.py --onefile --workpath=build -y --clean --name=Proj4Extent --distpath=dist\PreProcTool ..\source\Proj4Extent.py %*
+echo ==============================
+echo copy config folder ...
+robocopy "..\source\config" "dist\preproctool\config" /MIR /NFL /NDL /NP /NJH /NJS
+echo ==============================
+echo copy web base folder ...
+robocopy "..\..\WebVisTool\build\dist" "dist\preproctool\webbase" /MIR /NFL /NDL /NP /NJH /NJS
+echo ==============================
+echo copy gdal-data ...
+robocopy "gdal-data" "dist\preproctool\gdal-data" /NFL /NDL /NP /NJH /NJS
+echo ==============================
+pause
+
+
+	e1. robocopy
+http://ss64.com/nt/robocopy.html
+
+/MIR : MIRror a directory tree 
+/NP : No Progress
+/NFL : No File List 
+/NDL : No Directory List 
+/NJH : No Job Header 
+/NJS : No Job Summary
+
+
+
+	e2. analyze pyinstaller flags
+https://pyinstaller.readthedocs.io/en/stable/usage.html
+
+--workpath=build		==> Where to put all the temporary work files, .log, .pyz and etc. (default: ./build) 
+-y, --noconfirm			==> Replace output directory (default: SPECPATH/dist/SPECNAME) without asking for confirmation
+--clean 			==> Clean PyInstaller cache and remove temporary files before building.
+--name=PreProcTool 		==> Name to assign to the bundled app and spec file (default: first script’s basename)
+
+
+--hidden-import=scipy.special._ufuncs_cxx 
+--log-level=WARN		==> Amount of detail in build-time console messages. LEVEL may be one of DEBUG, INFO, WARN, ERROR, CRITICAL (default: INFO).
+--distpath=..\dist		==> Where to put the bundled app (default: ./dist)
+
+
+	
+
+	f. test the first build command in the preproctool batch-file (PreProcTool\build\build_preproctool.bat)
+	f1. open command-line (admin); cd; execute build command
+	f2. check git changes
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python pyinstaller\pyinstaller.py --workpath=build -y --clean --name=PreProcTool_bm --distpath=..\dist --hidden-import=scipy.special._ufuncs_cxx ..\source\main.py
+ 
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        PreProcTool/build/build/				<== --workpath=build
+        PreProcTool/dist/					<== --distpath=..\dist
+
+nothing added to commit but untracked files present (use "git add" to track)
+
+
+
+	g. trial1 build: sequential commands from build_preproctool.bat
+	g1. open command-line (admin); cd
+	g2. execute 1st build command
+	g3. execute 2nd build command
+	g4. execute 3rd build command
+	g5. execute 4th build command
+	g6. execute 5th build command
+	g7. check git changes
+	g8. compare changes as .txt files
+
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python pyinstaller\pyinstaller.py --workpath=build_output_logs -y --clean --name=PreProcTool_bm --distpath=..\dist --hidden-import=scipy.special._ufuncs_cxx ..\source\main.py
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>python pyinstaller\pyinstaller.py --onefile --workpath=build_output_logs -y --clean --name=Proj4Extent_bm --distpath=..\dist ..\source\Proj4Extent.py
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "..\source\config" "dist\preproctool_bm\config" /MIR /NFL /NDL /NP /NJH /NJS
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "..\..\WebVisTool\build\dist" "dist\preproctool_bm\webbase" /MIR /NFL /NDL /NP /NJH /NJS
+
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>robocopy "gdal-data" "dist\preproctool_bm\gdal-data" /NFL /NDL /NP /NJH /NJS
+
+
+
+$ git status
+On branch master
+Your branch is up-to-date with 'origin/master'.
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        PreProcTool/build/..dist/
+        PreProcTool/build/build_output_logs/
+        PreProcTool/build/dist/
+        PreProcTool/dist/
+
+ deleted:    PreProcTool/build/installer/LandisPreProcToolInstaller.aip
+
+
+
+C:\Program Files (x86)\LANDIS-II\LandisPreProcTool>dir /b > a.txt
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool_bm>dir /b > b.txt
+C:\Users\bmarr\Desktop>fc a.txt b.txt > c.txt
+
+
+
+
+
+
+
+
+
+
+
+
+

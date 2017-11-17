@@ -1,0 +1,189 @@
+Title:				PWL78_QAQC_BaseFire_20170827
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			27 Aug 2017
+Final Date:			
+
+
+
+############
+QAQC Summary
+#############
+
+	1. Base Fire .dll and installer rebuilt.
+
+	2. The examples in deploy/examples were checked by running scenario_s1e1.txt with all
+	   disturbance extensions active
+
+	3. A typo at Line 20, base-BDA_SetUp_s1e1.txt was found and corrected.
+
+	4. Running Extension-Base-Fire\deploy\examples\scenario_s1e1.txt required an updated BaseHarvest be re-installed
+
+	5. Support-Other/QAQC_Examples/ repo was checked to make sure that there was no typo (Line 20) in base-BDA_SetUp_s1e1.txt
+
+	6. All required libraries (eg, Landis.Library.Metadata.dll) added to installer 
+
+
+
+#############
+QAQC Results
+#############
+
+	1. Base Fire .dll and installer successfully rebuilt
+
+	2. Extension-Base-Fire\deploy\examples successfully updated.
+
+
+	
+######################
+QAQC sequence
+######################
+
+	a. Base Fire .dll and installer rebuilt
+
+	b. checking the example/scenario_s1e1 
+	b1. modified scenario_s1e1.txt and base-harvest_SetUp_s1e1.txt (slightly in order to shorten run to 50 yrs)
+	b2. modified scenario_s1e1.txt to run all disturbance options
+
+>> 	Disturbance Extension	Initialization File
+>>	--------------------	-------------------
+	"Base Fire"		base-fire_SetUp_s1e1.txt
+	"Base Wind"		base-wind_SetUp_s1e1.txt
+	"Base Harvest"		base-harvest_SetUp_s1e1.txt
+	"Base BDA"		base-BDA_SetUp_s1e1.txt
+
+
+	b3. exception thrown with base-BDA
+
+Loading Base BDA extension ...
+Internal error occurred within the program:
+  Method not found: 'Void Landis.Library.SiteHarvest.Main.ResetLib(Landis.Core.ICore)'.
+
+Stack trace:
+   at Landis.Extension.BaseHarvest.PlugIn.CleanUp()
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+
+	c. forked BaseBDA
+	c1. checked .csproj file for "bad" (not updated) .dlls being called by BaseBDA 
+		==> OK, all .dll calls current
+	c2. found typo Line 20, base-BDA_SetUp_s1e1.txt
+		==> BDAInputFiles	base-BDA_Input)s1e1.txt
+
+	c3. fixed typo
+		==> BDAInputFiles	base-BDA_Input_s1e1.txt
+
+
+	d. re-ran scenario_s1e1.txt
+	d1. exception at timestep 50
+
+Current time: 50
+Running Base Fire ...
+   Processing landscape for Fire events ...
+dataset created: fire/base-fire-severity-50.img
+Running Base Wind ...
+Processing landscape for wind events ...
+  Wind events: 5
+dataset created: wind/severity-50.img
+Running Base Harvest ...
+dataset created: harvest/base-harvest-prescripts-50.img
+Running Base BDA ...
+   Processing landscape for BDA events ...
+Running Age-only Succession ...
+growing cohorts ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Computing shade ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Cohort reproduction ...
+% done:   0%  10%  20%  30%  40%  50%  60%  70%  80%  90%  100%
+          |----|----|----|----|----|----|----|----|----|----|
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+Running Output Max Species Age ...
+   Writing maximum age map for abiebals to outputs/max-age-selected-spp/abiebals-50.gis ...
+dataset created: outputs/max-age-selected-spp/abiebals-50.gis
+   Writing maximum age map for all species to outputs/max-age-selected-spp/AllSppMaxAge-50.gis ...
+...
+ Writing COUNT site map to outputs/age-all-spp/AGE-COUNT-50.img ...
+dataset created: outputs/age-all-spp/AGE-COUNT-50.img
+   Writing RICH site map to outputs/spp-counts/SPP-RICH-50.img ...
+dataset created: outputs/spp-counts/SPP-RICH-50.img
+Internal error occurred within the program:
+  Method not found: 'Void Landis.Library.SiteHarvest.Main.ResetLib(Landis.Core.ICore)'.
+
+Stack trace:
+   at Landis.Extension.BaseHarvest.PlugIn.CleanUp()
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+	e. re-installed Base Harvest and re-ran scenario_s1e1.txt
+	e1. another exception
+
+Current time: 36
+Running Base BDA ...
+   Processing landscape for BDA events ...
+   Initializing agent budworm.
+   New BDA Epidemic Activated.
+   Calculating BDA Site Resource Dominance.
+   Calculating BDA Modified Site Resource Dominance.
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Extension.BaseBDA.SiteResources.SiteResourceDominanceModifier(IAgent agent)
+   at Landis.Extension.BaseBDA.Epidemic.Simulate(IAgent agent, Int32 currentTime, Int32 timestep, Int32 ROS)
+   at Landis.Extension.BaseBDA.PlugIn.Run()
+   at Landis.Model.Run(ExtensionMain extension)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+	f. modified base-BDA_Input_s1e1.txt and re-ran
+
+LandisData "BDA Agent"
+
+BDAAgentName		budworm
+BDPCalibrator		1
+SRDMode			mean
+>>StartYear 20
+>>EndYear   30
+
+	f1. more exceptions!!
+
+
+	g. uninstalled/reinstalled BaseFire 
+	g1. modified scenario_s1e1.txt to run all disturbance options w/o changing length of run (left at 100 yrs)
+
+>> 	Disturbance Extension	Initialization File
+>>	--------------------	-------------------
+	"Base Fire"		base-fire_SetUp_s1e1.txt
+	"Base Wind"		base-wind_SetUp_s1e1.txt
+	"Base Harvest"		base-harvest_SetUp_s1e1.txt
+	"Base BDA"		base-BDA_SetUp_s1e1.txt
+
+	g2. Finally no exceptions!!
+C:\Program Files\LANDIS-II\v6\examples\Base Fire>call landis-ii scenario_s1e1.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s1e1.txt" ...
+Initialized random number generator with seed = 999,890,809
+Loading species data from file "./species_s1e1.txt" ...
+......
+Model run is complete.
+
+
+	h. All good
+
+
+
+
+
+
+
+

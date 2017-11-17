@@ -1,0 +1,63 @@
+Title:				PWL86_QAQC_LibrarySuccession_v5_20171010
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			10 Oct 2017
+Final Date:			12 Oct 2017
+
+
+
+
+############
+QAQC Summary
+#############
+
+	1. Landis.Library.Succession-v5.dll was rebuilt by Rob with the updated version number.
+
+	2. The entire Harvest Suite of libraries was rebuilt because there are direct or indirect calls to 
+      	   Landis.Library.Succession-v5.dll; namely,
+
+Landis.Library.SiteHarvest-v1.dll			<< direct 
+Landis.Library.HarvestManagement-v2.dll			<< direct 
+Landis.Library.BiomassHarvest-v2.dll			<< indirect thru SiteHarvest	
+
+
+	3. Other libraries that are affected were rebuilt; namely,
+		Extension-Age-Only-Succession		<< direct
+		Extension-Biomass-Succession		<< direct
+		Extension-NECN-Succession		<< direct (Rob has done this one)
+		Extension Base Harvest 			<< direct
+		Extension-Biomass-Harvest		<< direct 
+	
+	
+
+
+#############
+QAQC Results
+#############
+
+	1. All repos rebuilt and pushed upstream
+
+
+
+
+###################
+QAQC sequence
+###################
+
+	a. Landis.Library.Succession-v5.dll was rebuilt by Rob with the updated version number. 
+	   The new version is already available in Support-Library-Dlls 
+
+	b. Rebuild the Harvest Suite of libraries then push them to Rob in Support-Dlls
+
+	c. Once these libraries are in Support-Library-Dlls, rebuild the Extensions
+done		Extension-Age-Only-Succession		<< direct
+done		Extension-Biomass-Succession		<< direct
+done		Extension-NECN-Succession		<< direct (Rob has done this one)
+done		Extension Base Harvest 			<< direct
+done		Extension-Biomass-Harvest		<< direct
+
+
+
+
+	

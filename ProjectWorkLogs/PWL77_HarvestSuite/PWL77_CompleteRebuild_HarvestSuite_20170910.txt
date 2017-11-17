@@ -1,0 +1,93 @@
+Title:				PWL77_ CompleteRebuild_HarvestSuite
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			10 Sept 2017
+Final Date:			10 Oct 2017
+
+
+
+################################
+Rebuillding the Harvest Suite
+################################
+
+
+	a. A complete rebuild and reinstall of the entire Harvest Suite means changes to:
+
+		Landis.Library.HarvestManagement-v2.dll 	
+		Landis.Library.SiteHarvest-v1.dll 
+		Landis.Library.BiomassHarvest-v2.dll
+		
+		Landis.Extension.BaseHarvest-3.1.1.dll		
+		Landis.Extension.BiomassHarvest-3.2.1.dll
+		Landis.Extension.Succession.AgeOnly-4.1.2.dll
+		Landis.Extension.Succession.Biomass-4.0.3.dll
+		Landis.Extension.Succession.NetEcosystemCarbonNitrogen-4.2.2.dll
+
+	b. A complete rebuild can be triggered by changes to Library.Succession because there are direct or 
+           indirect calls to Landis.Library.Succession-v5.dll; namely,
+
+Landis.Library.SiteHarvest-v1.dll					<< direct
+Landis.Library.HarvestManagement-v2.dll					<< direct
+Landis.Library.BiomassHarvest-v2.dll					<< indirect thru SiteHarvest
+
+Landis.Extension.BaseHarvest-3.1.1.dll					<< direct
+Landis.Extension.BiomassHarvest-3.2.1.dll				<< direct
+Landis.Extension.Succession.AgeOnly-4.1.2.dll				<< direct
+Landis.Extension.Succession.Biomass-4.0.3.dll				<< direct
+Landis.Extension.Succession.NetEcosystemCarbonNitrogen-4.2.2.dll	<< direct
+		
+
+	c. Careful! This suite of repos is terribly cross-linked and there is a hierarchy 
+	   of dependecies ==> you must build in this sequence:
+
+	Landis.Library.SiteHarvest-v1.dll
+
+		Landis.Library.HarvestManagement-v2.dll 	
+		Landis.Library.BiomassHarvest-v2.dll
+		
+			Landis.Extension.BaseHarvest-3.1.1.dll		
+			Landis.Extension.BiomassHarvest-3.2.1.dll
+			Landis.Extension.Succession.AgeOnly-4.1.2.dll
+			Landis.Extension.Succession.Biomass-4.0.3.dll
+			Landis.Extension.Succession.NetEcosystemCarbonNitrogen-4.2.2.dll
+
+	    That is, build Library.SiteHarvest first
+			==> then substitute the freshly-built Landis.Library.SiteHarvest-v1.dll into the src/bin/Debug 
+			folder of Library.HarvestManagement and Library.BiomassHarvest and rebuild these two libraries 
+				==> then substitute all three now freshly-built libraries into the src/bin/Debug 
+				folder of Extension.BaseHarvest and Extension.BiomassHarvest and rebuild these two extensions
+
+	d. You will need to 'leave on' then 'turn off' then 'turn back on' the pre-build command,
+	"PreBuildEvent>call $(SolutionDir)\install-libs.cmd</PreBuildEvent" in .csproj files in order to
+		a) pull in the requiste libraries from Support-DLLs ('leave on')
+		b) rebuild with freshly-built libraries inserted per the hierarchy above ('turn off')
+		c) re-set for future builds ('turn back on')
+
+	d1. NB. Step d. above can be avoided for the rebuild of the extensions if, after making changes
+	    to the three Harvest libraries, these new rebuilds are pushed to Support-Library-Dlls. Then 
+	    only the .csproj file and .iss file will need to be changed and the rebuild will automatically
+	    call in the three, newly-built Harvest libraries.
+
+	e. The installers for all of the extensions will also need to be rebuilt
+
+	f. Push all changes back up to LANDIS-Foundation repos 
+	f1. Push (ie Pull requests) to all repos
+	f2. Add the three freshly-built libraries to Support DLLs repo and likewise make a Pull request 
+	   for the changes
+
+
+	g. On your personal machine, you will need to re-install
+		Extension.BaseHarvest	
+		Extension.BiomassHarvest
+		Extension.Succession.AgeOnly
+		Extension.Succession.Biomass
+		Extension.Succession.NECN
+
+	h. Notify the site administrator that folks will need to re-install as well
+
+	
+
+
+
+

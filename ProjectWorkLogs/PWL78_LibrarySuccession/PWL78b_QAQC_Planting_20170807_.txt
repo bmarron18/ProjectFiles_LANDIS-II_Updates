@@ -1,0 +1,189 @@
+Title:				PWL78b_QAQC_Planting_20170807
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			07 Aug 2017
+Final Date:			
+
+
+
+
+
+
+############
+QAQC Summary
+#############
+
+	1. Rebuilt Landis.Library.Succession-v2.dll with changes from BMiranda detailed in 
+	   https://github.com/bmarron18/Library-Succession/pull/1
+
+	2. Rebuilt and reinstalled Extension-Age-Only-Succession, Extension-Biomass-Succession, and Extension-NECN-Succession
+	   using BMiranda's Landis.Library.Succession-v2.dll
+
+	3. Ran three (3) rounds of BMiranda's original scenario test set with different succesion extensions and harvest extensions;
+	   specifically, 1) Age-only Succession + Base Harvest, 2) Biomass Succession + Base Harvest, and 
+	   3) Biomass Succession + Biomass Harvest
+
+	4. Exceptions thrown in every case.
+
+
+#############
+QAQC Results
+#############
+
+	1. First round changes did not pass QAQC.
+
+
+
+###################
+QAQC sequence
+###################
+
+
+	a. Rebuilt Landis.Library.Succession-v2.dll with BMiranda's changes
+
+1>  library-succession -> C:\Users\bmarr\Desktop\PR8\Library-Succession\src\bin\Debug\Landis.Library.Succession-v2.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+	b. Rebuild Extension-Age-Only-Succession repo to use BMiranda's Landis.Library.Succession-v2.dll
+		==> modify .csproj file to call Landis.Library.Succession-v2.dll (currently calls Landis.Library.Succession.dll!)
+		==> manually replace Landis.Library.Succession-v2.dll from Support-DLLS w/ BMiranda's Landis.Library.Succession-v2.dll
+		==> rebuild installer
+		==> reinstall on my machine
+
+	c. Rebuild Extension-Biomass-Succession repo to use BMiranda's Landis.Library.Succession-v2.dll
+		==> modify .csproj file to call Landis.Library.Succession-v2.dll (currently calls Landis.Library.Succession.dll!)
+		==> manually replace Landis.Library.Succession-v2.dll from Support-DLLS w/ BMiranda's Landis.Library.Succession-v2.dll
+		==> rebuild installer
+		==> reinstall on my machine
+
+	d. Rebuild Extension-NECN-Succession to use BMiranda's Landis.Library.Succession-v2.dll
+		==> modify .csproj file to call Landis.Library.Succession-v2.dll (currently calls Landis.Library.Succession.dll!)
+		==> manually replace Landis.Library.Succession-v2.dll from Support-DLLS w/ BMiranda's Landis.Library.Succession-v2.dll
+		==> rebuild installer
+		==> reinstall on my machine
+
+
+	e.  run BMiranda's original scenario test set, "scenario.txt" w/ Age-only Succession containing BMiranda's 
+	    Landis.Library.Succession-v2.dll and w/ active extensions
+
+		"Age-only Succession"    	age-only-succession.txt
+		"Base Harvest"			BaseHarvest_test_PLANT.txt
+		"Output Cohort Statistics"    	cohort-stats.output.txt
+
+C:\Users\bmarr\Desktop\PR8\TestScenario_Issue21_BaseHarvest1>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ..
+...
+Current time: 10
+Running Base Harvest ...
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Library.Succession.Reproduction.ScheduleForPlanting(SpeciesList speciesToPlant, ActiveSite site)
+   at Landis.Library.HarvestManagement.Prescription.Harvest(Stand stand)
+   at Landis.Library.HarvestManagement.AppliedPrescription.HarvestHighestRankedStand()
+   at Landis.Library.HarvestManagement.ManagementArea.HarvestStands()
+   at Landis.Extension.BaseHarvest.PlugIn.Run()
+   at Landis.Model.Run(ExtensionMain extension)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+
+
+
+
+	f. Run BMiranda's original scenario test set, "scenario.txt" w/ Biomass Succession containing BMiranda's 
+	    Landis.Library.Succession-v2.dll and w/ active extensions
+
+
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Biomass Succession        BiomassSuccession_SetUp.txt
+   Base Harvest              BaseHarvest_test_PLANT.txt
+   Output Cohort Statistics  cohort-stats.output.txt
+
+
+C:\Users\bmarr\Desktop\PR8\TestScenario_Issue21_BaseHarvest2>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ...
+...
+Current time: 10
+Running Base Harvest ...
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Library.Succession.Reproduction.ScheduleForPlanting(SpeciesList speciesToPlant, ActiveSite site)
+   at Landis.Library.HarvestManagement.Prescription.Harvest(Stand stand)
+   at Landis.Library.HarvestManagement.AppliedPrescription.HarvestHighestRankedStand()
+   at Landis.Library.HarvestManagement.ManagementArea.HarvestStands()
+   at Landis.Extension.BaseHarvest.PlugIn.Run()
+   at Landis.Model.Run(ExtensionMain extension)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+
+
+
+
+
+	g. Run BMiranda's original scenario test set, "scenario.txt" w/ Biomass Succession containing BMiranda's 
+	   Landis.Library.Succession-v2.dll and w/ active extensions
+
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Biomass Succession        BiomassSuccession_SetUp.txt
+   Biomass Harvest           BiomassHarvest_test_PLANT.txt
+   Output Cohort Statistics  cohort-stats.output.txt
+
+
+	NB. biomass-succession_ClimateGenerator.txt and biomass-succession_StdBiomassReductions.txt added from QAQC stds
+	NB. BiomassSuccession_DynamicInputs.txt modified to add ANPP and MaxB
+	NB. PRISM_data_AFRI_4.18.13.csv added and modified for eco1 and eco2
+
+
+
+C:\Users\bmarr\Desktop\PR8\TestScenario_Issue21_BiomassHarvest1>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ...
+....
+Current time: 10
+Running Biomass Harvest ...
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Library.Succession.Reproduction.ScheduleForPlanting(SpeciesList speciesToPlant, ActiveSite site)
+   at Landis.Library.HarvestManagement.Prescription.Harvest(Stand stand)
+   at Landis.Library.HarvestManagement.AppliedPrescription.HarvestHighestRankedStand()
+   at Landis.Library.HarvestManagement.ManagementArea.HarvestStands()
+   at Landis.Extension.BiomassHarvest.PlugIn.Run()
+   at Landis.Model.Run(ExtensionMain extension)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,542 @@
+Title:				PWL70_QAQC&RepoStd_HarvestSuite
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			22 May 2017
+Final Date:			
+
+################################
+The Harvest Suite: 
+Background
+################################
+
+	a. The Harvest Suite
+		==> Landis.Library.HarvestManagement-v2.dll
+		==> Landis.Library.BiomassHarvest-v2.dll
+		==> Landis.Library.SiteHarvest-v1.dll
+
+		==> Landis.Extension.BaseHarvest-3.0.dll
+		==> Landis.Extension.BiomassHarvest-3.2.dll
+
+
+	b. GitHub queries on the affected
+	b1. Only (1) Library-Harvest-Mgmt and (2) Library-Biomass-Harvest have had internal
+	    changes; all else just QAQCRepoStd
+	b2. Support-Library-Dlls commits:
+		Landis.Library.HarvestManagement-v2.dll 	==> committed on Feb 13
+		Landis.Library.BiomassHarvest-v2.dll 		==> committed on Apr 23
+
+
+LANDIS-II-Foundation/Library-Harvest-Mgmt in:name pushed:>=2017-01-15
+	Commits on Jan 26, 2017 ==> new stand-ranking method and two new requirements
+				    (salvage logging)
+
+	Commits on Jan 6, 2017 ==> fix for AdjacencyType Input error (issue #10) in 
+				   Extension-Biomass-Harvest
+
+LANDIS-II-Foundation/Library-Biomass-Harvest in:name pushed:>=2017-01-15
+	Commits on Apr 9, 2017 ==> fix for the 100% total thinning designation
+	Commits on Apr 22, 2017 ==> first round QAQCRepoStd 
+
+
+LANDIS-II-Foundation/Extension-Base-Harvest in:name pushed:>=2017-01-15
+	Commits on Apr 22, 2017 ==> Third round QAQCRepoStd
+
+
+LANDIS-II-Foundation/Extension-Biomass-Harvest in:name pushed:>=2017-01-15
+	Commits on Apr 24, 2017 ==> Third round QAQCRepoStd
+
+
+
+###################
+Inter-relationships
+#####################
+
+
+						base-harvest.csproj	biomass-harvest.csproj
+Landis.Library.HarvestManagement-v2.dll			X			X
+Landis.Library.BiomassHarvest-v2.dll			--			X
+Landis.Library.SiteHarvest-v1.dll			X			X
+
+
+LANDIS-II-Foundation/Landis-Spatial-Modeling-Library
+
+
+############
+QAQC Summary
+#############
+
+	a. Five, (5) QAQC runs were made using Biomass Succession and Base Wind:
+		==> two, (2) runs with 
+			*StandRanking ==> MaxCohortAge
+		==> one, (1) run with 
+			*StandRanking ==> TimeSinceDisturbance
+			*TimeSinceLastFire 90
+			*Mngmnt Area 1
+		==> one, (1) run with 
+			*StandRanking ==> TimeSinceDisturbance
+			*TimeSinceLastFire 1
+			*Mngmnt Area 1
+		==> one, (1) run with 
+			*StandRanking ==> TimeSinceDisturbance 
+			*TimeSinceLastFire 75
+			*Mngmnt Area 1
+			*StandRanking ==> TimeSinceDisturbance 
+			*TimeSinceLastFire 5
+			*Mngmnt Area 1
+			*StandRanking ==> TimeSinceDisturbance 
+			*TimeSinceLastFire 75
+			*Mngmnt Area 3
+			*StandRanking ==> TimeSinceDisturbance 
+			*TimeSinceLastFire 5
+			*Mngmnt Area 3
+
+	b. All QAQC runs used
+		*SiteSelection ==> Complete
+		*CohortsRemoved ==> ClearCut 
+
+
+
+#############
+QAQC Results
+#############
+
+	a. 
+
+
+
+###############
+QAQC Sequence
+################
+
+NB. The following runtime error is from NOT having Landis.Library.BiomassCohorts-v2 in the
+build ==> "The data type of site variable "Succession.BiomassCohorts" is Landis.Library.BiomassCohorts.ISiteCohorts, not Landis.Library.BiomassCohorts.ISiteCohorts"
+
+START HERE----
+
+	a. (LANDIS-II) QAQC run1:
+		Input files
+			==> "scenario_PWL70.txt"
+			==> "Prescriptions_PWL70.txt"
+
+
+
+		==> modified "biomass-harvest_SalvageLog_QAQCPrescription.txt"
+    HarvestImplementations
+>>	Mgmt Area	Prescription	Harvest Area	BeginTime	EndTime
+>>	---------	------------	------------	----------	--------
+>>	1		SalvageLogger1		50%
+>>	1		SalvageLogger2		50%
+>>	3		SalvageLogger1		50%
+>>	3		SalvageLogger2		50%
+	1		MaxAgeClearcut		5%	0		15
+>>	1		MaxAgeClearcut		10%	15		30
+
+
+
+	a1. QAQCrun1 "harvest/harvest_summary_log.csv" in R
+open "harvest/harvest_summary_log.csv" in R ==>
+> QAQCrun1_harvest_summary_log_output <- as.matrix(setNames(harvest_summary_log[, c(2,4,5,7)], NULL))
+
+Col2==ManagementArea
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+     [,1] [,2] [,3]     [,4]
+[1,]    1  436 2144   932.15
+[2,]    1  305 1518 13796.49
+[3,]    1  337 1404 28784.21
+
+
+	a2. QAQCrun1 "NECN_succession_log.csv" in R
+open "NECN_succession_log.csv" in R ==>
+> QAQCrun1_NECN_succession_log_output <- as.matrix(setNames(NECN_succession_log[, c(3,6,25,26)], NULL))
+
+Col3==EcoregionIndex
+Col6==SOMTC
+Col25==C_SOM1surf
+Col26==C_SOM1soil
+
+      [,1]    [,2]  [,3]   [,4]
+ [1,]    0 17164.4 785.5 3363.3
+ [2,]    1 15394.7 818.0 2947.8
+ [3,]    0 15697.7 239.8 3187.4
+ [4,]    1 14057.3 219.2 2818.0
+ [5,]    0 14739.6 205.5 3019.9
+ [6,]    1 13192.3 175.3 2685.8
+ [7,]    0 13733.4 151.1 2836.4
+ [8,]    1 12467.1 176.9 2552.6
+ [9,]    0 12645.8 125.8 2606.8
+[10,]    1 11583.8 131.9 2382.0
+[11,]    0 11633.8 109.0 2387.1
+[12,]    1 10644.4  95.2 2190.8
+[13,]    0 10694.0  94.2 2179.5
+[14,]    1  9686.3  64.0 1989.0
+
+
+	a3. QAQCrun1 "fire/summary-log.csv" in R
+open "fire/summary-log.csv" in R ==>
+> QAQCrun1_fire_summary_log_output <- as.matrix(setNames(summary_log[ ,1:5], NULL))
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==TotalNumberEvents
+Col4==MN101
+Col5==MN102
+
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9104  318 1635 7469
+[2,]   10  769  515   77  692
+[3,]   15 1496  779  147 1349
+[4,]   20 2212  884  139 2073
+[5,]   25 2092  853  133 1959
+[6,]   30 1765  868  135 1630
+
+
+
+
+
+
+
+	b. (LANDIS-II) QAQC run2 
+		==> "NECN-succession.txt"
+		==> "base-fire_NECN.txt"
+		==> modified "biomass-harvest_SalvageLog_QAQCPrescription.txt"
+    HarvestImplementations
+>>	Mgmt Area	Prescription	Harvest Area	BeginTime	EndTime
+>>	---------	------------	------------	----------	--------
+>>	1		SalvageLogger1		50%
+>>	1		SalvageLogger2		50%
+>>	3		SalvageLogger1		50%
+>>	3		SalvageLogger2		50%
+	1		MaxAgeClearcut		5%	0		15
+	1		MaxAgeClearcut		10%	15		30
+
+
+
+	b1. QAQCrun2 "harvest/harvest_summary_log.csv" in R
+open "harvest/harvest_summary_log.csv" in R ==>
+> QAQCrun2_harvest_summary_log_output <- as.matrix(setNames(harvest_summary_log[, c(2,4,5,7)], NULL))
+
+Col2==ManagementArea
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+      [,1] [,2] [,3]     [,4]
+[1,]    1  436 2144   932.15
+[2,]    1  305 1518 13796.49
+[3,]    1  933 3441 72965.38
+[4,]    1  632 1350 39601.56
+[5,]    1  622 1137 43281.59
+[6,]    1   22   25   872.76
+
+
+	b2. QAQCrun2 "NECN_succession_log.csv" in R
+open "NECN_succession_log.csv" in R ==>
+> QAQCrun2_NECN_succession_log_output <- as.matrix(setNames(NECN_succession_log[, c(3,6,25,26)], NULL))
+
+Col3==EcoregionIndex
+Col6==SOMTC
+Col25==C_SOM1surf
+Col26==C_SOM1soil
+
+      [,1]    [,2]  [,3]   [,4]
+ [1,]    0 17164.4 785.5 3363.3
+ [2,]    1 15394.7 818.0 2947.8
+ [3,]    0 15697.7 239.8 3187.4
+ [4,]    1 14057.3 219.2 2818.0
+ [5,]    0 14739.6 205.5 3019.9
+ [6,]    1 13192.3 175.3 2685.8
+ [7,]    0 13615.1 107.1 2831.4
+ [8,]    1 12431.0 165.9 2549.8
+ [9,]    0 12203.5  35.1 2550.3
+[10,]    1 11467.7 111.0 2366.3
+[11,]    0 10840.4   5.2 2257.4
+[12,]    1 10418.6  60.3 2158.2
+[13,]    0  9624.7   0.4 1983.0
+[14,]    1  9373.7  35.8 1933.7
+
+
+	b3. QAQCrun2 "fire/summary-log.csv" in R
+open "fire/summary-log.csv" in R ==>
+> QAQCrun2_fire_summary_log_output <- as.matrix(setNames(summary_log[ ,1:5], NULL))
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==TotalNumberEvents
+Col4==MN101
+Col5==MN102
+
+      [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9104  318 1635 7469
+[2,]   10  769  515   77  692
+[3,]   15 1496  779  147 1349
+[4,]   20 1964  887   46 1918
+[5,]   25 1705  917   34 1671
+[6,]   30  936  847    0  936
+
+
+
+
+
+
+
+	c. (LANDIS-II) QAQC run3 
+		==> "NECN-succession.txt"
+		==> "base-fire_NECN.txt"
+		==> modified "biomass-harvest_SalvageLog_QAQCPrescription.txt"
+    HarvestImplementations
+>>	Mgmt Area	Prescription	Harvest Area	BeginTime	EndTime
+>>	---------	------------	------------	----------	--------
+	1		SalvageLogger1		50%
+>>	1		SalvageLogger2		50%
+>>	3		SalvageLogger1		50%
+>>	3		SalvageLogger2		50%
+>>	1		MaxAgeClearcut		5%	0		15
+>>	1		MaxAgeClearcut		10%	15		30
+
+
+
+	c1. QAQCrun3 "harvest/harvest_summary_log.csv" in R
+open "harvest/harvest_summary_log.csv" in R ==>
+> QAQCrun3_harvest_summary_log_output <- as.matrix(setNames(harvest_summary_log[, c(2,4,5,7)], NULL))
+
+Col2==ManagementArea
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+	NO DATA!!!
+	0 observations of 76 variables
+
+
+	c2. QAQCrun3 "NECN_succession_log.csv" in R
+open "NECN_succession_log.csv" in R ==>
+> QAQCrun3_NECN_succession_log_output <- as.matrix(setNames(NECN_succession_log[, c(3,6,25,26)], NULL))
+
+Col3==EcoregionIndex
+Col6==SOMTC
+Col25==C_SOM1surf
+Col26==C_SOM1soil
+
+       [,1]    [,2]  [,3]   [,4]
+ [1,]    0 17164.4 785.5 3363.3
+ [2,]    1 15394.7 818.0 2947.8
+ [3,]    0 15903.6 273.7 3223.3
+ [4,]    1 14069.4 221.3 2820.1
+ [5,]    0 15424.3 308.5 3141.4
+ [6,]    1 13244.6 184.5 2694.5
+ [7,]    0 14997.5 306.7 3057.9
+ [8,]    1 12569.8 189.2 2570.9
+ [9,]    0 14563.7 292.1 2966.8
+[10,]    1 11700.7 138.7 2404.4
+[11,]    0 13968.6 245.7 2845.5
+[12,]    1 10766.8  99.5 2215.6
+[13,]    0 13267.8 206.0 2700.3
+[14,]    1  9791.4  63.5 2011.8
+
+
+	c3. QAQCrun3 "fire/fire-summary-log.csv" in R
+open "fire/fire-summary-log.csv" in R ==>
+> QAQCrun3_fire_summary_log_output <- as.matrix(setNames(fire_summary_log[ ,1:5], NULL))
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==TotalNumberEvents
+Col4==MN101
+Col5==MN102
+
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9104  318 1635 7469
+[2,]   10  776  515   80  696
+[3,]   15 1570  758  181 1389
+[4,]   20 2467  908  242 2225
+[5,]   25 2269  877  290 1979
+[6,]   30 2008  883  263 1745
+
+
+
+
+
+
+
+	d. (LANDIS-II) QAQC run4 
+		==> "NECN-succession.txt"
+		==> "base-fire_NECN.txt"
+		==> modified "biomass-harvest_SalvageLog_QAQCPrescription.txt"
+    HarvestImplementations
+>>	Mgmt Area	Prescription	Harvest Area	BeginTime	EndTime
+>>	---------	------------	------------	----------	--------
+>>	1		SalvageLogger1		50%
+	1		SalvageLogger2		50%
+>>	3		SalvageLogger1		50%
+>>	3		SalvageLogger2		50%
+>>	1		MaxAgeClearcut		5%	0		15
+>>	1		MaxAgeClearcut		10%	15		30
+
+
+
+	d1. QAQCrun4 "harvest/harvest_summary_log.csv" in R
+open "harvest/harvest_summary_log.csv" in R ==>
+> QAQCrun4_harvest_summary_log_output <- as.matrix(setNames(harvest_summary_log[, c(2,4,5,7)], NULL))
+
+Col2==ManagementArea
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+	NO DATA!!!
+	0 observations of 76 variables
+
+
+	d2. QAQCrun4 "NECN_succession_log.csv" in R
+open "NECN_succession_log.csv" in R ==>
+> QAQCrun4_NECN_succession_log_output <- as.matrix(setNames(NECN_succession_log[, c(3,6,25,26)], NULL))
+
+Col3==EcoregionIndex
+Col6==SOMTC
+Col25==C_SOM1surf
+Col26==C_SOM1soil
+
+      [,1]    [,2]  [,3]   [,4]
+ [1,]    0 17164.4 785.5 3363.3
+ [2,]    1 15394.7 818.0 2947.8
+ [3,]    0 15903.6 273.7 3223.3
+ [4,]    1 14069.4 221.3 2820.1
+ [5,]    0 15424.3 308.5 3141.4
+ [6,]    1 13244.6 184.5 2694.5
+ [7,]    0 14997.5 306.7 3057.9
+ [8,]    1 12569.8 189.2 2570.9
+ [9,]    0 14563.7 292.1 2966.8
+[10,]    1 11700.7 138.7 2404.4
+[11,]    0 13968.6 245.7 2845.5
+[12,]    1 10766.8  99.5 2215.6
+[13,]    0 13267.8 206.0 2700.3
+[14,]    1  9791.4  63.5 2011.8
+ 
+
+	d3. QAQCrun4 "fire/fire-summary-log.csv" in R
+open "fire/fire-summary-log.csv" in R ==>
+> QAQCrun4_fire_summary_log_output <- as.matrix(setNames(fire_summary_log[ ,1:5], NULL))
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==TotalNumberEvents
+Col4==MN101
+Col5==MN102
+
+      [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9104  318 1635 7469
+[2,]   10  776  515   80  696
+[3,]   15 1570  758  181 1389
+[4,]   20 2467  908  242 2225
+[5,]   25 2269  877  290 1979
+[6,]   30 2008  883  263 1745
+
+
+
+
+
+
+
+
+	e. (LANDIS-II) QAQC run5 
+		==> "NECN-succession.txt"
+		==> "base-fire_NECN.txt"
+		==> modified "biomass-harvest_SalvageLog_QAQCPrescription.txt"
+
+Prescription	SalvageLogger1
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		75
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut    
+
+
+Prescription	SalvageLogger2
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		5
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut  
+
+
+>> -----------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+>> ----------------------------------------
+    HarvestImplementations
+>>	Mgmt Area	Prescription	Harvest Area	BeginTime	EndTime
+>>	---------	------------	------------	----------	--------
+	1		SalvageLogger1		50%
+	1		SalvageLogger2		50%
+	3		SalvageLogger1		50%
+	3		SalvageLogger2		50%
+>>	1		MaxAgeClearcut		5%	0		15
+>>	1		MaxAgeClearcut		10%	15		30
+
+
+
+	e1. QAQCrun5 "harvest/harvest_summary_log.csv" in R
+open "harvest/harvest_summary_log.csv" in R ==>
+> QAQCrun5_harvest_summary_log_output <- as.matrix(setNames(harvest_summary_log[, c(2,4,5,7)], NULL))
+
+Col2==ManagementArea
+Col4==HarvestedSites
+Col5==TotalCohortsCompleteHarvest
+Col7==TotalBiomassHarvested
+
+> QAQCrun5_harvest_summary_log_output
+     [,1] [,2] [,3] [,4]
+
+	NO DATA!!!
+	0 observations of 76 variables
+
+
+	e2. QAQCrun5 "NECN_succession_log.csv" in R
+open "NECN_succession_log.csv" in R ==>
+> QAQCrun5_NECN_succession_log_output <- as.matrix(setNames(NECN_succession_log[, c(3,6,25,26)], NULL))
+
+Col3==EcoregionIndex
+Col6==SOMTC
+Col25==C_SOM1surf
+Col26==C_SOM1soil
+
+> QAQCrun5_NECN_succession_log_output
+      [,1]    [,2]  [,3]   [,4]
+ [1,]    0 17164.4 785.5 3363.3
+ [2,]    1 15394.7 818.0 2947.8
+ [3,]    0 15903.6 273.7 3223.3
+ [4,]    1 14069.4 221.3 2820.1
+ [5,]    0 15424.3 308.5 3141.4
+ [6,]    1 13244.6 184.5 2694.5
+ [7,]    0 14997.5 306.7 3057.9
+ [8,]    1 12569.8 189.2 2570.9
+ [9,]    0 14563.7 292.1 2966.8
+[10,]    1 11700.7 138.7 2404.4
+[11,]    0 13968.6 245.7 2845.5
+[12,]    1 10766.8  99.5 2215.6
+[13,]    0 13267.8 206.0 2700.3
+[14,]    1  9791.4  63.5 2011.8
+ 
+
+	e3. QAQCrun5 "fire/fire-summary-log.csv" in R
+open "fire/fire-summary-log.csv" in R ==>
+> QAQCrun5_fire_summary_log_output <- as.matrix(setNames(fire_summary_log[ ,1:5], NULL))
+
+Col==Time
+Col2==TotalSitesBurned
+Col3==TotalNumberEvents
+Col4==MN101
+Col5==MN102
+
+> QAQCrun5_fire_summary_log_output
+     [,1] [,2] [,3] [,4] [,5]
+[1,]    5 9104  318 1635 7469
+[2,]   10  776  515   80  696
+[3,]   15 1570  758  181 1389
+[4,]   20 2467  908  242 2225
+[5,]   25 2269  877  290 1979
+[6,]   30 2008  883  263 1745
+
+
+

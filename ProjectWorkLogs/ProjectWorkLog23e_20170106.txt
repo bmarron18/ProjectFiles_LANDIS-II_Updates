@@ -1,0 +1,89 @@
+Title:				Project Work Log23e
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			06 Jan 2017
+Revision Date:		
+
+
+#########################################################################
+Log:
+LANDVIZ -- run a build test w/ pyinstaller (Windows)
+#########################################################################
+
+
+	a. trial5: try pyinstaller-pyinstaller-8892e11 w/ (modified) build_preproctool.bat file
+http://ss64.com/nt/start.html
+
+	a1. delete all former build folders from (_bm2, _bm3, _bm4)
+ 
+	a2. modify build_preproctool.bat in Vim
+
+	a3. go to C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>start /B build_preproctool.bat
+
+build landis2 vis preproc tool
+==============================
+run pyinstaller ...
+5118 INFO: PyInstaller: 3.3.dev0+8892e11
+5118 INFO: Python: 2.7.12
+5118 INFO: Platform: Windows-10-10.0.14393
+
+	a4. checked log file warnPreProcTool.txt in C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\build\PreProcTool>
+...
+missing module named l2utils - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+missing module named l2data - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+
+
+	
+	b. trial5a: same as above but use (adm) command line
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>start /B build_preproctool.bat
+
+	b1. no luck!! checked log file warnPreProcTool.txt in C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\build\PreProcTool>
+...
+missing module named l2utils - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+missing module named l2data - imported by C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\source\main.py
+
+
+
+	c. trial6: try PyInstaller-3.2 w/ (modified) build_preproctool.bat file and (adm) command line
+http://ss64.com/nt/start.html
+
+	c1. delete all former build and dist folders from (_bm2, _bm3, _bm4)
+ 
+	c2. modify build_preproctool.bat in Vim
+
+	c3. go to C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>
+C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build>start /B build_preproctool.bat
+
+build landis2 vis preproc tool
+==============================
+run pyinstaller ...
+5467 INFO: PyInstaller: 3.2
+5467 INFO: Python: 2.7.12
+5467 INFO: Platform: Windows-10-10.0.14393
+
+
+	c4. copy C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\dist\PreProcTool;
+	   paste into C:\Program Files (x86)\LANDIS-II>
+
+	c5. rename folder C:\Program Files (x86)\LANDIS-II\PreProcTool;
+	   to C:\Program Files (x86)\LANDIS-II\LandisPreProcTool 			<== the name of the original LANDVIZ
+
+
+	c6. run the example project batch fiel: run_preproctool_example.bat
+C:\Users\bmarr\Downloads\LANDVIZ_example_project\example_project>start /B run_preproctool_example.bat
+Traceback (most recent call last):
+  File "PyInstaller\loader\rthooks\pyi_rth_pkgres.py", line 11, in <module>
+  File "C:\Users\bmarr\Desktop\LANDVIZ_clone_20170103\LANDVIZ\PreProcTool\build\PyInstaller-3.2\PyInstaller\loader\pyimod03_importers.py", line 389, in load_module
+    exec(bytecode, module.__dict__)
+  File "site-packages\setuptools-27.2.0-py2.7.egg\pkg_resources\__init__.py", line 68, in <module>
+  File "site-packages\setuptools-27.2.0-py2.7.egg\pkg_resources\extern\__init__.py", line 61, in load_module
+ImportError: The 'appdirs' package is required; normally this is bundled with this package so if you get this warning, consult the packager of your distribution.
+Failed to execute script pyi_rth_pkgres
+
+
+
+
+
+

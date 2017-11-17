@@ -1,0 +1,107 @@
+LandisData  "Biomass Harvest"
+
+
+>>----------------
+>> REQUIRED INPUTS
+>>-----------------
+Timestep		5
+
+ManagementAreas 	./biomass-harvest_Management_s2e1.gis
+
+Stands     		./biomass-harvest_Stand_s2e1.gis
+
+
+>> ----------------------------------------------------
+>> STAND SELECTION CRITERION: TimeSinceLastDisturbance
+>> ----------------------------------------------------
+>>	1) IF avgtime of fire in a stand >= TimeSinceLastFire
+>>	   THEN stand IS NOT selected	
+
+>>	2) IF avgtime of fire in a stand < TimeSinceLastFire
+>>	   THEN stand IS selected
+
+
+
+>> -----------------------------------------
+>> HARVEST PRESCRIPTIONS
+>> -----------------------------------------
+
+Prescription MaxAgeClearcut
+    StandRanking 	MaxCohortAge
+    SiteSelection 	Complete
+    CohortsRemoved 	ClearCut
+
+
+Prescription	SalvageLogger1
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		50
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut    
+
+
+Prescription	SalvageLogger2
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		25
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut
+
+Prescription	SalvageLogger3
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		10
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut    
+
+
+Prescription	SalvageLogger4
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		1
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut    
+
+
+>> -----------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+>> ----------------------------------------
+
+    HarvestImplementations
+>>	Mgmt Area	Prescription	Harvest Area	BeginTime	EndTime
+>>	---------	------------	------------	----------	--------
+	1		SalvageLogger1		50%	0		15
+	1		SalvageLogger1		50%	15		30
+	2		SalvageLogger1		50%	0		15
+	2		SalvageLogger1		50%	15		30
+
+>>	1		SalvageLogger2		50%	0		15
+>>	1		SalvageLogger2		50%	15		30
+>>	2		SalvageLogger2		50%	0		15
+>>	2		SalvageLogger2		50%	15		30
+
+>>	1		SalvageLogger3		50%	0		15
+>>	1		SalvageLogger3		50%	15		30
+>>	2		SalvageLogger3		50%	0		15
+>>	2		SalvageLogger3		50%	15		30
+
+>>	1		SalvageLogger4		50%	0		15
+>>	1		SalvageLogger4		50%	15		30
+>>	2		SalvageLogger4		50%	0		15
+>>	2		SalvageLogger4		50%	15		30
+
+>>	1		MaxAgeClearcut		5%	0		15
+>>	1		MaxAgeClearcut		10%	15		30
+>>	2		MaxAgeClearcut		5%	0		15
+>>	2		MaxAgeClearcut		10%	15		30
+
+
+
+	
+>> --------------
+>> OUTPUTS
+>> --------------
+
+PrescriptionMaps    harvest/harvest-prescripts-{timestep}.img
+BiomassMaps         harvest/harvest-biomass-removed-{timestep}.img
+EventLog            harvest/harvest-biomass-event-test-log.csv
+SummaryLog	    harvest/harvest-summary-log.csv
+
+
+

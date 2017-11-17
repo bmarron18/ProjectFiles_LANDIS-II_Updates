@@ -1,0 +1,139 @@
+﻿Title:				PWL84_QAQC_PlantOnly_20171005
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			05 Oct 2017
+Final Date:			
+
+
+
+############
+QAQC Summary
+#############
+
+	1. "PlantOnly" is a harvest prescription where "No cohorts of any species will be removed 
+	but reproduction will occur according to the succession extension." 
+		(from the UG for BaseHarvest)
+
+	2. LBross made changes in Biomass Harvest so that output from PlantOnly prescriptions are
+	   written as they are in Base Harvest.
+
+	3. LBross' changes were checked by modifying an identical  prescription in both Base Harvest and 
+	   Biomass Harvest and comparing the "base-harvest-event-log.csv" to the 
+	   "biomass-harvest-event-log.csv".
+
+	4. In both cases, The fields, "Time","ManagementArea","Prescription","Stand","EventID",
+	   "StandAge", "StandRank", and "NumberOfSites" all report data indicating that PlantOnly 
+	   was active. All other fields reported zero (ie no harvest).
+
+#############
+QAQC Results
+#############
+
+	1. QAQC passed
+
+	
+######################
+QAQC sequence
+######################
+
+	a.  history
+	a1. there is (undocumented) keyword for the CohortsRemoved parameter: PlantOnly
+	a2. LBross made changes in Biomass Harvest so that entries from PlantOnly prescriptions are
+	being written as they are in Base Harvest
+
+LBross commit Implement LANDIS-II-Foundation/Extension-Base-Harvest#3: Plant-only prescription
+https://github.com/LANDIS-II-Foundation/Extension-Biomass-Harvest/commit/6a02f17a42597218c91131b806c318966a19b75a
+
+	a3. there should be log information to report that planting had occurred
+	a4. If PlantOnly is used in lieu of ClearCut or SpeciesList, the species are scheduled for 
+	planting but no harvesting occurs.
+	a5. Plant only prescriptions do appear in the event log for Base Harvest in the format that
+	Rob suggested. The first several columns contain information, but all the harvesting values 
+	are populated with zeroes
+	a6. "PlantOnly" – No cohorts of any species will be removed but reproduction will occur 
+	according to the succession extension (from the UG for BaseHarvest)
+
+
+	b.Perform a test run with the PlantOnly prescription in Base Harvest and in Biomass
+	Harvest as QAQC tests. Biomass output for PlantOnly prescriptions should mimic
+	the output for Base Harvest (ie several columns of information indicating that the prescription
+	was active followed by zeroes indicating no harvest)
+
+	c. Run Base Harvest with a MaxAgePlant Prescription in "base-harvest_SetUp_s1e1_QAQC.txt":
+
+>>---- PRESCRIPTION_1 ---------------------------------------
+Prescription MaxAgePlant
+    StandRanking 	MaxCohortAge
+    SiteSelection 	Complete
+    CohortsRemoved 	PlantOnly	<< QAQC test: change from ClearCut
+
+	c1. 
+C:\Users\bdmarron\Desktop\BaseHarvest\Extension-Base-Harvest\deploy\examples>call landis-ii scenario_s1e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+Loading scenario from file "scenario_s1e1_QAQC.txt" ...
+...
+Model run complete.
+
+
+	c2. check output in "base-harvest-event-log.csv"
+The fields, 
+Time	ManagementArea	Prescription	Stand	EventID	StandAge	StandRank	NumberOfSites
+
+all report data indicating that PlantOnly was active. All other fields are zero (ie no harvest)
+
+10, 1, MaxAgePlant, 4, 5, 345, 345, 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+10, 1, MaxAgePlant, 6, 15, 295, 295, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+10, 1, MaxAgePlant, 7, 9, 326, 326, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+10, 1, MaxAgePlant, 2, 12, 305, 305, 31, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+...
+
+
+	d. Run Biomass Harvest with a MaxAgePlant Prescription in "biomass-harvest_SetUp_s2e1_QAQC.txt":
+
+>>---- PRESCRIPTION_1 ---------------------------------------
+Prescription MaxAgePlant
+    StandRanking 	MaxCohortAge
+    SiteSelection 	Complete
+    CohortsRemoved 	PlantOnly	<< QAQC test: change from ClearCut
+
+
+	d1. 
+C:\Users\bdmarron\Desktop\BiomassHarvest\Extension-Biomass-Harvest\deploy\examples>
+call landis-ii scenario_s2e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+Loading scenario from file "scenario_s2e1_QAQC.txt" ...
+...
+Model run complete.
+
+
+	d2. check output in "biomass-harvest-event-log.csv"
+The fields, 
+Time	ManagementArea	Prescription	Stand	EventID	StandAge	StandRank	NumberOfSites
+
+all report data indicating that PlantOnly was active. All other fields are zero (ie no harvest)
+
+5, 1, MaxAgePlant, 47, 36, 3, 3, 121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
+...
+
+
+	e. Biomass outputs mimic Base Harvest outputs
+
+	f. QAQC passed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

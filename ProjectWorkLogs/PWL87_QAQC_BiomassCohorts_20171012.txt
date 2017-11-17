@@ -1,0 +1,273 @@
+Title:				PWL85_QAQC_LibraryBiomassCohorts_20171010
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			12 Oct 2017
+Final Date:			
+
+
+
+
+############
+QAQC Summary
+#############
+
+	1. 
+	
+	
+
+
+#############
+QAQC Results
+#############
+
+	1. 
+
+
+
+
+###################
+QAQC sequence
+###################
+
+	a1. Rebuild Library.Biomass.Cohorts ==> Uncomment Lines 327-328 in SpeciesCohorts.cs 
+
+
+	a2. Repos with Library.Biomass.Cohorts
+
+AgeOnly.Succession		<<no
+DynamicFireSystem		<<no
+	*Biomass.Harvest		<<yes		(TESTED OK)
+Base.Harvest			<<no
+	*Biomass.Succession		<<yes		(TESTED OK)
+	*Output.Biomass.Reclass		<<yes		(TESTED OK)
+	*Output.BiomassbyAge		<<yes		(TESTED OK)
+	*Output.Biomass			<<yes		(TESTED OK)
+	*DynamicBiomassFuels		<<yes		(TESTED OK)
+Base.Wind			<<no
+OutputAgeReclassification	<<no
+Output.Cohort.Statistics	<<no
+Output.Max.Species.Age		<<no
+Base.BDA			<<no
+	Biomass.Insects			<<yes
+Base.Fire			<<no
+Library.Succession		<<no
+	*NECN-Succession		<<yes		(TESTED OK)
+	NECN-Hydro-Succession		<<yes
+Library.Climate			<<no
+Library.Site.Harvest		<<no
+Library.HarvestMgmnt		<<no
+		*Library.Biomass.Harvest	<<yes	(REBUILT)
+		*Library.LeafBiomassCohorts	<<yes	(REBUILT)
+		*Library.Biomass		<<yes	(REBUILT)
+Output.Biomass.Community	<<no
+	PnET-Succession			<<yes		(NOT TESTED)
+	Output.Biomass.PnET		<<yes		(NOT TESTED)
+	Local.Habitat.Suitability	<<yes		(NOT TESTED)
+SpruceBudworm			<<yes? a weird version
+Biomass.Drought			<<yes? a weird version
+Dynamic.Fuel.System		<<no
+Base.EDA			<<no
+Library.Base.Cohort		<<no
+Age.Cohort			<<no
+Biomass.Browse			<<yes? a weird version
+	Output.Wildlife.Habitat		<<yes		(NOT TESTED)
+
+
+
+	b. Rebuild
+		Library.Biomass.Harvest	
+		Library.LeafBiomassCohorts	
+		Library.Biomass
+ 
+
+
+	c. First set of QAQC runs: Rebuild each one of the following individually (including
+	installers) and then run all at once with the same scenario. Note hierarchy of rebuild:
+
+
+Landis.Library.BiomassCohorts-v2.0.1.dll
+
+	Landis.Library.BiomassHarvest-v2.0.1.dll
+	Landis.Library.Biomass-v1.0.1.dll
+	Landis.Library.LeafBiomassCohorts-v1.0.1.dll
+
+		Landis.Extension.Succession.Biomass.dll
+		Landis.Extension.BiomassHarvest.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.BiomassByAge.dll
+		Landis.Extension.Output.Biomass.dll
+		Landis.Extension.Succession.NetEcosystemCarbonNitrogen.dll
+
+
+
+	d. Run QAQC test1 on 
+Landis.Extension.Succession.Biomass.dll
+		Landis.Extension.BiomassHarvest.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.BiomassByAge.dll
+		Landis.Extension.Output.Biomass.dll
+
+
+	d1. C:\Users\bdmarron\Desktop\QAQC_examples_BiomassCohort_test1>call landis-ii scenario_s2e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s2e1_QAQC.txt" ...
+.....
+Model run is complete.
+
+PASSED QAQC!
+
+
+
+	e. Run QAQC test2 on 
+Landis.Extension.Succession.NetEcosystemCarbonNitrogen.dll
+		Landis.Extension.BiomassHarvest.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.BiomassByAge.dll
+		Landis.Extension.Output.Biomass.dll
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test2>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e1_QAQC.txt" ...
+
+Initializing NECN Succession ...
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Edu.Wisc.Forest.Flel.Util.InputValue`1.op_Implicit(InputValue`1 inputValue)
+   at Landis.Library.Climate.InputParametersParser.Parse()
+   at Edu.Wisc.Forest.Flel.Util.TextParser`1.Parse(LineReader reader)
+   at Landis.Data.Load[T](String path, ITextParser`1 parser)
+   at Landis.Library.Climate.Climate.Initialize(String climateConfigFilename, Boolean writeOutput, ICore mCore)
+   at Landis.Extension.Succession.NetEcosystemCN.PlugIn.Initialize()
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+EXCEPTIONS THROWN!!
+
+	e1. Had to add line of code to NECN-succession_ClimateGenerator.txt
+		Line 11 ==> UsingFireClimate 	No
+
+	e2. Had to change biomass-harvest_SetUp_s3e1.txt
+		Lines 91-94 ==> change from 50 to 30
+
+    HarvestImplementations
+>>	Mgmt Area	Prescription		Harvest Area	BeginTime	EndTime
+>> 	---------   	------------   		------------   	---------- 	--------
+	1		SelectiveNorthernHardwood	10%	0  	    	30
+	2		SelectiveNorthernHardwood	10%	0  	    	30
+>>	1		MaxAgeClearcut			5%	0	   	30
+>>	2		MaxAgeClearcut			5%	0	    	30
+
+
+
+	e3. After changes made in e1 and e2 above, Run QAQC test2 again on 
+Landis.Extension.Succession.NetEcosystemCarbonNitrogen.dll
+		Landis.Extension.BiomassHarvest.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.BiomassByAge.dll
+		Landis.Extension.Output.Biomass.dll
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test2>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e1_QAQC.txt" ..
+....
+   Writing acersacc and ageclass1 map to outputs/spp-biomass-by-age/acersacc-ageclass1-30.img ...
+dataset created: outputs/spp-biomass-by-age/acersacc-ageclass1-30.img
+Model run is complete.
+
+PASSED QAQC!
+
+
+
+
+	f. Run QAQC test3 on 
+Landis.Extension.Succession.Biomass.dll
+		Landis.Extension.BiomassFuels.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.Biomass.dll
+
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test3>call landis-ii scenario_s2e3_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s2e3_QAQC.txt" ...
+...
+   Writing tiliamer biomass map to outputs/biomass/biomass-tiliamer-50.img ...
+dataset created: outputs/biomass/biomass-tiliamer-50.img
+Model run is complete.
+
+
+PASSED QAQC!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DISREGARD!!! THESE USED JANE'S CHANGES. ROB FOUND HE ALREADY CORRECTED THE PROBLEM
+Uncomment Lines 327-328 in SpeciesCohorts.cs
+
+	b. run QAQC examples with as many extensions as possible per run
+
+	c. First set of QAQC runs: Have to rebuild each one of the following individually (including
+	installers) and then run all at once with the same scenario. Note hierarchy of rebuild:
+
+
+Landis.Library.BiomassCohorts-v2.0.2.dll
+
+	Landis.Library.BiomassHarvest-v2.0.2.dll
+	Landis.Library.Biomass-v1.0.2.dll
+
+		Landis.Extension.Succession.Biomass.dll
+		Landis.Extension.BiomassHarvest.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.BiomassByAge.dll
+		Landis.Extension.Output.Biomass.dll
+
+
+C:\Users\bdmarron\Desktop\QAQC_examples_BiomassCohort_test1>call landis-ii scenario_s2e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s2e1_QAQC.txt" ...
+....
+ataset created: outputs/spp-biomass-by-age/acersacc-ageclass1-100.img
+Model run is complete.
+
+
+	d. Second set of QAQC runs: Have to rebuild each one of the following individually (including
+	installers) and then run all at once with the same scenario.
+
+Landis.Library.BiomassCohorts-v2.0.2.dll
+
+	Landis.Library.BiomassHarvest-v2.0.2.dll
+	Landis.Library.Biomass-v1.0.2.dll
+
+		NECN-Succession
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	

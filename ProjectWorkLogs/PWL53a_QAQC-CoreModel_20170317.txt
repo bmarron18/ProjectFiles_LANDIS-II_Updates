@@ -1,0 +1,222 @@
+Title:				QAQC1 CoreModel
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			17 Mar 2017
+Final Date:			18 Mar 2017
+
+
+
+############
+QAQC Summary
+#############
+
+	a. The rebuild process was organized into five (5) distinct, well-documented stages.
+		==> Stage One Rebuild -- Add support libraries
+		==> Stage Two Rebuild -- Generate .sln and .csproj file with Premake
+		==> Stage Three Rebuild -- Perform Visual Studio build
+		==> Stage Four Rebuild -- Staging for installer prep or testing
+		==> Stage Five Rebuild -- Create the installer
+
+	b. A host of changes (bug fixes) were made pre-QAQC to permit a complete, from-scratch
+	   rebuild and installation (ie, to be able to proceed through all five stages
+	   listed above). This included an upgrade to Premake5.0.
+
+	c. A newly-minted LANDIS-II 6.1 was installed (64-bit) after uninstalling all previous
+	   LANDIS-ii versions and extensions.
+
+	d. The most-recent versions of NECN-Succession and Biomass-Harvest were installed and
+	   a QAQC run was made with a simplified version of "scenario.txt" from NECN-Succession.
+
+	
+
+
+#############
+QAQC Results
+#############
+
+	a. Two (2) MAJOR PROBLEMS were uncovered:
+ 
+1) C:\..\>call landis-ii scenario.txt throws an exception:
+C:\Program Files\LANDIS-II\v6\examples\NECN-succession>call landis-ii scenario.txt
+'""' is not recognized as an internal or external command,
+operable program or batch file.
+
+
+2) two internal errors thrown when running LANDIS-II:
+C:\Program Files\LANDIS-II\v6\bin>Landis.Console-6.1 ..\examples\NECN-succession\scenario.txt
+LANDIS-II 6.1 (official release)
+
+Internal error occurred within the program:
+  The type initializer for 'Landis.RasterIO.Gdal.RasterFactory' threw an exception.
+  The type initializer for 'Landis.RasterIO.Gdal.GdalSystem' threw an exception.
+
+Stack trace:
+   at Landis.RasterIO.Gdal.RasterFactory..ctor()
+   at Landis.App.Main(String[] args)
+
+
+
+###############
+QAQC Analysis
+###############
+
+	a. Problem 1) may have a simple resolution in modification of the 
+	   "landis-ii.cmd" script
+	b. Problem 2) appears more serious.
+	c. The "\model\deploy\premake5.lua" file and the "\model\deploy\installer\LANDIS-II.iss"
+	   file are in desperate need of major revisions.
+
+
+
+########################
+relevant GitHub Issue(s)
+("ready for testing"
+######################
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/16
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/17
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/18
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/19
+
+
+
+#########################
+Pre-QAQC set up actions
+(ie bug fixes)
+###################
+
+	a. complete rewrite "README.txt"
+		==> "README_CoreModel6.1.txt"
+
+	b. download "premake5.exe" 
+		==> add copy to Core-Model/model
+		==> add copy to Core-Model/model/deploy
+
+	c. add Austen's install-libs.cmd protocol as a pre-build condition in order
+	   to download the requisite .dlls from the GitHub repo, "Support-Library-Dlls"
+		==> add "install-libs.cmd"
+		==> add "WnpkgTools" folder
+
+	d. modify "install-libs.cmd" 
+		==> change all "bin\Debug" to "libs" to match "premake5.lua"; 
+		   (eg change "set DownloadDir=bin\Debug" to "set DownloadDir=libs")
+		==> "install-libs_CoreModel.cmd" 
+
+	e. modify "WinPkgTools/getPackage.cmd"
+		==> change "set DirForUnpacking=bin\Debug" to "set DirForUnpacking=libs"
+
+	f. modify "...\model\premake4.lua" 
+		==> Lines 4-10
+		==> "...\model\premake5.lua"
+
+	g. modify "...\model\deploy\premake4.lua" 
+		==> Lines 105-116
+		==> "...\model\deploy\premake5.lua"
+
+	h. complete rewrite "...\model\deploy\README.txt"
+		==> "...\model\deploy\README_Debug-testing-the-build.txt"
+
+	i. return all .cmd scripts to "...\model\deploy\bin" (lost during SDK purge?)
+		==> from C:\Program Files\LANDIS-II\bin>
+
+	j. modify  "...\model\deploy\windows\LANDIS-II.iss"
+		==> Lines 1-12
+		==> Lines 112-122
+		==> "...\model\deploy\installer\LANDIS-II.iss"
+
+	k. build "...\plugin-admin\Landis.PlugIns.Admin.exe"
+		==> run MSBuild on installer\plugin-admin\Landis.PlugIns.Admin.proj
+C:\Windows\Microsoft.NET\Framework\v3.5>MSBuild \Users\bmarr\Desktop\Working_CoreModel\Core-Model\model\deploy\installer\plugin-admin\Landis.PlugIns.Admin.proj
+
+
+	l. modify "...\model\deploy\installer\plugin-admin\README.txt"
+
+
+
+
+###############
+QAQC CoreModel
+###############
+
+	a. add support libraries 
+	a1. run ...\model\install-libs_CoreModel.cmd
+C:\Users\bmarr\Desktop\Working_CoreModel\Core-Model\model>install-libs_CoreModel.cmd
+
+	b. generate .sln and .csproj files
+	b1. run \model\premake5.lua
+C:\Users\bmarr\Desktop\Working_CoreModel\Core-Model\model>premake5 vs2015
+** Warning: the flags value Symbols has been deprecated.
+   Use `symbols "On"` instead
+
+
+	c. check premake5.lua output with GitBash
+	c1. the following files were created in the repo:
+ 		model/LANDIS-II.sln
+       		model/console/Console.csproj
+        	model/core/src/Core.csproj
+        	model/core/src/Implementation/Core_Implementation.csproj
+        	model/core/test/ecoregions/Ecoregions_Tests.csproj
+        	model/core/test/species/Species_Tests.csproj
+        	model/ext-admin/Extension_Admin.csproj
+        	model/ext-dataset/src/Extension_Dataset.csproj
+
+
+	d. open "LANDIS-II.sln" in vs 2015
+	d1. build "LANDIS-II.sln" in vs2015
+========== Build: 7 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+	e. stage files for installer or testing
+	e1. run ...\model\deploy\premake5.lua
+C:\Users\bmarr\Desktop\Working_CoreModel\Core-Model\model\deploy>premake5 install Debug
+
+
+	f. create the installer, "LANDIS-II-6.1-setup64.exe"
+	f1. open "...\model\deploy\installer\LANDIS-II.iss" in Inno Script Studio
+	f2. compile the "LANDIS-II.iss" script (Ctrl-F9)
+
+
+	g. uninstall LANDIS-II and all extensions 
+
+
+	h. run the newly-minted installer
+	h1. install LANDIS-II 6.1 into C:\Program Files\LANDIS-II
+	
+
+	i. install extensions
+		==> https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest
+		==> https://github.com/LANDIS-II-Foundation/Extension-NECN-Succession
+
+	j. run test scenarios
+	j1. modiy NECN-succession\scenario.txt to run w/o fire; run scenario
+		==> C:\Program Files\LANDIS-II\v6\examples\NECN-succession>notepad scenario.txt
+	j2. run modified "scenario.txt" for NECN-Succession
+		==> C:\Program Files\LANDIS-II\v6\examples\NECN-succession>call landis-ii scenario.txt
+
+
+!!TWO MAJOR PROBLEMS!!
+ 
+1) the "call landis-ii scenario.txt" throws an exception:
+
+C:\Program Files\LANDIS-II\v6\examples\NECN-succession>call landis-ii scenario.txt
+'""' is not recognized as an internal or external command,
+operable program or batch file.
+
+
+2) two internal errors thrown when running LANDIS-II:
+
+C:\Program Files\LANDIS-II\v6\bin>Landis.Console-6.1 ..\examples\NECN-succession\scenario.txt
+LANDIS-II 6.1 (official release)
+
+Internal error occurred within the program:
+  The type initializer for 'Landis.RasterIO.Gdal.RasterFactory' threw an exception.
+  The type initializer for 'Landis.RasterIO.Gdal.GdalSystem' threw an exception.
+
+Stack trace:
+   at Landis.RasterIO.Gdal.RasterFactory..ctor()
+   at Landis.App.Main(String[] args)
+
+
+
+
+

@@ -1,0 +1,77 @@
+﻿Title:				PWL83_QAQC_BaseBDA_20171005
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			05 Oct 2017
+Final Date:			
+
+
+
+
+
+############
+QAQC Summary
+#############
+
+	1. reported (https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/issues/5),
+	In the base-BDA-Input file,
+		TemporalType continuous 	<< pulse, variablepulse,or continuous
+		throws an exception; get an error msg of invalid selection
+
+	2. QAQC_Example, base-BDA-Input_s1e1.txt from scenario_s1e1_QAQC.txt used to test.
+
+	3. No exceptions thrown; close issue.
+
+
+#############
+QAQC Results
+#############
+
+	1. QAQC passed
+
+	
+######################
+QAQC sequence
+######################
+
+	a. reported (https://github.com/LANDIS-II-Foundation/Extension-Base-BDA/issues/5),
+		In the base-BDA-Input file,
+			TemporalType continuous 	<< pulse, variablepulse,or continuous
+		should produce a viable model run. Instead get an error msg of invalid selection
+
+	b. Use base-BDA-Input_s1e1.txt to test. Note that the current QAQC_Example of 
+	base-BDA-Input_s1e1.txt does not list "continuous" as an option
+
+	c. test run w/ following setting
+		TemporalType continuous 	<< pulse, variablepulse,or continuous
+
+C:\Users\bdmarron\Desktop\BaseBDA\Extension-Base-BDA\deploy\examples>call landis-ii scenario_s1e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s1e1_QAQC.txt" ...
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Age-only Succession       age-only-succession_SetUp_s1e1.txt
+   Base Wind                 base-wind_SetUp_s1e1.txt
+   Base BDA                  base-BDA_SetUp_s1e1_QAQC.txt
+
+Current time: 1
+Running Base BDA ...
+   Processing landscape for BDA events ...
+Running Age-only Succession ...
+Current time: 2
+Running Base BDA ...
+   Processing landscape for BDA events ...
+Running Age-only Succession ...
+Current time: 3
+Running Base BDA ...
+   Processing landscape for BDA events ...
+...
+Model run is complete.
+
+	d. No problem.
+
+
+
+

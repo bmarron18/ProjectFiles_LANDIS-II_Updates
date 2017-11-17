@@ -1,0 +1,126 @@
+Title:							Visual Basic 1
+Project Description:			LANDIS-II upgrades/corrections
+Project ID:
+Author:							bmarron
+Origin Date:					8 Oct 2016
+Revision Date:					
+
+##############
+URLs
+#############
+http://stackoverflow.com/questions/18362361/visual-studio-how-to-create-project-from-existing-github-repository
+
+https://visualstudio.github.com/
+3rd-party Git command prompt tools.
+
+http://rickrainey.com/2013/07/27/visual-studio-and-gitub-the-basics-of-working-with-existing-repositories-2/
+
+http://premake.github.io/
+https://github.com/premake/premake-core/wiki
+
+http://www.nunit.org/
+
+
+#######
+notes
+######
+https://github.com/premake/premake-4.x/wiki/A-Bit-Of-Meta
+
+
+Premake is built on Lua, a powerful, fast, light-weight scripting language. Premake scripts are really Lua programs, so anything you can do in Lua can also be done in a Premake script. 
+
+Premake will look for a file named premake4.lua by default, much like make looks for a file named Makefile. So that's the name you want to give your project script files, generally.
+
+
+
+C:\Users\bmarr\Documents>premake4 vs2013
+No Premake script (premake4.lua) found!
+
+
+
+	# ran premake4.exe here
+		==> C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk
+	# premake4 vs2013 DOES NOT work!
+C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk>premake4 vs2013
+Building configurations...
+Running action 'vs2013'...
+[string "newaction..."]:14: attempt to index global 'vstudio' (a nil value)
+
+
+
+	#This DID build a LANDIS-II.sln file!!!
+C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk>premake4 vs2010
+Building configurations...
+Running action 'vs2010'...
+Generating LANDIS-II.sln...
+Generating core/src/Core.csproj...
+Generating core/src/Core.csproj.user...
+Generating core/src/Implementation/Core_Implementation.csproj...
+Generating core/src/Implementation/Core_Implementation.csproj.user...
+Generating core/test/species/Species_Tests.csproj...
+Generating core/test/species/Species_Tests.csproj.user...
+Generating core/test/ecoregions/Ecoregions_Tests.csproj...
+Generating core/test/ecoregions/Ecoregions_Tests.csproj.user...
+Generating ext-dataset/src/Extension_Dataset.csproj...
+Generating ext-dataset/src/Extension_Dataset.csproj.user...
+Generating ext-admin/Extension_Admin.csproj...
+Generating ext-admin/Extension_Admin.csproj.user...
+Generating console/Console.csproj...
+Generating console/Console.csproj.user...
+Modifying core/src/Core.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+  Enabled the generation of XML documentation file
+Modifying core/src/Implementation/Core_Implementation.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying core/test/species/Species_Tests.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying core/test/ecoregions/Ecoregions_Tests.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying ext-dataset/src/Extension_Dataset.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying ext-admin/Extension_Admin.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+Modifying console/Console.csproj ...
+  <HintPath> elements added to the project's references
+  <TargetFrameworkProfile> element removed
+  Changed <AssemblyName> element to "Landis.Console-6.1"
+Running third-party\LSML\LSML-admin.cmd 'get'...
+Initializing toolkit in C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk\third-party\LSML\WinPkgTools\ ...
+Downloading checksum.exe ...
+0% error
+Downloading checksum-LICENSE.txt ...
+0% error
+  Error: System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.WebClient.GetWebResponse(WebRequest request, IAsyncResult result)
+   at System.Net.WebClient.DownloadBitsResponseCallback(IAsyncResult result)
+Downloading unzip.exe ...
+0% error
+  Error: System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.WebClient.GetWebResponse(WebRequest request, IAsyncResult result)
+   at System.Net.WebClient.DownloadBitsResponseCallback(IAsyncResult result)
+Downloading Info-ZIP-LICENSE.txt ...
+0% error
+  Error: System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.WebClient.GetWebResponse(WebRequest request, IAsyncResult result)
+   at System.Net.WebClient.DownloadBitsResponseCallback(IAsyncResult result)
+Toolkit initialized
+Making directory C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk\third-party\LSML\download\ ...
+Downloading download\LSML-1.0.zip ...
+0% error
+  Error: System.Net.WebException: The remote server returned an error: (404) Not Found.
+   at System.Net.HttpWebRequest.EndGetResponse(IAsyncResult asyncResult)
+   at System.Net.WebClient.GetWebResponse(WebRequest request, IAsyncResult result)
+   at System.Net.WebClient.DownloadBitsResponseCallback(IAsyncResult result)
+Verifying checksum of download\LSML-1.0.zip ...
+Access is denied.
+Done.
+

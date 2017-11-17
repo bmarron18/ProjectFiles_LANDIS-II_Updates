@@ -1,0 +1,10 @@
+Title:				PWL76_QAQC_Widgets
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			29 Jun 2017
+Final Date:			
+
+
+
+	See PWL_HarvestSuite ==> PWL77e_BaseHarvest_Issue5 

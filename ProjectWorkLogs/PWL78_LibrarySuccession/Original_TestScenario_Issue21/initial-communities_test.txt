@@ -1,0 +1,10 @@
+LandisData   "Initial Communities"
+
+
+>> 
+MapCode  1
+  piceglau 100
+
+>>    
+MapCode 2
+   piceglau 100

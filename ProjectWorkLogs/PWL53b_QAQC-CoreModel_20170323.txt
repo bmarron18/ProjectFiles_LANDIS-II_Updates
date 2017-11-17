@@ -1,0 +1,139 @@
+Title:				QAQC2 CoreModel
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			17 Mar 2017
+Final Date:			23 Mar 2017
+
+
+
+############
+QAQC Summary
+#############
+
+	a. The rebuild process was organized into five (5) distinct, well-documented stages.
+		==> Stage One Rebuild -- Add support libraries
+		==> Stage Two Rebuild -- Generate .sln and .csproj file with Premake
+		==> Stage Three Rebuild -- Perform Visual Studio build
+		==> Stage Four Rebuild -- Staging for installer prep or testing
+		==> Stage Five Rebuild -- Create the installer
+
+	b. A few additional tweaks to various files were made (see below).
+
+	c. A newly-minted LANDIS-II 6.1 was installed (64-bit) after uninstalling all previous
+	   LANDIS-ii versions and extensions.
+
+	d. The most-recent versions of NECN-Succession and Biomass-Harvest were installed and
+	   a QAQC run was made with a simplified version of "scenario.txt" from NECN-Succession.
+
+	
+
+
+#############
+QAQC Results
+#############
+
+	a. The QAQC run was successfully performed.
+
+	b. Core-Model has passed QAQC.
+
+
+
+###############
+QAQC Analysis
+###############
+
+	N/A
+
+
+
+########################
+relevant GitHub Issue(s)
+("ready for testing"
+######################
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/16
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/17
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/18
+https://github.com/LANDIS-II-Foundation/Core-Model/pull/19
+
+
+
+#################################
+Pre-QAQC set up actions
+(ie bug / clarification fixes)
+###################################
+
+	a. review changes made by VSchuster after QAQC1 (first-round)
+		==> "README_CoreModel6.1.txt"
+
+	b. slight revisions to "README"
+		==> "README_CoreModel6.1.txt"
+
+
+	c. removed requirement for installing, "LANDIS-II_Binary_license.rtf"
+		==> commented out Line 166 ...\model\deploy\premake5.lua
+
+	d. modified Line 81 LANDIS-II.iss to author of Core Model
+		==> old: AppPublisher=LANDIS-II Core Development Team
+		==> new: AppPublisher= LANDIS-II Foundation
+
+	e. modified Line 9 LANDIS-II.iss
+		==> old: #define ReleaseConfigDir BuildDir + "\Debug"
+		==> new: #define ReleaseConfigDir BuildDir + "\Release"
+
+
+
+###############
+QAQC CoreModel
+###############
+
+	a. followed the five (5) stage instructions in README_CoreModel6.1.txt
+
+	b. uninstall LANDIS-II and all extensions 
+
+
+	c. run the newly-minted installer
+	c1. install LANDIS-II 6.1 into C:\Program Files\LANDIS-II
+	
+
+	d. install most-recent BiomassHarvest and NECN extensions from repos
+		==> https://github.com/LANDIS-II-Foundation/Extension-Biomass-Harvest
+		==> https://github.com/LANDIS-II-Foundation/Extension-NECN-Succession
+
+	e. run QAQC test scenario
+	e1. modiy NECN-succession\scenario.txt to run w/o fire; run scenario
+C:\Program Files\LANDIS-II\v6\examples\NECN-succession>notepad scenario.txt
+
+	e2. run modified "scenario.txt" for NECN-Succession
+C:\Program Files\LANDIS-II\v6\examples\NECN-succession>call landis-ii scenario.txt
+
+
+	f. run successful!!
+	f1. partial (QAQC confirmation) output,
+
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario.txt" ...
+Initialized random number generator with seed = 2,213,092,804
+Loading species data from file "./species.txt" ...
+Loading ecoregions from file "./ecoregions.txt" ...
+Initializing landscape from ecoregions map "./ecoregions.gis" ...
+Cell length = 100 m, cell area = 1 ha
+Map dimensions: 99 rows by 99 columns = 9,801 cells
+Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+  reading in ecoregion from ./ecoregions.gis
+Loading NetEcosystemCN Succession extension ...
+.....
+dataset created: necn/NECN-ag_anpp-30.gis
+dataset created: necn/NECN-nee-30.gis
+Model run is complete.
+
+
+
+
+
+
+
+
+
+

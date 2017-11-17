@@ -1,0 +1,248 @@
+Title:				PWL78d_QAQC_Planting_20170911
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			11 Sept 2017
+Final Date:			
+
+Trello Board ==> PR8
+
+
+NB. Once changes approved all libraries in the Harvest Suite must be rebuilt to reference 
+Landis.Library.Succession-v2.dll because of the changes made. 
+
+NB. Ditto above for  Age-Only Succession, Biomass Succession, and NECN Succession
+
+NB. These are ready-to-go on 'tmp1' branches
+
+
+
+############
+QAQC Summary
+#############
+
+	1. Rebuilt Landis.Library.Succession-v2.dll with changes from B.Miranda as detailed in 
+	   https://github.com/bmarron18/Library-Succession/pull/1
+
+	2. Rebuilt the entire Harvest Suite of libraries because there are direct or indirect calls to 
+      	   Landis.Library.Succession-v2.dll; namely,
+
+Landis.Library.SiteHarvest-v1.dll			<< direct 
+Landis.Library.HarvestManagement-v2.dll			<< direct 
+Landis.Library.BiomassHarvest-v2.dll			<< indirect thru SiteHarvest	
+Landis.Extension.BaseHarvest.dll			<<  direct and indirect thru SiteHarvest
+Landis.Extension.BiomassHarvest.dll			<< direct and indirect thru SiteHarvest
+
+	3. All rebuilds for 2. above were carefully sequenced and built on 'tmp1' branches
+
+	4. Rebuilt and reinstalled Extension-Age-Only-Succession, Extension-Biomass-Succession, and 
+	  Extension-NECN-Succession with  B.Miranda's Landis.Library.Succession-v2.dll and the freshly-built
+           Harvest Suite libraries in 2. above
+
+	5. Ran four (4) rounds of B.Miranda's scenario test set with different succession extensions and harvest 
+           extensions; specifically, 
+		a) QAQC2_TestScenario_Issue21_BaseHarvest1 (Age-only Succession + Base Harvest) 
+		b) QAQC2_TestScenario_Issue21_BaseHarvest2 (Biomass Succession + Base Harvest)
+	   	c) QAQC2_TestScenario_Issue21_BiomassHarvest1 (Biomass Succession + Biomass Harvest)
+		d) QAQC2_TestScenario_Issue21_BiomassHarvest2 (NECN Succession + Biomass Harvest)
+
+	6. No exceptions were thrown and every QAQC scenario produced identical counts of
+	   "HarvestedSites"  and "CohortsHarvested_piceglau"
+
+
+#############
+QAQC Results
+#############
+
+	1.  Passed QAQC!
+
+
+
+###################
+QAQC sequence
+###################
+
+
+	a. The entire Harvest Suite was recently rebuilt to test TimeSinceLastFire (04 Sept 2017)
+	(see PWL77a3_QAQC_SalvageLogging)
+
+	b. Austen's changes to fix "highest"  by percentCells back into ForestTypeTable will require
+	   ANOTHER rebuild of the Harvest Suite BEFORE testing either Austen's or Brian's changes
+	(https://github.com/LANDIS-II-Foundation/Library-Harvest-Mgmt/issues/11)
+
+	c. The rebuild sequence is documented in 'PWL77_CompleteRebuild_HarvestSuite_20170910.txt'
+	
+---- build issue ---------------------------------------------------------------------
+Support-Dlls may not have the correct Landis.Library.SiteHarvest-v1.dll 
+	==> pulls in .dll from 8/20 NOT the 9/4 version !!!
+
+Rebuilt Library.Succession-v2.dll and pushed EVERYTHING again (to individual repos as well as 
+Support Library DLLs)
+----------------------------------------------------------------------------------------------
+
+	d. Rebuild Landis.Library.Succession-v2.dll w/ BMiranda's changes (on branch=master)
+
+	e. Harvest Suite entities that call Landis.Library.Succession-v2.dll
+Landis.Library.SiteHarvest-v1.dll			<< yes; direct 
+Landis.Library.HarvestManagement-v2.dll			<< yes; direct 
+Landis.Library.BiomassHarvest-v2.dll			<< yes; indirect thru SiteHarvest	
+Landis.Extension.BaseHarvest.dll			<< yes; direct and indirect thru SiteHarvest
+Landis.Extension.BiomassHarvest.dll			<< yes; direct and indirect thru SiteHarvest
+
+
+	f. create and clone 'tmp1' branch for all repos in the Harvest Suite
+	f1. 'tmp1' branch will have the rebuilds using Brian's Landis.Library.Succession-v2.dll
+
+	g. rebuild the entire Harvest Suite with Brian's Landis.Library.Succession-v2.dll
+
+	h. reinstall Extension.BaseHarvest and Extension.BiomassHarvest
+
+	i. rebuild and reeinstall Age-only Succession with Brian's Landis.Library.Succession-v2.dll
+	i1. also in a 'tmp1' branch
+
+	j. rebuild and reeinstall NECN Succession with Brian's Landis.Library.Succession-v2.dll
+	j1. also in a 'tmp1' branch
+
+	k. QAQC runs based on Brian Miranda's .zip files found on GitHub
+		(https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest/issues/21)
+
+
+
+---- QAQC2_TestScenario_Issue21_BaseHarvest1 ---------------------------------------
+
+	# run LANDIS-II
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Age-only Succession       age-only-succession.txt
+   Base Harvest              BaseHarvest_test_PLANT.txt
+
+C:\Users\bdmarron\Desktop\PR8\QAQC2_TestScenario_Issue21_BaseHarvest1>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ...
+...
+Model run is complete.
+
+
+
+	# examine output
+library(readr)
+library(data.table)
+
+summary_log <- read_csv("C:/Users/bdmarron/Desktop/PR8/QAQC2_TestScenario_Issue21_BaseHarvest1/harvest/summary-log.csv")
+names(summary_log[, c(1,2,4,11)])
+[1] "Time"                      "ManagementArea"            "HarvestedSites"           
+[4] "CohortsHarvested_piceglau"
+dt <- as.matrix(setNames(summary_log[, c(1,2,4,11)], NULL))
+dt
+     [,1] [,2] [,3] [,4]
+[1,]   10    1 5997 5997
+[2,]   10    2  344  344
+[3,]   10    3 3460 3460
+
+
+
+---- QAQC2_TestScenario_Issue21_BaseHarvest2 ---------------------------------------
+
+	# run LANDIS-II
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Biomass Succession        BiomassSuccession_SetUp.txt
+   Base Harvest              BaseHarvest_test_PLANT.txt
+
+
+C:\Users\bdmarron\Desktop\PR8\QAQC2_TestScenario_Issue21_BaseHarvest2>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ...
+...
+Model run is complete.
+
+
+
+	# examine output
+summary_log <- read_csv("C:/Users/bdmarron/Desktop/PR8/QAQC2_TestScenario_Issue21_BaseHarvest2/harvest/summary-log.csv")
+names(summary_log[, c(1,2,4,11)])
+[1] "Time"                      "ManagementArea"            "HarvestedSites"           
+[4] "CohortsHarvested_piceglau"
+dt <- as.matrix(setNames(summary_log[, c(1,2,4,11)], NULL))
+dt
+     [,1] [,2] [,3] [,4]
+[1,]   10    1 5997 5997
+[2,]   10    2  344  344
+[3,]   10    3 3460 3460
+
+
+
+
+
+---- QAQC2_TestScenario_Issue21_BiomassHarvest1 ---------------------------------------
+
+	# run LANDIS-II
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Biomass Succession        BiomassSuccession_SetUp.txt
+   Biomass Harvest           BiomassHarvest_test_PLANT.txt
+
+
+C:\Users\bdmarron\Desktop\PR8\QAQC2_TestScenario_Issue21_BiomassHarvest1>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ...
+...
+Model run is complete.
+
+
+
+	# examine output
+summary_log <- read_csv("C:/Users/bdmarron/Desktop/PR8/QAQC2_TestScenario_Issue21_BiomassHarvest1/harvest/summary-log.csv")
+names(summary_log[, c(1,2,4,5,7,14)])
+[1] "Time"                        "ManagementArea"              "HarvestedSites"             
+[4] "TotalCohortsCompleteHarvest" "TotalBiomassHarvested"       "CohortsHarvested_piceglau"  
+dt <- as.matrix(setNames(summary_log[, c(1,2,4,5,7,14)], NULL))
+dt
+     [,1] [,2] [,3] [,4]       [,5] [,6]
+[1,]   10    1 5997 5997 1370494.41 5997
+[2,]   10    2  344  344   78614.32  344
+[3,]   10    3 3460 3460  790713.80 3460
+
+
+
+---- QAQC2_TestScenario_Issue21_BiomassHarvest2 ---------------------------------------
+
+	#run LANDIS-II
+
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   NECN Succession           NECN-succession_SetUp.txt
+   Biomass Harvest           BiomassHarvest_test_PLANT.txt
+
+
+C:\Users\bdmarron\Desktop\PR8\QAQC2_TestScenario_Issue21_BiomassHarvest2>call landis-ii scenario.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario.txt" ...
+...
+Model run is complete.
+
+
+
+	# examine output
+summary_log <- read_csv("C:/Users/bdmarron/Desktop/PR8/QAQC2_TestScenario_Issue21_BiomassHarvest2/harvest/summary-log.csv")
+dt <- as.matrix(setNames(summary_log[, c(1,2,4,5,7,14)], NULL))
+dt
+     [,1] [,2] [,3] [,4]     [,5] [,6]
+[1,]   10    1 5997 5997 653373.2 5997
+[2,]   10    2  344  344  37478.8  344
+[3,]   10    3 3460 3460 376967.0 3460
+
+
+
+
+
+
+

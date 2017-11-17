@@ -1,0 +1,178 @@
+Title:				PWL55b_QAQC&RepoStd_Base Fire
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			16 Apr 2017
+Final Date:			
+
+
+##########
+OnHold
+#########
+
+re-cloned after Rob merged pull #4 and re-tested; failed QAQC w/ same runtime errors
+awaiting new programming update (24 Apr)
+
+############
+QAQC Summary
+#############
+
+	a. A set of general standardizations, cleanups, and restructurings was performed
+	   (see below). Major revisions to files in deploy\examples were made.
+
+	b. The "Landis.Extension.BaseFire.dll" extension and the 
+	   "???-setup.exe" installer were scratch-built.
+
+	c. The newly-minted installer was used to freshly install ??? on a 
+	    Windows 10 box and the example "scenario.txt" was run.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. Base Fire has passed QAQC.
+
+
+##########################
+general RepoStd actions
+##########################
+
+* add/modify README_<RepoName.version>.txt file
+* restructure repo:
+
+	deploy\
+	  examples\
+	  installer\
+	  past-releases\
+
+	docs\
+	  calibration\
+
+	src\
+	  WinPkgTools\
+
+	testings\
+	  unit-tests\
+ 	 version-tests\
+
+
+*remove .config files
+*remove .sln file
+*remove directory src\Properties
+*move AssemblyInfo.cs to \src
+*add Austen's Support-Library-Dll scripts
+*update .csproj file
+*update examples\ files
+*update and standardize .iss file
+*update installer\
+
+ 
+
+
+##########################
+specific RepoStd actions
+##########################
+
+
+	a. add and modify "README_BaseFire3.0.txt"
+
+	b. modify src\"base-fire.csproj"
+		==> simplify <Reference Include=...> statements
+		==> add <SpecificVersion>False</SpecificVersion> statements
+     		==> add <Private>False</Private> statements
+	
+	c. update all deploy\examples\ files
+		==> modify "scenario.txt"
+		==> modify "outputs_MaxSppAge.txt"
+		==> modify "output_CohortStats.txt"
+
+
+	d. modify installer\ directory
+		==> add "package (Setup section) v6.0.iss"
+		==> add "package (Code section) v3.iss"
+		==> add "LANDIS-II_Binary_license.rtf"
+		==> add "EnsureLandisIIDirsUC.iss"
+
+
+	e. restructure of installer\"Base Fire 3.0.iss"
+		==> add standardized .iss format
+		==> remove .pdf inclusion into installer
+		==> add code documentation
+
+
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. VS build of "base-fire.csproj"
+1>  base-fire -> C:\Users\bmarr\Desktop\working_BaseFire_merge4\Extension-Base-Fire\src\bin\Debug\Landis.Extension.BaseFire.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Saturday, April 22 2017 at 16:34:39]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+....
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Saturday, April 22 2017 at 16:34:40]
+Total compile time: 00:01.422
+
+
+
+
+
+
+	c. install the freshly-minted Extension-Base-Fire
+
+
+
+
+	d. run the example scenario w/ the following active extensions:
+		==> "Base Fire"
+		==> "Output Max Species Age"
+		==> "Output Cohort Statistics"
+
+
+C:\Program Files\LANDIS-II\v6\examples\Base Fire>call landis-ii scenario.txt
+LANDIS-II 6.1 (official release)
+Loading scenario from file "scenario.txt" ...
+....
+
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+Stack trace:
+   at Landis.Library.Metadata.DataTableExtensions.SetColumns[T](DataTable tbl)
+   at Landis.Library.Metadata.MetadataTable`1..ctor(String filePath)
+   at Landis.Extension.BaseFire.MetadataHandler.InitializeMetadata(Int32 Timestep, String MapFileName, String eventLogName, String summaryLogName)
+   at Landis.Extension.BaseFire.PlugIn.Initialize()
+   at Landis.Model.InitExtensions(ExtensionMain[] extensions)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+same error as first QAQC run
+
+
+
+
+
+
+
+
+
+
+
+
+

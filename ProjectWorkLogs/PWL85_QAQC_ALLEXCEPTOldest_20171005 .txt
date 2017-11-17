@@ -1,0 +1,77 @@
+﻿Title:				PWL85_QAQC_AllExceptOldest_20171007
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			07 Oct 2017
+Final Date:			
+
+
+
+############
+QAQC Summary
+#############
+
+	1. The prescription, OakPatchCutting in base-harvest_SetUp_s1e1.txt contains the 
+	   cohort keyword "AllExceptOldest". This prescription was modified along with 
+	   base-harvest_SetUp_s1e1.txt to ensure its realization.
+
+	2. Checking the output in base-harvest-event-log.csv confirmed the prescription using
+	   cohort keyword "AllExceptOldest" was implemented.
+
+	3. This does not appear to be an issue. Perhaps an operator error?
+
+	    
+#############
+QAQC Results
+#############
+
+	1. No issue.
+
+	
+######################
+QAQC sequence
+######################
+
+	a.  history
+https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest/issues/28
+
+From a diligent user:
+"Error reading input value for Age or Age Range: AllExceptOldest is not a valid integer". 
+The model doesn't like AllExceptOldest keyword in my harvest file which I don't know why.
+
+	b. In BaseHarvest, \deploy\examples\base-harvest_SetUp_s1e1.txt has a prescription that uses 
+	   the "AllExceptOldest" keyword.
+
+	c. Modified base-harvest_SetUp_s1e1.txt Prescription OakPatchCutting to run in Management area 1
+	   with the following:
+
+	querrubr 	AllExceptOldest
+	pinubank 	AllExceptOldest
+
+
+	d. run
+C:\Users\bdmarron\Desktop\BaseHarvest\Extension-Base-Harvest\deploy\examples>call landis-ii scenario_s1e1.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s1e1.txt" ...
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   Age-only Succession       age-only-succession_SetUp_s1e1.txt
+   Base Wind                 base-wind_SetUp_s1e1.txt
+   Base Harvest              base-harvest_SetUp_s1e1.txt
+
+...
+Model run is complete.
+
+
+	e. Checking the output in base-harvest-event-log.csv shows harvest events for pinubank using the
+	   cohort keyword "AllExceptOldest"
+
+	f. This does not appear to be an issue. Operator error?
+
+
+
+
+
+

@@ -1,0 +1,96 @@
+Title:				PWL71_QAQC&RepoStd_SpatialModelingLibrary
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			26 May 2017
+Final Date:			26 May 2017
+
+
+############
+QAQC Summary
+#############
+
+	a. A set of very basic general standardizations, cleanups, and restructurings was performed with the
+	   aim of simplifying the (re)build.
+
+	b. The following extensions were scratch-built:
+
+Landis.Landscapes.dll
+Landis.Landscapes.pdb
+Landis.RasterIO.dll
+Landis.RasterIO.pdb
+Landis.RasterIO.Gdal.dll
+Landis.RasterIO.Gdal.pdb
+Landis.SpatialModeling.dll
+Landis.SpatialModeling.pdb
+
+
+
+
+##########################
+specific RepoStd actions
+##########################
+
+	a. create "README_SpatialModelingLibrary.txt"
+		==> provided a step-by-step build process
+ 
+
+		
+	b. modified src\"premake5.lua" 
+		==> was "premake4.lua"
+		==> changed Line 81 to call "premake5_util.lua" 
+
+
+	c. renamed src\"premake5_util.lua"
+		==> was "premake4_util.lua"
+
+
+	d. add .gitignore
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. run premake5.lua
+
+C:\Users\bmarr\Desktop\working_LibrarySpatial\Landis-Spatial-Modeling-Library\src>premake5 vs2015
+** Warning: the flags value Symbols has been deprecated.
+   Use `symbols "On"` instead
+Building configurations...
+Running action 'vs2015'...
+Generated landis-spatial.sln...
+Generated api/Landis_SpatialModeling.csproj...
+Generated Landscapes/Landis_Landscapes.csproj...
+Generated RasterIO/Landis_RasterIO.csproj...
+Generated RasterIO.Gdal/Landis_RasterIO_Gdal.csproj...
+Modifying api/Landis_SpatialModeling.csproj ...
+  <HintPath> elements added to the project's references
+  Enabled the generation of XML documentation file
+Modifying Landscapes/Landis_Landscapes.csproj ...
+  <HintPath> elements added to the project's references
+Modifying RasterIO/Landis_RasterIO.csproj ...
+  <HintPath> elements added to the project's references
+Modifying RasterIO.Gdal/Landis_RasterIO_Gdal.csproj ...
+  <HintPath> elements added to the project's references
+Done (168ms).
+
+
+	b. VS build of "landis-spatial.sln"
+
+1>------ Build started: Project: Landis_SpatialModeling, Configuration: Release Any CPU ------
+1>C:\Users\bmarr\Desktop\working_SpatialLibrary\Landis-Spatial-Modeling-Library\src\api\Band.cs(49,29,49,37): warning CS1734: XML comment on 'Band<T>.ComputeSize()' has a paramref tag for 'typeCode', but there is no parameter by that name
+1>  Landis_SpatialModeling -> C:\Users\bmarr\Desktop\working_SpatialLibrary\Landis-Spatial-Modeling-Library\build\Release\Landis.SpatialModeling.dll
+2>------ Build started: Project: Landis_RasterIO, Configuration: Release Any CPU ------
+3>------ Build started: Project: Landis_Landscapes, Configuration: Release Any CPU ------
+2>  Landis_RasterIO -> C:\Users\bmarr\Desktop\working_SpatialLibrary\Landis-Spatial-Modeling-Library\build\Release\Landis.RasterIO.dll
+4>------ Build started: Project: Landis_RasterIO_Gdal, Configuration: Release Any CPU ------
+4>  Landis_RasterIO_Gdal -> C:\Users\bmarr\Desktop\working_SpatialLibrary\Landis-Spatial-Modeling-Library\build\Release\Landis.RasterIO.Gdal.dll
+3>  Landis_Landscapes -> C:\Users\bmarr\Desktop\working_SpatialLibrary\Landis-Spatial-Modeling-Library\build\Release\Landis.Landscapes.dll
+========== Build: 4 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+

@@ -1,0 +1,99 @@
+Title:				C# programming1
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			10 Jan 2017
+Revision Date:		
+
+
+
+#############
+C# 4.0	==> p11 -
+C# 6.0	==> p11 - 
+###############
+
+	a. VisualStudio HelloWorld
+	a1. File -> New -> Project Console Application creates directories
+
+Directory of C:\Users\bmarr\Documents\Visual Studio 2015\Projects\HelloWorld\HelloWorld
+01/10/2017  18:35    <DIR>          .
+01/10/2017  18:35    <DIR>          ..
+01/10/2017  18:26               189 App.config
+01/10/2017  18:26    <DIR>          bin
+01/10/2017  18:26             2,680 HelloWorld.csproj
+01/10/2017  18:26    <DIR>          obj
+01/10/2017  18:35               298 Program.cs
+01/10/2017  18:26    <DIR>          Properties
+ 
+
+Directory of C:\Users\bmarr\Documents\Visual Studio 2015\Projects\HelloWorld\HelloWorld\bin
+01/10/2017  18:26    <DIR>          .
+01/10/2017  18:26    <DIR>          ..
+01/10/2017  18:35    <DIR>          Debug
+
+
+Directory of C:\Users\bmarr\Documents\Visual Studio 2015\Projects\HelloWorld\HelloWorld\bin\Debug
+01/10/2017  18:35    <DIR>          .
+01/10/2017  18:35    <DIR>          ..
+01/10/2017  18:35             4,608 HelloWorld.exe
+01/10/2017  18:26               189 HelloWorld.exe.config
+01/10/2017  18:35            11,776 HelloWorld.pdb
+01/10/2017  18:26            22,696 HelloWorld.vshost.exe
+01/10/2017  18:26               189 HelloWorld.vshost.exe.config
+07/16/2016  03:44               490 HelloWorld.vshost.exe.manifest
+
+
+Directory of C:\Users\bmarr\Documents\Visual Studio 2015\Projects\HelloWorld\HelloWorld\Properties
+01/10/2017  18:26    <DIR>          .
+01/10/2017  18:26    <DIR>          ..
+01/10/2017  18:26             1,432 AssemblyInfo.cs
+
+
+
+
+	b. VisualStudio RacInfo (per Example 2-8, p39)
+	b1. executing the code produces not output!
+
+
+C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\CommandLineArgs\RaceInfo\bin\Debug>RaceInfo.exe 5.14 78.74 2.7
+
+C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\CommandLineArgs\RaceInfo\bin\Debug>
+
+
+	c. VisualStudio RacInfo (per Example 2-9, p41)
+	c1. throws UnhandledException: error b/c no arg[3] provided on commandline
+
+
+C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\IfStatements\RaceInfo\bin\Debug\RaceInfo.exe 5.14 78.74 2.7
+
+Unhandled Exception: System.IndexOutOfRangeException: Index was outside the bounds of the array.
+   at RaceInfo.Program.Main(String[] args) in C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\IfStatements\RaceInfo\Program.cs:line 42
+
+Line 41 ==>            // Example 2-10. Testing multiple conditions with if and else
+Line 42 ==>            string raceStatus = args[3];
+
+
+	d. modified code added 'else' staement (Lines 30-36)
+	d1. VS first marks changes w/ yellow band then green band after rebuild
+	d2. 	arg[0]= kmTravelled
+		arg[1]= elapsedSeconds
+		arg[2]= fuelKilosConsumed
+
+New code ---
+           else
+            {
+                Console.WriteLine("Plenty fuel. Laps remaining: " +
+                 predictedLapsUntilOutOfFuel);
+            }
+
+C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\IfStatements\RaceInfo\bin\Debug>RaceInfo.exe 5.14 78.74 2.7 YellowFlag
+Plenty fuel. Laps remaining: 28.624060746216
+
+C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\IfStatements\RaceInfo\bin\Debug>RaceInfo.exe 2 10 10 YellowFlag
+Low on fuel. Laps remaining: 2.72320560202295
+
+C:\Users\bmarr\Desktop\C#\OReilly_ProgrammingC#_4.0_code\Chapter 2\IfStatements\RaceInfo\bin\Debug>RaceInfo.exe 25 75 50 YellowFlag
+Low on fuel. Laps remaining: 2.91772028788174
+
+
+

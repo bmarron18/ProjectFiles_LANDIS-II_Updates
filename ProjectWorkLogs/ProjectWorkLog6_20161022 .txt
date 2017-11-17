@@ -1,0 +1,18 @@
+Title:				Project Work Log6
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			22 Oct 2016
+Revision Date:					
+
+
+#######
+Log
+######
+
+	a. look at Ch. 13 material from training session
+> start /B SimpleBatchFile.bat
+
+	b. ran OK!
+
+	c. 

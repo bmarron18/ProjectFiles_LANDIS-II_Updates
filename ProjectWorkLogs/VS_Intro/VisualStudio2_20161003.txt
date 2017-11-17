@@ -1,0 +1,64 @@
+Title:				Visual Basic 2
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			8 Oct 2016
+Revision Date:					
+
+##############
+Steps so far
+#############
+
+1. Installed Microsoft Visual Studio Community 2015
+
+Microsoft Visual Studio Community 2015
+Version 14.0.25431.01 Update 3
+Microsoft .NET Framework
+Version 4.6.01586
+
+Visual Basic 2015   00322-20000-00000-AA044
+Microsoft Visual Basic 2015
+
+Visual C# 2015   00322-20000-00000-AA044
+Microsoft Visual C# 2015
+
+Visual C++ 2015   00322-20000-00000-AA044
+Microsoft Visual C++ 2015
+
+
+
+2. Installed GitHub Desktop
+Chocolate-Covered Yaks (3.3.1.0) 906de22
+
+	a. Set GitHub Desktop to use bash command line
+	`	cogwheel ==> select Git Bash
+
+	b. installed GitHub Extension for VisualStudio
+		GitHub.VisualStudio.vsix
+
+3. Cloned Core-Model from GitHub bmarron18
+	 C:\Users\bmarr\Documents\GitHub\Core-Model
+
+4. Downloaded and installed the Premake (premake-4.4-beta5-windows) 
+build configuration tool to generate the C# solution and project files 
+(needed for VisualStudio)
+
+	a. Put premake4.exe here and ran installer
+		C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk
+
+
+5.  Opened a cmdline prompt and ran premak4 with vs2010. This opened the 
+premake4.lua file and built the LANDIS-II.sln file needed for VisualStudio 
+to pull in all of the .cs files of the Core-Model. Amazing!
+	C:\Users\bmarr\Documents\GitHub\Core-Model\model\trunk>premake4 vs2010
+
+
+6. Opened  LANDIS-II.sln in VisualStudio. All the .cs files are there!!
+
+
+
+
+
+
+
+

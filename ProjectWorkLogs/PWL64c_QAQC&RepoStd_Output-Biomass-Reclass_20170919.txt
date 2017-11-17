@@ -1,0 +1,72 @@
+Title:				PWL64c_QAQC&RepoStd_Output-Biomass-Reclass
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			19 Sept 2017
+Final Date:			
+
+
+
+############
+QAQC Summary
+#############
+
+	a. Output-Biomass-Reclass was run with Biomass Succession
+
+	b. No exceptions were generated
+
+
+#############
+QAQC Results
+#############
+
+	a. Extension-Output-Biomass-Reclass currently DOES work with Biomass Succession
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. run \deploy\examples\scenario_s2e1.txt
+
+	b. the following extensions were run in scenario_s2e1.txt:
+
+>> 	Succession Extension     Initialization File
+>> 	--------------------     -------------------
+	"Biomass Succession"	biomass-succession_SetUp_s2e1.txt
+
+>> 	Disturbance Extension	Initialization File
+>>	--------------------	-------------------
+>>	"Base Fire"		base-fire_SetUp_s2e1.txt
+>>	"Base Wind"		base-wind_SetUp_s2e1.txt
+	"Biomass Harvest"	biomass-harvest_SetUp_s2e1.txt
+>>	"Base BDA"		base-BDA_SetUp_s2e1.txt
+
+>> 	Output Extension		Initialization File
+>> 	----------------		-------------------
+  	"Output Biomass"		output_Biomass.txt		
+  	"Output Biomass Reclass"    	output_BiomassReclass.txt
+
+	d. no exceptions
+
+C:\Users\bdmarron\Desktop\OuputBiomassReclass\Extension-Output-Biomass-Reclass\deploy\examples>
+call landis-ii scenario_s2e1.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s2e1.txt" ...
+
+....
+
+   Writing tiliamer biomass map to outputs/biomass/biomass-tiliamer-100.img ...
+dataset created: outputs/biomass/biomass-tiliamer-100.img
+Model run is complete.
+
+
+
+
+
+
+
+
+

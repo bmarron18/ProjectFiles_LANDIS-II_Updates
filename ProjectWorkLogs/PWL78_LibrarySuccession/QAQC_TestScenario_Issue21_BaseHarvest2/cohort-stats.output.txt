@@ -1,0 +1,14 @@
+LandisData  "Output Cohort Statistics"
+
+
+Timestep   10
+
+
+SiteAgeStats
+
+MapNames   spp-age-stats/AGE-{statistic}-{timestep}.img
+
+MIN 			<< minimum age across all species on site
+MAX			<< maximum age across all species on site
+COUNT   		<< count of cohorts
+

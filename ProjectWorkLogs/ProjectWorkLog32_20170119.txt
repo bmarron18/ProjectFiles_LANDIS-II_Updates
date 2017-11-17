@@ -1,0 +1,326 @@
+Title:				LANDVIZ on 32-bit box
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			19 Jan 2017
+Revision Date:		
+
+
+
+#############
+LANDVIZ
+###############
+
+	a. installed Wine (Linux 32-bit)
+\home\bmarron\.wine
+
+$ wine cmd
+Z:\home\bmarron>C:
+C:\>
+
+	#to exit wine
+<esc>
+
+
+	b. installed LANDVIZ
+	b1. using Wizard installer
+/home/bmarron/.wine/drive_c/Program Files/LANDIS-II/LandisPreProcTool/
+
+
+	c. download a git clone of LANDVIZ repo
+	c1. unzip the LANDIS example found in LANDVIZ:
+/home/bmarron/Desktop/New_Folder/LANDVIZ/deploy/examples/
+
+	c2. copy "example-project" into "C:\"
+	c2i. use mouse-copy b/c command-line has issues with "Program Files" 
+sudo cp -r /home/bmarron/Desktop/New_Folder/LANDVIZ/deploy/examples/example_project/ /home/bmarron/.wine/drive_c/Program Files/LANDIS-II/LandisPreProcTool/
+cp: target 'Files/LANDIS-II/LandisPreProcTool/' is not a directory
+
+
+
+	d.  run PreProcTool in Wine w/ example-project
+	d1. NO GO!
+	d2. see "/logs" ==> 
+
+$ wine cmd
+Z:\home\bmarron>C:
+C:\> cd \Program Files\LANDIS-II\LandisPreProcTool\example_project
+
+
+	#C:\> cd \Program Files\LANDIS-II\LandisPreProcTool\example_project>preproctool.exe -p preproc_VizTool_example.xml -o CNF_LANDVIZ
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.163000106812 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Output Leaf Biomass
+output: Species Biomass Map: abiebals
+prepair year = 0
+prepair year = 10
+prepair year = 20
+prepair year = 30
+prepair year = 40
+prepair year = 50
+prepair year = 60
+prepair year = 70
+prepair year = 80
+prepair year = 90
+prepair year = 100
+[Error 0] Success
+fixme:msvcrt:__clean_type_info_names_internal (0x3b14358) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x39fca30) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x3d6e8dc) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x38618ec) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x3818ba0) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x1d1b5210) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x2c9b5e0) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x1eb9618c) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x1e7ba8c4) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x357b60) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x2be6bcc) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x347180) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x2b8adf8) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x3f9dec) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x18a400c) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x298e798) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x2b4fdb4) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x1836ac0) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x100e24d4) stub
+fixme:msvcrt:__clean_type_info_names_internal (0x1e24d588) stub
+
+
+	#C:\Program Files\LANDIS-II\LandisPreProcTool\example_project>start run_preproctool_example.bat
+Start LANDIS-II PreProcTool
+Setup application configuration
+Create Project
+Project name: "Chippewa National Forest Landscape"
+Load spatial refrence and geo extent from the project xml file
+Load Map Preferences form project xml file
+Load Datastructure from Lanids Metadata
+Generate output directories
+Start prepairing Table Output
+End prepairing Table Output [time: 0.163000106812 sec]
+7,8,9,10,11
+Start prepairing Map Output
+scenario: Baseline Climate, BaseWind
+extension: Output Leaf Biomass
+output: Species Biomass Map: abiebals
+prepair year = 0
+prepair year = 10
+prepair year = 20
+prepair year = 30
+prepair year = 40
+prepair year = 50
+prepair year = 60
+prepair year = 70
+prepair year = 80
+prepair year = 90
+prepair year = 100
+[Error 0] Success
+Press any key to continue...
+
+
+	#20170119-063037.log
+01/19/2017 06:30:37 AM landis.main               INFO     Start LANDIS-II PreProcTool
+01/19/2017 06:30:37 AM collector.setupConfig     INFO     Setup application configuration
+01/19/2017 06:30:37 AM collector.setupConfig     DEBUG    Detect Application Folder: C:\PROG~FBU\LAND~XO0\LAND~Y5U\PreProcTool.exe
+01/19/2017 06:30:37 AM collector.setupConfig     DEBUG    Detect Project File: C:\Program Files\LANDIS-II\LandisPreProcTool\example_project\preproc_VizTool_example.xml
+01/19/2017 06:30:37 AM collector.setupConfig     DEBUG    Detect Output Folder: C:\Program Files\LANDIS-II\LandisPreProcTool\example_project\CNF_LANDVIZ
+01/19/2017 06:30:37 AM collector.createProject   INFO     Create Project
+01/19/2017 06:30:37 AM collector.createProject   DEBUG    Load Information from project file: C:\Program Files\LANDIS-II\LandisPreProcTool\example_project\preproc_VizTool_example.xml
+01/19/2017 06:30:37 AM collector.createProject   INFO     Project name: "Chippewa National Forest Landscape"
+01/19/2017 06:30:37 AM collector.loadSRS         INFO     Load spatial refrence and geo extent from the project xml file
+01/19/2017 06:30:37 AM collector.loadSRS         DEBUG    SRS definition: PROJCS["UTM Zone 15, Northern Hemisphere",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9108"]],AUTHORITY["EPSG","4269"]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-93],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["Meter",1]]
+01/19/2017 06:30:37 AM collector.loadSRS         DEBUG    geo extent: {'lry': '5202717.52204077', 'lrx': '466234.717985773', 'ulx': '373434.717985773', 'uly': '5300017.52204077'}
+01/19/2017 06:30:37 AM collector.loadMapPrefs    INFO     Load Map Preferences form project xml file
+01/19/2017 06:30:37 AM collector.loadMapPrefs    DEBUG    Zoom: [{'max': '11', 'init': '9', 'min': '7'}]
+01/19/2017 06:30:37 AM collector.loadMapPrefs    DEBUG    Basemap: [{'source': 'osm', 'saturation': '0', 'contrast': '1', 'brightness': '0'}]
+01/19/2017 06:30:37 AM collector.loadMapPrefs    DEBUG    Legend: [{'qualitativeCol': 'Paired', 'sequentialCol': 'Reds', 'initClassCount': '3', 'divergingCol': 'PiYG'}]
+01/19/2017 06:30:37 AM collector.loadDataStruct  INFO     Load Datastructure from Lanids Metadata
+01/19/2017 06:30:37 AM output.genOutputDirs      INFO     Generate output directories
+01/19/2017 06:30:37 AM output.genOutputDirs      DEBUG    Create landisdata directory: CNF_LANDVIZ\landisdata
+01/19/2017 06:30:37 AM preworker.prepairTables   INFO     Start prepairing Table Output
+01/19/2017 06:30:38 AM preworker.prepairTables   INFO     End prepairing Table Output [time: 0.163000106812 sec]
+01/19/2017 06:30:38 AM preworker.prepairMaps     INFO     Start prepairing Map Output
+01/19/2017 06:30:38 AM preworker.prepairMaps     INFO     scenario: Baseline Climate, BaseWind
+01/19/2017 06:30:38 AM preworker.prepairMaps     INFO     extension: Output Leaf Biomass
+01/19/2017 06:30:38 AM preworker.prepairMaps     INFO     output: Species Biomass Map: abiebals
+01/19/2017 06:30:38 AM preworker.prepairMaps     INFO     prepair year = 0
+01/19/2017 06:30:38 AM preworker.prepairMaps     INFO     prepair year = 10
+01/19/2017 06:30:39 AM preworker.prepairMaps     INFO     prepair year = 20
+01/19/2017 06:30:40 AM preworker.prepairMaps     INFO     prepair year = 30
+01/19/2017 06:30:40 AM preworker.prepairMaps     INFO     prepair year = 40
+01/19/2017 06:30:41 AM preworker.prepairMaps     INFO     prepair year = 50
+01/19/2017 06:30:42 AM preworker.prepairMaps     INFO     prepair year = 60
+01/19/2017 06:30:42 AM preworker.prepairMaps     INFO     prepair year = 70
+01/19/2017 06:30:43 AM preworker.prepairMaps     INFO     prepair year = 80
+01/19/2017 06:30:44 AM preworker.prepairMaps     INFO     prepair year = 90
+01/19/2017 06:30:44 AM preworker.prepairMaps     INFO     prepair year = 100
+01/19/2017 06:30:45 AM preworker.prepairMaps     ERROR    [Error 0] Success
+01/19/2017 06:30:45 AM preworker.prepairMaps     DEBUG    <type 'exceptions.WindowsError'>::l2utils.preworker::83
+
+
+
+	e. remember: cannot run main.py through 32bit Python b/c need regex pkg
+	e1. remember: 
+PyInstaller is not a cross-compiler: to make a Windows app  you  run PyInstaller in  Windows;  
+to  make  a  Linux  app  you  run  it  in  Linux,  etc.)
+
+home/bmarron/.wine/drive_c/Program Files/LANDIS-II/LandisPreProcTool/		<== Windows app
+ vs
+/home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/dist/PreProcTool/	<== Linux app
+
+	f. try python PyInstaller from pyinstaller/pyinstaller.py using "build_preproctool.bat"
+	f1. modify directory slashes o/w run "as is "
+
+$ cd ~/Desktop/New_Folder/LANDVIZ/PreProcTool/build/
+
+$ python pyinstaller/pyinstaller.py --workpath=build -y --clean --name=PreProcTool --hidden-import=scipy.special._ufuncs_cxx ../source/main.py
+14 INFO: wrote /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/PreProcTool.spec
+80 INFO: UPX is not available.
+116 INFO: Processing hook hook-os
+287 INFO: Processing hook hook-time
+308 INFO: Processing hook hook-cPickle
+436 INFO: Processing hook hook-_sre
+628 INFO: Processing hook hook-cStringIO
+793 INFO: Processing hook hook-encodings
+816 INFO: Processing hook hook-codecs
+1712 INFO: Removing temporary files and cleaning cache in /home/bmarron/.local/share/pyinstaller
+1713 INFO: Extending PYTHONPATH with /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool
+1714 INFO: checking Analysis
+1714 INFO: building Analysis because out00-Analysis.toc non existent
+1714 INFO: running Analysis out00-Analysis.toc
+1820 INFO: Analyzing /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/_pyi_bootstrap.py
+1845 INFO: Processing hook hook-os
+1868 INFO: Processing hook hook-site
+1893 INFO: Processing hook hook-encodings
+2047 INFO: Processing hook hook-time
+2068 INFO: Processing hook hook-cPickle
+2190 INFO: Processing hook hook-_sre
+2387 INFO: Processing hook hook-cStringIO
+2570 INFO: Processing hook hook-codecs
+3215 INFO: Processing hook hook-pydoc
+3452 INFO: Processing hook hook-email
+3543 INFO: Processing hook hook-httplib
+3611 INFO: Processing hook hook-email.message
+3727 INFO: Analyzing /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/pyi_importers.py
+3794 INFO: Analyzing /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/pyi_archive.py
+3858 INFO: Analyzing /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/pyi_carchive.py
+3922 INFO: Analyzing /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/pyi_os_path.py
+3928 INFO: Analyzing ../source/main.py
+4395 INFO: Processing hook hook-distutils
+5908 INFO: Processing hook hook-sysconfig
+5953 INFO: Processing hook hook-xml
+6253 INFO: Processing hook hook-xml.sax
+6295 INFO: Processing hook hook-pyexpat
+6524 INFO: Processing hook hook-parser
+7983 INFO: Processing hook hook-setuptools
+9551 INFO: Processing hook hook-scipy.sparse.csgraph
+9901 INFO: Processing hook hook-PIL
+9950 INFO: Processing hook hook-PIL.Image
+11479 INFO: Processing hook hook-PyQt5
+11479 INFO: Processing hook hook-PyQt5.QtGui
+11842 INFO: Processing hook hook-PyQt5.QtCore
+14818 INFO: Processing hook hook-matplotlib
+20243 INFO: Processing hook hook-IPython
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+/home/bmarron/anaconda2/lib/python2.7/site-packages/matplotlib/font_manager.py:273: UserWarning: Matplotlib is building the font cache using fc-list. This may take a moment.
+  warnings.warn('Matplotlib is building the font cache using fc-list. This may take a moment.')
+194808 INFO: Processing hook hook-matplotlib.backends
+194980 INFO: Processing hook hook-PyQt5.QtWidgets
+196266 INFO: Processing hook hook-pytz
+197836 INFO: Processing hook hook-pygments.styles
+197877 INFO: Processing hook hook-pygments.lexers
+202196 WARNING: library user32.dll required via ctypes not found
+202997 INFO: Processing hook hook-xml.dom
+203073 INFO: Processing hook hook-xml.dom.domreg
+203184 INFO: Processing hook hook-zmq
+204049 INFO: Processing hook hook-PyQt5.QtSvg
+204084 INFO: Processing hook hook-_tkinter
+204247 INFO: checking Tree
+204247 INFO: building because out00-Tree.toc missing or bad
+204247 INFO: building Tree out00-Tree.toc
+204356 INFO: checking Tree
+204356 INFO: building because out01-Tree.toc missing or bad
+204356 INFO: building Tree out01-Tree.toc
+204944 INFO: Processing hook hook-sqlite3
+204991 INFO: Processing hook hook-anydbm
+205277 INFO: Processing hook hook-jinja2
+206247 WARNING: library user32 required via ctypes not found
+206499 INFO: Processing hook hook-lxml.etree
+206511 INFO: Analyzing hidden import 'scipy.special._ufuncs_cxx'
+206511 INFO: Hidden import 'codecs' has been found otherwise
+206511 INFO: Hidden import 'encodings' has been found otherwise
+206511 INFO: Looking for run-time hooks
+206518 INFO: Analyzing rthook /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/rthooks/pyi_rth_qt5plugins.py
+206574 INFO: Analyzing rthook /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/rthooks/pyi_rth_PIL_Image.py
+206632 INFO: Analyzing rthook /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/rthooks/pyi_rth_Tkinter.py
+206687 INFO: Analyzing rthook /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/rthooks/pyi_rth_mplconfig.py
+206746 INFO: Analyzing rthook /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/rthooks/pyi_rth_mpldata.py
+206800 INFO: Analyzing rthook /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/pyinstaller/PyInstaller/loader/rthooks/pyi_rth_pkgres.py
+211149 INFO: Using Python library /home/bmarron/anaconda2/bin/../lib/libpython2.7.so.1.0
+211555 INFO: Warnings written to build/PreProcTool/warnPreProcTool.txt
+211629 INFO: checking PYZ
+211629 INFO: rebuilding out00-PYZ.toc because out00-PYZ.pyz is missing
+211629 INFO: building PYZ (ZlibArchive) out00-PYZ.toc
+247851 INFO: checking PKG
+247851 INFO: rebuilding out00-PKG.toc because out00-PKG.pkg is missing
+247852 INFO: building PKG (CArchive) out00-PKG.pkg
+247911 INFO: checking EXE
+247911 INFO: rebuilding out00-EXE.toc because PreProcTool missing
+247911 INFO: building EXE from out00-EXE.toc
+247912 INFO: Appending archive to EXE build/PreProcTool/PreProcTool
+247935 INFO: checking COLLECT
+247935 INFO: building COLLECT out00-COLLECT.toc
+
+
+	f2. look at /home/bmarron/Desktop/New_Folder/LANDVIZ/PreProcTool/build/build/PreProcTool/warnPreProcTool.txt
+1686 lines of warnings!!
+	f3. seems to work ==> but builds a Linux PreProcTool
+
+
+
+
+
+
+
+

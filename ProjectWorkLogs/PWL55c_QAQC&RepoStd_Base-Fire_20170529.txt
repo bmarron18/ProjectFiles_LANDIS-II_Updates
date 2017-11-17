@@ -1,0 +1,96 @@
+Title:				PWL55c_QAQC&RepoStd_Base Fire
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			29 May 2017
+Final Date:			29 May 2017
+
+
+
+
+############
+QAQC Summary
+#############
+
+	a. Re-test after pull request (Fixed metadata bug #1) merged
+
+	b. The "Landis.Extension.BaseFire.dll" extension and the installer were scratch-built.
+
+	c. The newly-minted installer was used to freshly install Base Fire on a 
+	    Windows 10 box and the example "scenario_s1e1.txt" was run.
+
+
+
+#############
+QAQC Results
+#############
+
+	a. All QAQC tests were successfully performed.
+
+	b. Base-Fire has passed QAQC.
+
+
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. VS build of "base-fire.csproj"
+1>  base-fire -> C:\Users\bmarr\Desktop\New_folder_BaseFire\Extension-Base-Fire\src\bin\Debug\Landis.Extension.BaseFire.dll
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+
+
+
+
+	b. Inno Setup installer build
+Starting compile.  [Monday, May 29 2017 at 9:24:28 PM]
+Compiling script with Inno Setup 5.5.9 (a) [ISDLLCompileScriptA]
+
+Debug Information Start
+CurrentPath = C:\Program Files (x86)\Inno Script Studio
+Params.SourcePath = C:\Users\bmarr\Desktop\New_folder_BaseFire\Extension-Base-Fire\deploy\installer\
+Debug Information End
+.....
+[PostCompile] Processing.
+[PostCompile] Processing is still being tested.
+[PostCompile] Processing finished.
+
+Compile finished.  [Monday, May 29 2017 at 9:24:29 PM]
+Total compile time: 00:00.734
+
+
+
+
+
+	c. install the freshly-minted Extension-Base-Fire
+
+
+
+
+	d. run "scenario_s1e1.txt" w/ the following active extensions:
+	"Base Fire"			base-fire_SetUp_s1e1.txt
+	"Output Max Species Age"	output_MaxSppAge.txt
+	"Output Cohort Statistics"	output_CohortStats.txt
+
+C:\Program Files\LANDIS-II\v6\examples\Base Fire>call landis-ii scenario_s1e1.txt
+LANDIS-II 6.1 (official release)
+
+Loading scenario from file "scenario_s1e1.txt" ...
+....
+Model run is complete.
+
+
+PASSED QAQC!!
+
+
+
+
+
+
+
+
+
+
+

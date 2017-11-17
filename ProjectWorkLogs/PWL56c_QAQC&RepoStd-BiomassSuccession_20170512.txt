@@ -1,0 +1,79 @@
+Title:				PWL_QAQC&RepoStd-BiomassSuccession
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			12 May 2017
+Final Date:			
+
+
+
+
+
+############
+QAQC Summary
+#############
+
+	a. Examine "Biomass-succession-v3-log.csv" (Log1) and "spp-biomass-log.csv" (Log2) with 
+	   reference to "Log file does not match output from Biomass Output" (Issue #3)
+
+	b. Issue #3 validated:
+
+sum of zero-year biomass (Log1) != sum of zero-year biomass (Log2)
+sum of five-year biomass (Log1) = sum of five-year biomass (Log2)
+sum of ten-year biomass (Log1) = sum of ten-year biomass (Log2)
+
+
+#############
+QAQC Results
+#############
+
+	a. 
+	b. 
+ 
+
+
+
+
+
+##################
+QAQC Sequence
+##################
+
+
+	a. Pull "spp-biomass-log.csv" into R
+	a1. check data types in cells (R keeps C# data types)
+	a2. change all data cells [ , 4:37] to numeric
+	a3. sum zero-year biomass across both ecoreegions (subset == [1:2,4:37])
+	a4. sum five-year biomass across both ecoreegions (subset == [3:4,4:37])
+	a5. sum ten-year biomass across both ecoreegions (subset == [5:6,4:37])
+
+> sapply(spp_biomass_log, class)
+
+> sapply(spp_biomass_log[ ,4:37], as.numeric)
+> sum(rowSums(spp_biomass_log[1:2,4:37]))
+> sum(rowSums(spp_biomass_log[c(1,2),4:37]))
+[1] 46648.9
+sum(rowSums(spp_biomass_log[c(3,4),4:37]))
+[1] 46060.54
+> sum(rowSums(spp_biomass_log[5:6,4:37]))
+[1] 43156.98
+
+
+
+	b. Pull "Biomass_succession_v3_log.csv" into R
+	b1. check data types in cells (R keeps C# data types)
+	b2. sum zero-year biomass across both ecoreegions (subset == [3:4,4])
+	b3. sum five-year biomass across both ecoreegions (subset == [1:2,4])
+	b4. sum ten-year biomass across both ecoreegions (subset == [1:2,4])
+
+> sapply(Biomass_succession_v3_log, class)
+
+> sum(colSums(Biomass_succession_v3_log[1:2,4]))
+[1] 46060.54
+> sum(colSums(Biomass_succession_v3_log[3:4,4]))
+[1] 40182.69
+> sum(colSums(Biomass_succession_v3_log[5:6,4]))
+[1] 43156.99
+
+
+

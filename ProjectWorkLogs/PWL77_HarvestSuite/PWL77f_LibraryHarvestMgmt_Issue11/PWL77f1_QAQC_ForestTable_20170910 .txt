@@ -1,0 +1,44 @@
+Title:				PWL77f1_QAQC_ForestTable
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			10 Sept 2017
+Final Date:			
+
+
+
+
+
+
+############
+QAQC Summary
+#############
+
+	1. 
+
+	2. 
+
+
+
+
+#############
+QAQC Results
+#############
+
+	1. 
+
+
+
+
+###################
+QAQC algorithm
+###################
+
+
+	a.
+
+	b.
+
+
+
+

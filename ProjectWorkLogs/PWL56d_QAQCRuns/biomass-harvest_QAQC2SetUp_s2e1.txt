@@ -1,0 +1,69 @@
+LandisData  "Biomass Harvest"
+
+
+>>----------------
+>> REQUIRED INPUTS
+>>-----------------
+Timestep		5
+
+ManagementAreas 	./biomass-harvest_Management_s2e1.gis
+
+Stands     		./biomass-harvest_Stand_s2e1.gis
+
+
+
+>> -------------------------
+>> HARVESTING PRESCRIPTIONS
+>> -------------------------
+
+
+
+>>---- (Modified for QAQC) PRESCRIPTION_3 ---------------------------------------      
+Prescription QAQC2
+    StandRanking    Economic
+>>	Species 	EconomicRank	 Minimum Age
+>>	------- 	------------ 	-----------
+    	acerrubr   	60 	     	45
+    	acersacc   	100          	5
+    	betualle   	100	     	50
+    	fraxamer   	60	     	40
+
+    SiteSelection PatchCutting 10%  1  << ha
+
+    CohortsRemoved SpeciesList
+>>	Species		Selection
+>>	-------		---------
+	acerrubr   	1-400 (95%)
+	acersacc   	1-40  (95%)  45-100 (95%) 105 (95%) 
+	betualle   	1-400 (95%)
+	fraxamer   	1-400 (95%)
+
+
+
+
+
+
+>> ----------------------------------
+>> HARVESTING IMPLEMENTATION 
+>> ---------------------------------
+
+    HarvestImplementations
+>>	Mgmt Area	Prescription		Harvest Area	BeginTime	EndTime
+>> 	---------   	------------   		------------   	---------- 	--------
+	1		QAQC2				10%	0  	    	50
+	2		QAQC2				10%	0  	    	50
+
+
+	
+>> ------------
+>> OUTPUTS
+>> ----------
+
+PrescriptionMaps    harvest/biomass-harvest-prescripts-{timestep}.img
+BiomassMaps         harvest/biomass-removed-{timestep}.img
+EventLog            harvest/biomass-harvest-event-log.csv
+SummaryLog	    harvest/biomass-harvest-summary-log.csv
+
+
+
+

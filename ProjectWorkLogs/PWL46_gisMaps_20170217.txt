@@ -1,0 +1,115 @@
+Title:						.gis maps
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			17 Feb 2017
+Final Date:			17 Feb 2017
+
+
+##################
+.gis maps
+###################
+
+
+	a. LANDIS maps must only match in x, y size (# number of cells)
+		==> Coordinate Reference System (CRS) irrelevant; cell size is irrelevant
+
+
+	b. open maps in QGIS
+
+	    NB. "management.gis" and "stand.gis" in the BiomassHarvest Extension example
+		 are not scaled to match the "ecoregions.gis" and initial-communities.gis"
+		 maps in the NECN Succession example
+
+	    NB. compare two raster (.gis) maps
+http://gis.stackexchange.com/questions/33223/how-to-compare-two-dems-and-show-their-difference
+http://gis.stackexchange.com/questions/211182/raster-calculator-error-invalid-layer-gdal-provider-cannot-open-gdal-dataset
+http://gis.stackexchange.com/questions/154242/why-does-every-raster-calcuation-i-try-return-with-nan-values
+
+
+
+	    NB. info on rasters
+Raster ==> Miscellaneous ==> Information...
+
+initial-communities.gis
+Driver: LAN/Erdas .LAN/.GIS
+Files: C:\Program Files\LANDIS-II\v6\examples\NECN-succession\initial-communities.gis
+Size is 99, 99
+Coordinate System is:
+LOCAL_CS["Unknown",
+    UNIT["Meter",1]]
+Origin = (50.000000000000000,9950.000000000000000)
+Pixel Size = (100.000000000000000,-100.000000000000000)
+Corner Coordinates:
+Upper Left  (      50.000,    9950.000) 
+Lower Left  (  50.0000000,  50.0000000) 
+Upper Right (    9950.000,    9950.000) 
+Lower Right (    9950.000,      50.000) 
+Center      (    5000.000,    5000.000) 
+Band 1 Block=99x1 Type=Byte, ColorInterp=Undefined
+
+
+initial-communities_biomass.gis
+Driver: LAN/Erdas .LAN/.GIS
+Files: C:\Users\bmarr\Desktop\BiomassHarvest_20170130\Extension-Biomass-Harvest\deploy\
+examples\initial-communities_biomass.gis
+Size is 99, 99
+Coordinate System is:
+LOCAL_CS["Unknown",
+    UNIT["Meter",1]]
+Origin = (50.000000000000000,9950.000000000000000)
+Pixel Size = (100.000000000000000,-100.000000000000000)
+Corner Coordinates:
+Upper Left  (      50.000,    9950.000) 
+Lower Left  (  50.0000000,  50.0000000) 
+Upper Right (    9950.000,    9950.000) 
+Lower Right (    9950.000,      50.000) 
+Center      (    5000.000,    5000.000) 
+Band 1 Block=99x1 Type=Byte, ColorInterp=Undefined
+
+
+stand.gis
+Driver: LAN/Erdas .LAN/.GIS
+Files: C:\Users\bmarr\Desktop\BiomassHarvest_20170130\Extension-Biomass-Harvest\deploy\
+examples\stand.gis
+Size is 99, 99
+Coordinate System is:
+LOCAL_CS["Unknown",
+    UNIT["Meter",1]]
+Origin = (0.533391475677490,-2.911298274993897)
+Pixel Size = (1.000000000000000,-1.000000000000000)
+Corner Coordinates:
+Upper Left  (   0.5333915,  -2.9112983) 
+Lower Left  (       0.533,    -101.911) 
+Upper Right (  99.5333915,  -2.9112983) 
+Lower Right (      99.533,    -101.911) 
+Center      (  50.0333915, -52.4112983) 
+Band 1 Block=99x1 Type=Byte, ColorInterp=Undefined
+
+
+
+	    NB. match up rasters (kind of...)
+http://gis.stackexchange.com/questions/73046/how-to-resample-geotiff-images-to-the-same-resolution
+
+Raster Calculator - simply use the raster calculator and you can set the resolution and 
+extent there and can make them match another raster by selecting the raster band you want to 
+match in the Raster Bands list and then clicking the "Current layer extent" button. The columns
+and rows fields will let you set the resolution. However, this method gives you no control over
+the resampling method
+
+
+	    NB. raster stats
+Processing toolbox ==> QGIS geoalgorithms ==> Raster Tools ==> Raster Layer statistics
+
+
+	    NB. another way to difference rasters
+Processing Toolbox ==> SAGA (2.1.1) ==> Raster calculus ==> Raster Difference
+
+	    NB. Print terse list of category values found in a raster layer.
+Processing Toolbox ==> GRASS GIS Raster ==> r.describe
+
+	    NB. d.rast.edit - Edits cell values in a raster map. (GRASS) 
+https://grass.osgeo.org/grass73/manuals/d.rast.edit.html
+
+
+

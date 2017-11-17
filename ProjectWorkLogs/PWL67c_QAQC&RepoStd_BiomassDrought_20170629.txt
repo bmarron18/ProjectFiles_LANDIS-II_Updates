@@ -1,0 +1,66 @@
+Title:				PWL67b_QAQC&RepoStd_BiomassDrought
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			29 Jun 2017
+Final Date:			
+
+
+############
+QAQC Summary
+#############
+
+	a. Extension-Biomass-Drought was run with NECN
+
+	b. Exceptions were generated
+
+
+
+#############
+QAQC Results
+#############
+
+	a. Extension-Biomass-Drought currently DOES NOT work with NECN
+
+
+
+###############
+QAQC Sequence
+################
+
+	a. a new QAQC_Example folder was created, NECNs3e2
+
+	b. Two (2) files added to NECNs3e2
+		==> drought_SetUpDisturbance.txt
+		==> drought_SetUpGenerator.txt
+
+	c. the following extensions were run in scenario_s3e2.txt:
+
+	"NECN Succession"		NECN-succession_SetUp_s3e2.txt
+	"Biomass Harvest"		biomass-harvest_SetUp_s3e2.txt
+	"Drought Generator"		drought_SetUpGenerator.txt
+	"Drought Disturbance"		drought_SetUpDisturbance.txt
+
+	d. NO GO!
+C:\Users\bmarr\Desktop\NECNSuccession_s3e2>call landis-ii scenario_s3e2.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e2.txt" ...
+
+....
+
+Running Drought Disturbance ...
+   Processing Drought Disturbance ...
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Extension.Succession.Biomass.ForestFloor.AddWoody(Double woodyBiomass, ISpecies species, ActiveSite site)
+   at Landis.Extension.DroughtDisturbance.PlugIn.Run()
+   at Landis.Model.Run(ExtensionMain extension)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+
+

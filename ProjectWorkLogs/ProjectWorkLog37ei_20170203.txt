@@ -1,0 +1,383 @@
+Title:				Test re-built Landis.Library.BiomassHarvest-v2.dll
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			01 Feb 2017
+Final Date:			10 Feb 2017
+
+
+##########################
+QAQCL3 Landis.Library.BiomassHarvest-v2.dll
+w/ NECN
+#########################
+
+	a. at mtg Rob mentioned that testing of BiomasHarvest-v2.dll should be done
+	  w/ (new) NECN extension NOT BiomassHarvest
+	a1. installed NECN extension
+
+	c. QAQCL3 Part1: test rebuild of Landis.Library.BiomassHarvest-v2.dll
+	c1. clone Library-Biomass-Harvest; open VS; import biomass-harvest-lib.sln
+	c2. rebuild biomass-harvest-lib.sln 
+		==> NB. VS requires folder names like Linux ("New_folder" NOT "New folder")
+	c3. freshly built Landis.Library.BiomassHarvest-v2.dll; note byte size
+
+Directory of C:\Users\bmarr\Desktop\New_folder\Library-Biomass-Harvest\trunk\src\obj\Debug
+02/02/2017  18:27    <DIR>          .
+02/02/2017  18:27    <DIR>          ..
+02/02/2017  18:27             1,145 biomass-harvest-lib.csproj.FileListAbsolute.txt
+02/02/2017  18:27            45,802 biomass-harvest-lib.csprojResolveAssemblyReference.cache
+02/02/2017  18:27             7,187 DesignTimeResolveAssemblyReferencesInput.cache
+02/02/2017  18:27            13,312 Landis.Library.BiomassHarvest-v2.dll
+02/02/2017  18:27            36,352 Landis.Library.BiomassHarvest-v2.pdb
+
+	c4. cf. byte size of freshly built Landis.Library.BiomassHarvest-v2.dll with
+	    byte size of Landis.Library.BiomassHarvest-v2.dll from Support-Library-DLLs
+		==> equal!! 
+
+
+
+	d. developing a QAQCL3 test
+	d1. look at relationship between NECN and BiomassHarvest (Users Guide)
+	d2. look at NECN example files; no BioMass prescriptions
+	d3. NB. Need to have a BiomassHarvest prescription that references
+"CohortsRemoved SpeciesList"
+
+Century Succession v3.11 – User Guide LANDIS-II Extension
+"In addition, v4.1 now uses the Biomass Libraries. This enables this extension – in addition 
+to Biomass Succession and PnET Succession to use the same Biomass extensions (including Land Use, 
+Drought, Fuels, Harvest, Insects, Output, Reclassification Output, and Biomass-by-Age"
+
+
+Directory of C:\Program Files\LANDIS-II\v6\examples\NECN-succession
+02/02/2017  14:54    <DIR>          .
+02/02/2017  14:54    <DIR>          ..
+10/09/2016  12:13             1,349 base-fire.txt
+10/09/2016  12:13               466 bio-reductions-standard.txt
+10/09/2016  12:13               342 climate-generator-single-cell.txt
+10/09/2016  12:13               336 climate-generator.txt
+10/09/2016  12:13               185 ecoregions-2regions.txt
+10/09/2016  12:13               162 ecoregions-single-cell.txt
+10/09/2016  12:13             9,929 ecoregions.gis
+10/09/2016  12:13               337 initial-communities-single-cell.txt
+10/09/2016  12:13             9,929 initial-communities.gis
+10/09/2016  12:13             1,111 initial-communities.txt
+10/09/2016  12:13             6,891 NECN-succession-single-cell.txt
+10/09/2016  12:13             7,352 NECN-succession.txt
+10/09/2016  12:13               747 output-biomass-reclass.txt
+10/09/2016  12:13               164 output-leaf-biomass.txt
+10/09/2016  12:13           353,544 PRISM_data_AFRI_4.18.13.csv
+10/09/2016  12:13           223,977 PRISM_data_AFRI_4.18.13_SC.csv
+10/09/2016  12:13               179 RunSingleCell.bat
+10/09/2016  12:13               132 RunTestLandscape.bat
+10/09/2016  12:13               799 scenario-single-cell.txt
+10/09/2016  12:13               866 scenario.txt
+10/09/2016  12:13            12,581 single_cell_3.img
+10/09/2016  12:13             1,871 species.txt
+
+Biomass Harvest v3.1 LANDIS-II Extension – User Guide (p. 5)	
+"When SpeciesList is specified for the CohortsRemoved parameter in a prescription, the user may 
+specify a percentage after any individual age or range of ages. The percentage indicates what 
+ proportion of the biomass of a cohort(s) will be removed. For example:
+
+CohortsRemoved SpeciesList
+acersacc 1-40(50%) 50(65%) 65-70 71-107(15%)
+
+The default percentage is 100%. If no parenthetical biomass removal values are given, the 
+Biomass Harvest  extension will behave identically to the Base Harvest extension and remove 
+100% of the cohort. Age ranges not listed are not removed."
+
+
+
+
+	e.QAQCL3 algorithm
+	e1. check BiomassHarvest for a Prescription that involves the spp PRESENT in NECN 
+	    example species.txt file
+
+	e2. simplify the BiomassHarvest Prescription to just one (1) spp and intentionally 
+	    throw an exception by putting the percentage value at 99.9%
+
+	e3.  add a "BiomassHarvest_Sample-Input.txt"  file call to the NECN "scenario.txt":
+
+add to "scenario.txt" ==>
+
+>> Disturbance Extensions   Initialization File
+>> ----------------------   ------------------- 
+     "Biomass Harvest"		BiomassHarvest_Sample-Input.txt
+
+
+
+	e4. using "BiomassHarvest-v1.2-Sample-Input.txt" as a template, create the 
+	    BiomassHarvest Prescription file, "BiomassHarvestSample-Input.txt"
+
+"BiomassHarvestSample-Input.txt" derived from 
+C:\Users\bmarr\Desktop\BiomassHarvest_20170130\Extension-Biomass-Harvest\deploy\examples\
+BiomassHarvest-v1.2-Sample-Input.txt
+
+
+============ BiomassHarvestSample-Input.txt=================================================
+LandisData  "Biomass Harvest"
+
+Timestep    10
+
+ManagementAreas "./management.gis"
+
+Stands      "./stand.gis"
+
+>> -----------------------------------------
+>> PRESCRIPTIONS
+
+
+Prescription SelectiveNorthernHardwood
+    StandRanking    Economic
+    >> Species EconomicRank Minimum Age
+    >> ------- ------------ -----------
+ 
+       acersacc   100           5
+
+
+    SiteSelection PatchCutting 10%  1  << ha
+    CohortsRemoved SpeciesList
+	>> Species Selection
+	>> ------- ---------
+
+	acersacc   1-40 (99.9%)  45-100 (5%) 105 (65%) 
+
+
+
+>>-----------------------------------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+
+    HarvestImplementations
+>>  Mgmt Area   Prescription    		Harvest Area    Begin Time  End Time
+>>  ---------   ------------    		------------    ----------  --------
+	1	SelectiveNorthernHardwood	10%		0  	    50
+	2	SelectiveNorthernHardwood	10%		0  	    50
+
+	
+>>-----------------------------------------------------------------
+>> OUTPUTS
+
+PrescriptionMaps    harvest/prescripts-{timestep}.img
+BiomassMaps         harvest/biomass-removed-{timestep}.img
+EventLog            biomass-harvest-event-test-log.csv
+SummaryLog	    harvest/summary-log.csv
+==========================================================================================
+
+
+	e5. NB. BiomassHarvest Extension needs two (2) maps:
+
+ManagementAreas "./management.gis"
+Stands      "./stand.gis"
+
+	e6. maybe LANDIS maps must only match in size (# number of cells); Coordinate
+	    Reference System (CRS) irrelevant and cell size is irrelevant?
+
+	    NB. "management.gis" and "stand.gis" in the BiomassHarvest Extension example
+		 are not scaled to match the "ecoregions.gis" and initial-communities.gis"
+		 maps in the NECN Succession example
+
+	    NB. compare two raster (.gis) maps
+http://gis.stackexchange.com/questions/33223/how-to-compare-two-dems-and-show-their-difference
+http://gis.stackexchange.com/questions/211182/raster-calculator-error-invalid-layer-gdal-provider-cannot-open-gdal-dataset
+http://gis.stackexchange.com/questions/154242/why-does-every-raster-calcuation-i-try-return-with-nan-values
+
+
+Raster==> Raster Calculator... (rast calc) 
+
+abs( (raster1 - raster2) / raster1 * 100 ) 
+		= the percentage which raster2 deviates from raster1.
+abs("initial-communities_biomass@1" - "initial-communities@1")
+
+
+	    NB. info on rasters
+Raster ==> Miscellaneous ==> Information...
+
+initial-communities.gis
+Driver: LAN/Erdas .LAN/.GIS
+Files: C:\Program Files\LANDIS-II\v6\examples\NECN-succession\initial-communities.gis
+Size is 99, 99
+Coordinate System is:
+LOCAL_CS["Unknown",
+    UNIT["Meter",1]]
+Origin = (50.000000000000000,9950.000000000000000)
+Pixel Size = (100.000000000000000,-100.000000000000000)
+Corner Coordinates:
+Upper Left  (      50.000,    9950.000) 
+Lower Left  (  50.0000000,  50.0000000) 
+Upper Right (    9950.000,    9950.000) 
+Lower Right (    9950.000,      50.000) 
+Center      (    5000.000,    5000.000) 
+Band 1 Block=99x1 Type=Byte, ColorInterp=Undefined
+
+
+initial-communities_biomass.gis
+Driver: LAN/Erdas .LAN/.GIS
+Files: C:\Users\bmarr\Desktop\BiomassHarvest_20170130\Extension-Biomass-Harvest\deploy\
+examples\initial-communities_biomass.gis
+Size is 99, 99
+Coordinate System is:
+LOCAL_CS["Unknown",
+    UNIT["Meter",1]]
+Origin = (50.000000000000000,9950.000000000000000)
+Pixel Size = (100.000000000000000,-100.000000000000000)
+Corner Coordinates:
+Upper Left  (      50.000,    9950.000) 
+Lower Left  (  50.0000000,  50.0000000) 
+Upper Right (    9950.000,    9950.000) 
+Lower Right (    9950.000,      50.000) 
+Center      (    5000.000,    5000.000) 
+Band 1 Block=99x1 Type=Byte, ColorInterp=Undefined
+
+
+stand.gis
+Driver: LAN/Erdas .LAN/.GIS
+Files: C:\Users\bmarr\Desktop\BiomassHarvest_20170130\Extension-Biomass-Harvest\deploy\
+examples\stand.gis
+Size is 99, 99
+Coordinate System is:
+LOCAL_CS["Unknown",
+    UNIT["Meter",1]]
+Origin = (0.533391475677490,-2.911298274993897)
+Pixel Size = (1.000000000000000,-1.000000000000000)
+Corner Coordinates:
+Upper Left  (   0.5333915,  -2.9112983) 
+Lower Left  (       0.533,    -101.911) 
+Upper Right (  99.5333915,  -2.9112983) 
+Lower Right (      99.533,    -101.911) 
+Center      (  50.0333915, -52.4112983) 
+Band 1 Block=99x1 Type=Byte, ColorInterp=Undefined
+
+
+
+	    NB. match up rasters (kind of...)
+http://gis.stackexchange.com/questions/73046/how-to-resample-geotiff-images-to-the-same-resolution
+
+Raster Calculator - simply use the raster calculator and you can set the resolution and 
+extent there and can make them match another raster by selecting the raster band you want to 
+match in the Raster Bands list and then clicking the "Current layer extent" button. The columns
+and rows fields will let you set the resolution. However, this method gives you no control over
+the resampling method
+
+
+	    NB. raster stats
+Processing toolbox ==> QGIS geoalgorithms ==> Raster Tools ==> Raster Layer statistics
+
+
+	    NB. another way to difference rasters
+Processing Toolbox ==> SAGA (2.1.1) ==> Raster calculus ==> Raster Difference
+
+	    NB. Print terse list of category values found in a raster layer.
+Processing Toolbox ==> GRASS GIS Raster ==> r.describe
+
+	    NB. d.rast.edit - Edits cell values in a raster map. (GRASS) 
+https://grass.osgeo.org/grass73/manuals/d.rast.edit.html
+
+
+
+
+	e7. add the following three files to the NECN example folder:
+
+management.gis
+stand.gis
+BiomassHarvestSample-Input.txt
+
+
+	e8. modify scenario.txt
+
+============= modified scenario.txt for NECN ================================================
+LandisData  Scenario
+
+Duration  30
+
+Species   species.txt
+
+Ecoregions      ./ecoregions-2regions.txt
+EcoregionsMap   ./ecoregions.gis
+
+CellLength  100 << meters, 100 x 100 m = 1 ha
+
+
+>> Succession Extension     Initialization File
+>> --------------------     -------------------
+   "NetEcosystemCN Succession"        NECN-succession.txt
+
+
+>> Disturbance Extensions   Initialization File
+>> ----------------------   -------------------
+>>   "Base Fire"			base-fire.txt
+     "Biomass Harvest"		BiomassHarvestSample-Input.txt
+
+>>   DisturbancesRandomOrder  yes  << optional parameter; default = no
+
+
+>> Other Extensions         	Initialization File
+>> ----------------         	------------------
+>>   "Output Cohort Stats"    	cohort-stats.output.txt
+
+
+>>RandomNumberSeed  4,357  << optional parameter; default = the seed is
+                         << randomly generated using the current time
+=============================================================================
+
+
+
+
+
+	f. run (modified) scenario.txt
+
+2017-02-05 12:32:19,347 - LANDIS-II 6.2 (beta release 1)
+2017-02-05 12:32:19,379 - 
+2017-02-05 12:32:20,779 - Loading scenario from file "scenario.txt" ...
+2017-02-05 12:32:20,916 - Initialized random number generator with seed = 3,880,497,527
+2017-02-05 12:32:20,916 - Loading species data from file "species.txt" ...
+2017-02-05 12:32:20,994 - Loading ecoregions from file "./ecoregions-2regions.txt" ...
+2017-02-05 12:32:21,032 - Initializing landscape from ecoregions map "./ecoregions.gis" ...
+2017-02-05 12:32:21,132 - Cell length = 100 m, cell area = 1 ha
+2017-02-05 12:32:21,148 - Map dimensions: 99 rows by 99 columns = 9,801 cells
+2017-02-05 12:32:21,179 - Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+2017-02-05 12:32:21,195 - Loading NetEcosystemCN Succession extension ...
+2017-02-05 12:32:21,417 -    Registering Data:  Succession.LeafBiomassCohorts.
+2017-02-05 12:32:21,417 -    Registering Data:  Succession.AgeCohorts.
+2017-02-05 12:32:21,417 -    Registering Data:  Succession.BiomassCohorts.
+2017-02-05 12:32:21,564 -    Begin parsing FUNCTIONAL GROUP table.
+2017-02-05 12:32:21,580 -    Begin reading INITIAL ECOREGION parameters.
+2017-02-05 12:32:21,580 -    Begin reading FIXED ECOREGION parameters.
+2017-02-05 12:32:21,580 -    Begin reading FIRE REDUCTION parameters.
+2017-02-05 12:32:21,580 -    Begin reading HARVEST REDUCTION parameters.
+2017-02-05 12:32:21,796 - Initializing NECN Succession ...
+2017-02-05 12:32:22,524 -    Loading weather data ...
+2017-02-05 12:32:22,525 -    Loading spin-up weather data from file PRISM_data_AFRI_4.18.13.csv ...
+2017-02-05 12:32:22,660 -    Converting raw data from text file: PRISM_data_AFRI_4.18.13.csv, 
+Format=monthly_temp-c_precip-mmmonth, Temporal=Monthly.
+2017-02-05 12:32:22,729 -    Loading future weather data from file PRISM_data_AFRI_4.18.13.csv ...
+2017-02-05 12:32:22,729 -    Converting raw data from text file: PRISM_data_AFRI_4.18.13.csv, 
+Format=monthly_temp-c_precip-mmmonth, Temporal=Monthly.
+2017-02-05 12:32:55,261 -    Core.StartTime = 0, Core.EndTime = 30.
+2017-02-05 12:32:55,330 -   Completed calculations for SpinUp_Climate using AVERAGE MONTHLY data. 
+Ecoregion = MN101, SimulatedYear = AVERAGED.
+2017-02-05 12:32:55,346 - 
+........
+2017-02-05 13:03:24,382 -   Completed calculations for Future_Climate using AVERAGE MONTHLY data. 
+Ecoregion = MN102, SimulatedYear = AVERAGED.
+2017-02-05 13:03:24,382 -    Opening NECN P-establishment log file "NECN-prob-establish-log.csv" ...
+2017-02-05 13:03:24,413 -    Registering Data:  TimeOfLastSuccession.
+2017-02-05 13:03:24,413 -    Registering Data:  Shade.
+2017-02-05 13:03:24,413 -    Creating Dispersal Neighborhood List.
+2017-02-05 13:03:24,413 -    Dispersal:  NeighborRadius=15050, CellLength=100, numCellRadius=150
+2017-02-05 13:03:24,446 -    Loading biomass parameters for age-only disturbances from file 
+"bio-reductions-standard.txt" ...
+2017-02-05 13:03:24,451 -       Reading CohortBiomassReductions.
+2017-02-05 13:03:24,451 -          Adding disturbance:fire...
+2017-02-05 13:03:24,451 -          Adding disturbance:wind...
+2017-02-05 13:03:24,451 -          Adding disturbance:harvest...
+2017-02-05 13:03:24,451 -       Reading DeadBiomassReductions.
+2017-02-05 13:03:24,451 -          Adding disturbance:fire...
+2017-02-05 13:03:24,451 -    Loading initial communities from file "initial-communities.txt" ...
+2017-02-05 13:03:24,482 -    Reading initial communities map "initial-communities.gis" ...
+2017-02-05 13:03:27,734 - Loading Biomass Harvest extension ...
+2017-02-05 13:03:27,856 -    Registering Data:  Harvest.PrescriptionName.
+2017-02-05 13:03:27,872 -    Registering Data:  Harvest.TimeOfLastEvent.
+2017-02-05 13:03:27,872 -    Registering Data:  Harvest.CohortsDamaged.
+2017-02-05 13:03:27,888 - The data type of site variable "Succession.BiomassCohorts" is Landis.Library.BiomassCohorts.ISiteCohorts, not Landis.Library.BiomassCohorts.ISiteCohorts
+
+

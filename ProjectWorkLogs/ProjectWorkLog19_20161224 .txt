@@ -1,0 +1,241 @@
+Title:				Project Work Log19
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			24 Dec 2016
+Revision Date:			02 Jan 2017
+
+
+
+
+###############
+Log: 02 Jan 2017
+################
+
+	a. on Dell, upgrade Anaconda (spyder, gdal, regex)
+
+
+	b. import main works!! (see temp3.py)
+
+
+
+ 
+
+
+		
+
+
+#########################################################################
+Log: 24 Dec 2016
+LANDVIZ -- try "import main.py" (into Spyder)
+#########################################################################
+
+
+	a. use of main.py 
+http://stackoverflow.com/questions/4041238/why-use-def-main
+http://stackoverflow.com/questions/22492162/understanding-the-main-method-of-python
+
+	a1. main.py calls collector.py ==> instantiates instance of "class Collector(object):" as "collector"
+	a2. possible b/c there is an __ini__.py in /home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/
+
+
+main.py
+Line 10		import l2data as landis, l2utils as utils
+
+collector.py
+Line 8		class Collector(object):
+
+main.py
+Line 59		appPath, appFile = os.path.split(os.path.normpath(os.path.realpath(script)))	#define dir/file strings
+Line 79		args = parseArguemnts()								#call method (Line 40; main.py)
+Line 82		collector = utils.Collector()							#instantiation (Line 8; collector.py)
+Line 84 	CONFIG = collector.setupConfig(appPath, appFile, 'config\config.yaml', args)	#call method (Line 126; collector.py)
+Line 86		PROJECT = collector.setupProject()						#call method
+
+
+
+
+
+In [18]: os.path.realpath('/home/bmarron/Desktop/BAU_10-14/Charles_preproc-and-bat-files/run_preproctool.bat')
+Out[18]: '/home/bmarron/Desktop/BAU_10-14/Charles_preproc-and-bat-files/run_preproctool.bat'
+
+In [19]: os.path.normpath(os.path.realpath('/home/bmarron/Desktop/BAU_10-14/Charles_preproc-and-bat-files/run_preproctool.bat'))
+Out[19]: '/home/bmarron/Desktop/BAU_10-14/Charles_preproc-and-bat-files/run_preproctool.bat'
+
+In [20]: appPath, appFile = os.path.split(os.path.normpath(os.path.realpath('/home/bmarron/Desktop/BAU_10-14/Charles_preproc-and-bat-files/run_preproctool.bat')))
+
+In [21]: appPath
+Out[21]: '/home/bmarron/Desktop/BAU_10-14/Charles_preproc-and-bat-files'
+
+In [22]: appFile
+Out[22]: 'run_preproctool.bat'
+
+
+
+
+
+
+
+
+
+	b. path issues
+https://docs.python.org/2/library/sys.html
+
+
+In [15]: sys.path.insert(1, '/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source')
+Out[15]: '/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source'
+
+In [16]: sys.path[1]
+Out[16]: '/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source'
+
+In [17]: sys.path.insert(0, '/home/bmarron')
+Out [17]: '/home/bmarron'
+
+In [18]: sys.path[0]
+Out[18]: '/home/bmarron'
+
+
+In [19]: os.path.join(sys.path[0], sys.path[1])
+Out[19]: '/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source'
+
+
+In [20]: os.path.join(os.sep,sys.path[0], sys.path[1])
+Out[20]: '/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source'
+
+
+
+
+	c. first gdal issue: gdal not correctly installed
+http://gis.stackexchange.com/questions/70020/no-ogr-module-despite-having-gdal-installed
+$ conda search gdal
+
+
+https://anaconda.org/anaconda/gdal
+$ conda install -c anaconda gdal=2.1.0 
+Fetching package metadata .........
+Solving package specifications: ..........
+
+Package plan for installation in environment /home/bmarron/anaconda2:
+
+The following packages will be downloaded:
+
+    package                    |            build
+    ---------------------------|-----------------
+    conda-env-2.6.0            |                0          502 B  anaconda
+    geos-3.5.0                 |                0         3.0 MB  anaconda
+    proj4-4.9.2                |                0         279 KB  anaconda
+    xerces-c-3.1.4             |                0         1.8 MB  anaconda
+    hdf4-4.2.12                |                0         607 KB  anaconda
+    geotiff-1.4.1              |                0         925 KB  anaconda
+    kealib-1.4.6               |                0         205 KB  anaconda
+    libnetcdf-4.4.1            |                0         785 KB  anaconda
+    conda-4.2.13               |           py27_0         376 KB  anaconda
+    libgdal-2.1.0              |                0         6.5 MB  anaconda
+    gdal-2.1.0                 |           py27_0         1.5 MB  anaconda
+    ------------------------------------------------------------
+                                           Total:        16.0 MB
+
+The following NEW packages will be INSTALLED:
+
+    conda-env: 2.6.0-0      anaconda
+    gdal:      2.1.0-py27_0 anaconda
+    geos:      3.5.0-0      anaconda
+    geotiff:   1.4.1-0      anaconda
+    hdf4:      4.2.12-0     anaconda
+    kealib:    1.4.6-0      anaconda
+    libgdal:   2.1.0-0      anaconda
+    libnetcdf: 4.4.1-0      anaconda
+    proj4:     4.9.2-0      anaconda
+    xerces-c:  3.1.4-0      anaconda
+
+The following packages will be UPDATED:
+
+    conda:     4.2.9-py27_0          --> 4.2.13-py27_0 anaconda
+
+
+
+	c2. next gdal issue: libexpat.so.0
+http://stackoverflow.com/questions/1099981/why-cant-python-find-shared-objects-that-are-in-directories-in-sys-path
+http://gis.stackexchange.com/questions/186994/importerror-installing-gdal-on-ubuntu-14-04-with-anaconda-python-3-5
+
+
+    ...: import main
+    ...: 
+Traceback (most recent call last):
+
+  File "<ipython-input-10-0a0314e7e6c7>", line 3, in <module>
+    import main
+
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/main.py", line 10, in <module>
+    import l2data as landis, l2utils as utils
+
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/__init__.py", line 2, in <module>
+    from l2utils.collector import Collector
+
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/collector.py", line 4, in <module>
+    from osgeo import osr
+
+  File "/home/bmarron/anaconda2/lib/python2.7/site-packages/osgeo/__init__.py", line 21, in <module>
+    _gdal = swig_import_helper()
+
+  File "/home/bmarron/anaconda2/lib/python2.7/site-packages/osgeo/__init__.py", line 17, in swig_import_helper
+    _mod = imp.load_module('_gdal', fp, pathname, description)
+
+ImportError: libexpat.so.0: cannot open shared object file: No such file or directory
+
+
+
+~$ find /home/bmarron -name "libexpat.so"
+/home/bmarron/anaconda2/lib/libexpat.so
+/home/bmarron/anaconda2/pkgs/expat-2.1.0-0/lib/libexpat.so
+
+
+$ ln -s /home/bmarron/anaconda2/lib/libexpat.so /home/bmarron/anaconda2/lib/libexpat.so.0
+
+
+	b2i. gdal and osr now good!!
+In [18]: from osgeo import gdal, osr
+In [19]: 
+
+
+	c3. next issue: regex
+
+  ...: import main
+    ...: 
+Traceback (most recent call last):
+
+  File "<ipython-input-17-0a0314e7e6c7>", line 3, in <module>
+    import main
+
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/main.py", line 10, in <module>
+    import l2data as landis, l2utils as utils
+
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/__init__.py", line 5, in <module>
+    from l2utils.outputworker import OutputWorker
+
+  File "/home/bmarron/Desktop/LANDVIZ_20161213/LANDVIZ/PreProcTool/source/l2utils/outputworker.py", line 2, in <module>
+    from regex import sub
+
+ImportError: No module named regex
+
+
+
+
+	c3i. regex module 64-bit Linux only!
+
+https://anaconda.org/conda-forge/regex
+
+$ conda install -c conda-forge regex=2016.11.18 
+Fetching package metadata .........
+Solving package specifications: .
+
+PackageNotFoundError: Package not found: '' Package missing in current linux-32 channels: 
+  - regex 2016.11.18*
+
+You can search for packages on anaconda.org with
+$ anaconda search -t conda regex
+
+
+
+
+

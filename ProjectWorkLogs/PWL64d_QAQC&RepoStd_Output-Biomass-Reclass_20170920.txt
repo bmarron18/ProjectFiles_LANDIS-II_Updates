@@ -1,0 +1,64 @@
+Title:				PWL64d_QAQC&RepoStd_Output-Biomass-Reclass
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			20 Sept 2017
+Final Date:			
+
+
+
+############
+QAQC Summary
+#############
+
+	a. Output-Biomass-Reclass was run with NECN Succession to check against repo changes since
+	   last QAQC check w/ NECN
+
+	b. No exceptions were generated
+
+
+#############
+QAQC Results
+#############
+
+	a. Extension-Output-Biomass-Reclass currently DOES WORK with NECN
+
+
+###############
+QAQC Sequence
+################
+
+
+	a. run using QAQC_Example NECNSuccession_s3e2
+		run \deploy\examples\scenario_s3e2.txt
+
+	b. the following extensions were run in scenario_s3e2.txt:
+
+Using the following extensions ...
+   Extension Name            Extension Filename
+   --------------            ------------------
+   NECN Succession           NECN-succession_SetUp_s3e2.txt
+   Base Wind                 base-wind_SetUp_s3e2.txt
+   Biomass Harvest           biomass-harvest_SetUp_s3e2.txt
+   Output Biomass Reclass    output_BiomassReclass.txt
+
+	d. no exceptions; expected output provided
+
+C:\Users\bdmarron\Desktop\NECNSuccession_s3e2>call landis-ii scenario_s3e2.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e2.txt" ...
+
+....
+
+dataset created: NECN_Hydro\Annual-water-budget-50.img
+Model run is complete.
+
+
+
+
+
+
+
+
+

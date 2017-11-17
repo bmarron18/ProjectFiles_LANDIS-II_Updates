@@ -1,0 +1,177 @@
+Title:				PWL75_QAQC&RepoStd_ReleasePartyAlgorithms
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			11 Jun 2017
+Final Date:			14 Jun 2017
+ 
+#############
+Work Area
+#############
+
+aruzicka555
+VSchuster
+
+
+git status
+git remote -v
+git add --all  OR  git add -A
+git status
+git commit			
+git push origin master
+gitk
+
+QAQC_ReleaseUpdates_1
+
+Loading scenario from file "scenario_s1e1.txt" ...
+Error at line 47 of file "scenario_s1e1.txt":
+  Error reading input value for Extension:
+    No extension with the name "Base BDA".
+
+
+###########################
+ReleaseParty Algorithms
+###########################
+
+---- Part I (Marron) --------------------------------------------------
+Step-by-step:
+1) Fork ALL repos, in sequence, from Trello "QAQC Done" cards
+2) give Austen/Vincent authorization
+3) clone
+4) Check that all repos have correct QAQCstd examples
+
+check output_Biomass.txt 		==> LandisData  "Output Biomass"
+check scenario_s3e1.txt 		==> "NECN Succession"		NECN-succession_SetUp_s3e1.txt
+check biomass-insects_SetUp_s2e2.txt	==> outputs/insect
+
+6) run a-e below
+7) Check that repo correctly restructured
+8) After changes made, use the comment, "QAQC_ReleaseUpdates_1" for the commit/push
+
+
+	a. README_<ExtensionName-version>.txt
+		i) Synchronize w/ official GitHub extension name (source: https://github.com/LANDIS-II-Foundation)
+			==> extension NAME of README_<ExtensionName-version>.txt
+
+		ii) Synchronize w/ official release version number (source: Rob; ConfirmedReleaseVersion on Trello)
+			==> version NUMBER of README_<ExtensionName-version>.txt
+
+	b. deploy/examples/scenario_<version>.txt
+		i) Synchronize w/ official internal-to-LANDISII extension name (source: PlugIn.cs)
+			==> NAMES of extensions called
+		
+	c. deploy/installer/<ExtensionName-Version>.txt
+		i) Synchronize w/ official GitHub extension name (source: https://github.com/LANDIS-II-Foundation)
+			==> extension NAME of <ExtensionName-version>.txt
+
+	d. deploy/installer/<ExtensionName-version>.iss
+		i) Synchronize w/ official GitHub extension name (source: https://github.com/LANDIS-II-Foundation)
+			==> extension NAME of <ExtensionName-version>.iss
+
+	e. delete current installer
+
+
+
+
+
+------- Part II (Ruzicka/Schuster) ---------------------------------------------------------------------------------
+Step-by-step:
+1) Select a repo from Trello "QAQC Done" cards
+2) Add your selected repo to the "Part II: UpdatesCompleted" checklist in the "Part II: ReleaseParty (Ruzicka/Schuster)" Trello card
+3) Open your selected repo from the bmarron/<repo> forks in GitHub
+4) Run thru a-e below using the "edit pencil" to make changes to files
+5) After changes entered, use the comment, "QAQC_ReleaseUpdates_2" for the commit/push
+6) When repo changes are complete, check off the repo in the "Part II: UpdatesCompleted" checklist
+
+
+	a. LANDIS-II-Foundation/<ExtensionName>
+		i) ADD Apache license (open-source)to repo
+
+
+
+	b. README_<ExtensionName-version>.txt
+		i) Synchronize w/ official GitHub extension name (source: https://github.com/LANDIS-II-Foundation)
+			==> extension NAME in README_<ExtensionName-version>.txt
+
+		ii) Synchronize w/ official release version number (source: Rob; ConfirmedReleaseVersion on Trello)
+			==> version NUMBER in README_<ExtensionName-version>.txt
+
+		iii) if changes made in i) or ii) above,
+			==> change Final Date:	15 June 2017
+
+
+	c. src/Assembly.cs
+		i) Synchronize AssemblyTitle() w/ official assembly (.dll) extension name 
+		   (source: deploy/installer/<ExtensionName-version>.txt)	
+			==> [assembly: AssemblyTitle("Landis.Extension.<name>")]
+
+
+		ii) Synchronize AssemblyDescription() w/ official GitHub extension name 
+		    (source: https://github.com/LANDIS-II-Foundation)
+			==> [assembly: AssemblyDescription("Extension <name>")]
+
+
+
+	d. deploy/installer/<ExtensionName-version>.iss
+		i) Synchronize w/ official GitHub extension name (source: https://github.com/LANDIS-II-Foundation)
+			==> #define PackageName "<GitHub extension name>"
+
+		ii) Synchronize Version, ReleaseType, CoreVersion (source: Rob; ConfirmedReleaseVersion on Trello)
+			==> #define Version          "<ConfirmedReleaseVersion>"
+			==> #define ReleaseType      "official"
+			==> #define CoreVersion      "6.0"
+
+
+
+
+	e. deploy/installer/<ExtensionName-version>.txt 
+		i) Synchronize Version, CoreVersion (source: Rob; ConfirmedReleaseVersion on Trello)
+			==> Name "internal-to-LANDISII extension name" 	(source: PlugIn.cs)
+			==> Version <ConfirmedReleaseVersion>		(source: Rob; ConfirmedReleaseVersion on Trello)
+			==> CoreVersion 6.0
+
+
+
+
+
+
+----- Part III (Marron) -------------------------------------------------------------------------
+Step-by-step:
+1) Copy the name of a checked repo from the "Part II: UpdatesCompleted" checklist in the "Part II: ReleaseParty (Ruzicka/Schuster)" Trello card
+2) Paste to the "Part III: InstallerBuilt" checklist in the "Part III: ReleaseParty (Marron)" Trello Crard
+3) Clone the repo and build the installer
+4) Commit/push with comment "QAQC_ReleaseUpdates_3" back to bmarron/forked repo
+5) When repo changes are complete, check off the repo in the "Part III: InstallerBuilt" checklist
+
+
+
+
+------ Part IV (Marron/Ruzicka/Schuster) ---------------------------------------------------------
+Step-by-step:
+1) Copy the name of a checked repo from the "Part III: InstallerBuilt" checklist in the "Part III: ReleaseParty (Marron)" Trello card
+2) Paste to the "Part IV: Installed/ExampleRun" checklist in the "Part IV: ReleaseParty (Marron/Ruzicka/Schuster)" Trello card
+3) Download (.zip) or clone the installer
+4) (uninstall then) install the freshly-built extension
+5) Run the example in C:\Program Files\LANDIS-II\v6\examples
+
+6a) If run successful, 
+	==> check off the repo in the "Part IV: Installed/ExampleRun" checklist
+	==> create pull request to Rob (use the comment, "ReleaseReady" for the pull request)
+
+6b) If run NOT successful, 
+	==> leave repo unchecked and add, "NOGO" (pass back to Bruce)
+
+
+
+
+
+----- Part V (Scheller) ------------------------------------------------------------------------
+Step-by-step:
+1) Tag as release
+2) Update website documentation 
+3) Update installer on website
+
+
+
+
+

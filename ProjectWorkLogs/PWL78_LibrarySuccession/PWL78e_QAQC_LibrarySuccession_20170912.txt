@@ -1,0 +1,164 @@
+Title:				PWL78e_QAQC_Planting_20170912
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			12 Sept 2017
+Final Date:			
+
+Trello Board ==> PR8
+
+
+NB. Once changes approved all libraries in the Harvest Suite must be rebuilt to reference 
+Landis.Library.Succession-v2.dll because of the changes made. 
+
+NB. Ditto above for  Age-Only Succession, Biomass Succession, and NECN Succession
+
+NB. These are ready-to-go on 'tmp1' branches
+
+
+
+############
+QAQC Summary
+#############
+
+	1. In addition to consistency checks (PWL78d_QAQC_Planting_20170911), a check of 
+	    AGE-COUNT-*.img outputs was performed.
+
+	2.  The four (4) QAQC rounds below were re-run with "Output Cohort Statistics" active to obtain
+	   AGE-COUNT-*.img outputs
+		a) QAQC2_TestScenario_Issue21_BaseHarvest1 (Age-only Succession + Base Harvest) 
+		b) QAQC2_TestScenario_Issue21_BaseHarvest2 (Biomass Succession + Base Harvest)
+	   	c) QAQC2_TestScenario_Issue21_BiomassHarvest1 (Biomass Succession + Biomass Harvest)
+		d) QAQC2_TestScenario_Issue21_BiomassHarvest2 (NECN Succession + Biomass Harvest)
+
+	3. In every case, the issue was resolved per B. Miranda's resolution criterion:
+	   "The sequence of age counts that we expect when this issue is resolved 
+	   is generally (1, 1, 1, 1, 1, 1) for the majority of cells. A small number of cells will 
+	   have additional cohorts due to successful seeding (only after 25-years post-planting due to 
+	   maturity age), but the vast majority of cells should maintain a single cohort."
+
+
+
+#############
+QAQC Results
+#############
+
+	1.  Passed QAQC!
+
+
+
+###################
+QAQC sequence
+###################
+
+
+	a. Re-run QAQC test rounds
+
+	b. load AGE-COUNT*.img files into R and evaluate
+	b1. use "R_img_evaluation.R"
+
+---- R_img_evaluation.R ------------------------------------------------------
+'''
+Title:				    Image Evaluation
+Project Description:		   LANDIS-II upgrades/corrections
+Project ID:			    2016SoE021
+Author:				    bmarron
+Origin Date:			    12 Sept 2017
+Final Date:	
+  
+'''
+
+
+#libraries
+library(raster)
+library(sp)
+library(rgdal)
+
+#check working directory
+getwd()
+
+
+#load .img files and check output
+test<-paste("AGE-COUNT-0.img", sep="")
+AGECOUNT_0 <-raster(test)
+freq(AGECOUNT_0)
+
+test<-paste("AGE-COUNT-10.img", sep="")
+AGECOUNT_10 <-raster(test)
+freq(AGECOUNT_10)
+
+test<-paste("AGE-COUNT-20.img", sep="")
+AGECOUNT_20 <-raster(test)
+freq(AGECOUNT_20)
+
+test<-paste("AGE-COUNT-30.img", sep="")
+AGECOUNT_30 <-raster(test)
+freq(AGECOUNT_30)
+
+test<-paste("AGE-COUNT-40.img", sep="")
+AGECOUNT_40 <-raster(test)
+freq(AGECOUNT_40)
+
+test<-paste("AGE-COUNT-50.img", sep="")
+AGECOUNT_50 <-raster(test)
+freq(AGECOUNT_50)
+------------------------------------------------------------------------------------
+
+
+
+
+
+	c. AGE-COUNT*.img output evaluation per QAQC round
+
+---- QAQC2_TestScenario_Issue21_BaseHarvest1 ----------------------------------------------------
+
+		output file		no-fix value,count		fix value,count
+		-----------		--------------------		-----------------
+		AGE-COUNT-0			1, 9801				1, 9801
+		AGE-COUNT-10			1, 9801				1, 9801
+		AGE-COUNT-20			11, 9801			1, 9801
+		AGE-COUNT-30			21, 9801			1, 9801
+		AGE-COUNT-40			31, 9801			1, 9801
+		AGE-COUNT-50			41, 9801			1, 9801
+
+
+
+----- QAQC2_TestScenario_Issue21_BaseHarvest2 -----------------------------------------------------
+
+		output file		no-fix value,count		fix value,count
+		-----------		--------------------		-----------------
+		AGE-COUNT-0			1, 9801				1, 9801
+		AGE-COUNT-10			1, 9801				1, 9801
+		AGE-COUNT-20			11, 9801			1, 9801
+		AGE-COUNT-30			21, 9801			1, 9801
+		AGE-COUNT-40			31, 9801			1, 9795; 2,6
+		AGE-COUNT-50			41, 9801			1, 9788; 2, 13
+
+
+
+
+
+----- QAQC2_TestScenario_Issue21_BiomassHarvest1 -----------------------------------------------------
+
+		output file		no-fix value,count		fix value,count
+		-----------		--------------------		-----------------
+		AGE-COUNT-0			1, 9801				1, 9801
+		AGE-COUNT-10			1, 9801				1, 9801
+		AGE-COUNT-20			11, 9801			1, 9801
+		AGE-COUNT-30			21, 9801			1, 9801
+		AGE-COUNT-40			31, 9801			1, 9799; 2,2
+		AGE-COUNT-50			41, 9801			1, 9794; 2, 7
+
+
+----- QAQC2_TestScenario_Issue21_BiomassHarvest2 -----------------------------------------------------
+
+		output file		no-fix value,count		fix value,count
+		-----------		--------------------		-----------------
+		AGE-COUNT-0			1, 9801				1, 9801
+		AGE-COUNT-10			1, 9801				1, 9801
+		AGE-COUNT-20			11, 9801			1, 9801
+		AGE-COUNT-30			21, 9801			1, 9801
+		AGE-COUNT-40			31, 9801			1, 9801
+		AGE-COUNT-50			41, 9801			1, 9801
+
+

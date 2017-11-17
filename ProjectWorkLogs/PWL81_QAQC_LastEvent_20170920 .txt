@@ -1,0 +1,50 @@
+﻿Title:				PWL81_QAQC_TimeSinceLastEvent_20170926
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			20 Sept 2017
+Final Date:			
+
+Trello card ==> PR11
+
+
+
+############
+QAQC Summary
+#############
+
+	1. Landis.Library.Harvest.Mgmt-v2.dll was rebuilt and then 
+	   Extension.BaseFire was rebuilt with the fresh, Harvest.Mgmt.dll.
+
+	2.  Two elements of the Harvest Suite will need to be rebuilt with the new, 
+	   Landis.Library.Harvest.Mgmt-v2.dll
+
+		Landis.Library.HarvestManagement	
+		
+			Landis.Extension.BaseHarvest
+			Landis.Extension.BiomassHarvest
+
+	3a.  Landis.Extension.BaseHarvest-3.1.3.dll rebuilt 
+			==> Landis.Extension.BaseHarvest-3.1.4.dll
+
+	3b. Landis.Extension.BiomassHarvest-3.2.3.dll rebuilt
+			==> Landis.Extension.BiomassHarvest-3.2.4.dll
+
+
+#############
+QAQC Results
+#############
+
+	1. No QAQC runs made b/c a simple name change
+
+	
+######################
+QAQC sequence
+######################
+
+	
+
+
+
+
+

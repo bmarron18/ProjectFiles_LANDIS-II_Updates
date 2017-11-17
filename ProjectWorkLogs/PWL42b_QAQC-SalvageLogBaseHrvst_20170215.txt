@@ -1,0 +1,363 @@
+Title:				QAQC of salvage logging
+Project Description:		LANDIS-II upgrades/corrections
+Project ID:			2016SoE021
+Author:				bmarron
+Origin Date:			15 Feb 2017
+Final Date:			
+
+
+
+#######################
+salvage logging issue
+#######################
+https://github.com/LANDIS-II-Foundation/Extension-Base-Harvest/issues/1
+https://github.com/LANDIS-II-Foundation/Library-Harvest-Mgmt/pull/6
+https://github.com/LANDIS-II-Foundation/Library-Harvest-Mgmt/pull/7
+
+	a. affected
+		==> Landis.Library.HarvestManagement-v2.dll
+		==> Landis.Library.BiomassHarvest-v2.dll
+		==> Landis.Extension.BaseHarvest-3.0.dll
+		==> Landis.Extension.BiomassHarvest-3.2.dll
+
+
+###################
+pre-QAQC set up
+###################
+
+
+	a. trace of changes made for salvage logging
+
+Austen 26 Jan (Slack) ==>
+ I have implemented salvage logging for base harvest. The changes were made in the 
+library-harvest-mgmt repo. I created a new stand ranking method "TimeSinceDisturbance" 
+and two new requirements: TimeSinceLastFire and TimeSinceLastWind. 
+I created a pull request - it is ready for testing
+
+Library-Harvest-Mgmt commit info ==>
+https://github.com/LANDIS-II-Foundation/Library-Harvest-Mgmt/commit/
+67829d7809cd71f8c0dae86aa789d582c1cc00d3
+
+Implementation of Salvage Logging
+Added new stand-ranking method and two new requirements. The
+stand-ranking method goes by time since last disturbance - wind, fire,
+or both and if the average time since the last disturbance across a
+stand's sites are greater than or equal to the time specified by the
+user, then the stand is set aside for harvesting. This is an
+implementation of salvage logging, issue #1 in base-harvest should be
+resolved now.
+
+
+
+
+
+	b. my interpretation of Austen's code changes 
+		==> Library-Harvest-Mgmt/commit/67829d7809cd71f8c0dae86aa789d582c1cc00d3
+
+**Lines 307-308 InputParametersParser.cs
+	==> two Booleans (check and reqs) are set to False
+
+
+**Lines 310-326 InputParametersParser.cs
+	==> InputParametersParser.cs grabs the StandRanking inputs defined by the user and throws
+them to IStandRankingMethod.cs, an interface for ranking stands. IStandRankingMethod.cs defines a 
+rankingMethod object that is unique for each StandRanking option
+	==> for all raanking methods INCLUDING "TimeSinceDisturbance", a new class is instantiated. 
+	==> classes are defined in separate .cs file as, for example, EconomicRank.cs or 
+	    MaxCohortAge.cs.
+
+
+**Lines 381-399 InputParametersParser.cs
+	==> if "TimeSinceDisturbance" is selected as the ranking scheme, Boolean "check" is 
+re-set to True; if either "TimeSinceLastFire" or "TimeSinceLastWind" is processed correctly,
+Boolean "reqs" is set to True
+
+
+
+
+	c. see "PWL42a_RepoStd-LibHrvstMngmnt_20170215.txt"
+		==> re-built "Landis.Library.HarvestManagement-v2.dll"
+
+
+
+	d. see "PWL44_RepoStd-ExtBaseHrvst_20170216.txt"
+		==> std repo and rebuild .dll
+
+1. uninstall BaseHarvest extension from LANDIS (using Windows Control Panel)
+2. clone BaseHarvest repo to desktop (local)
+3. make changes to .csproj and .cs files
+4. re-build the .dll in VS 
+5. make changes to .iss file 
+6. compile .iss file in Inno Script Studio and generate a new installer
+7. re-install BaseHarvest extension
+
+
+
+
+
+
+#############################
+QAQC algorithm for 
+salvage logging testing
+#############################
+
+	a. basic algorithm
+		==> use BaseHarvest
+		==> run one simple standard Prescription and one simple salvage Prescription
+		==> modify Prescriptions in "BaseHarvest-BDA.txt"
+		==> add base-fire disturbance
+
+
+"scenario.txt" used for QAQC ==>
+========================================================================================
+LandisData  Scenario
+
+Duration  100
+
+Species   species.txt
+
+Ecoregions      ./ecoregions.txt
+EcoregionsMap   ./ecoregions.gis
+
+CellLength  100 << meters, 100 x 100 m = 1 ha
+
+
+>> ---------------------
+>> LANDISII RUN OPTIONS
+>>-----------------------
+
+>> Options for LANDISII runs are:
+>>	1) "Base Fire"		base-fire_Input.txt 
+>>	2) "Base Harvest" 	base-harvest_Prescriptions.txt
+>>	3) "Base Fire"		base-fire_Input.txt 
+>>	   "Base Harvest" 	base-harvest_Prescriptions.txt
+
+>>	4) "Base BDA"		base-BDA_Input.txt
+>>	5) "Base Harvest"	base-harvest_BDA-Prescription.txt
+>>	6) "Base BDA"		base-BDA_Input.txt
+>>	   "Base Harvest"	base-harvest_BDA-Prescription.txt
+
+>>	7) "Base Fire"		base-fire_Input.txt 
+>>	   "Base BDA"		base-BDA_Input.txt
+>>	   "Base Harvest"	base-harvest_BDA-Prescription.txt
+
+>>	8) "Base Fire"		base-fire_Input.txt 
+>>	   "Base BDA"		base-BDA_Input.txt
+>>	   "Base Harvest"	base-harvest_Prescriptions.txt
+
+>>	9) "Base Fire"		base-fire_Input.txt 
+>>	   "Base Harvest"	base-harvest_SalvageLog-Prescription.txt
+
+>>	10) "Base Fire"		base-fire_Input.txt 
+>>	    "Base BDA"		base-BDA_Input.txt
+>>	    "Base Harvest"	base-harvest_SalvageLog-Prescription.txt
+
+
+
+>> -----------------------
+>> SUCCESSION EXTENSIONS
+>> -----------------------
+
+>> 	Succession Extension     Initialization File
+>> 	--------------------     -------------------
+   	"Age-only Succession"    age-only-succession.txt
+
+
+>> --------------------------
+>> DISTURBANCE EXTENSIONS
+>> -------------------------
+
+>> 	Disturbance Extension	Initialization File
+>>	--------------------	-------------------
+	"Base Fire"		base-fire_Input.txt
+>>	"Base BDA"		base-BDA_Input.txt
+
+>>	"Base Harvest"		base-harvest_Prescriptions.txt
+>>	"Base Harvest"		base-harvest_BDA-Prescription.txt
+	"Base Harvest"		base-harvest_SalvageLog-Prescription.txt
+
+
+
+>> ------------------------
+>> OTHER EXTENSONS
+>> ----------------------
+
+>> 	Other Extension		Initialization File
+>> 	----------------	-------------------
+
+>> RandomNumberSeed  147  << optional parameter; uncomment for reproducibilty tests
+                          << default is a RandomNumberSeed generated using the current time
+
+=============================================================================================
+
+
+
+
+
+"base-harvest_SalvageLog-Prescription.txt" used for QAQC ==>
+=======================================================================
+LandisData  "Base Harvest"
+
+
+Timestep    10
+
+ManagementAreas "./management.gis"
+Stands      "./stand.gis"
+
+
+>> ---------------------------
+>> STAND SELECTION CRITERION
+>> --------------------------
+>>	1) IF avgtime of fire in a stand >= TimeSinceLastFire
+>>	   THEN stand IS NOT selected	
+
+>>	2) IF avgtime of fire in a stand < TimeSinceLastFire
+>>	   THEN stand IS selected	
+
+
+
+>> -----------------------------------------
+>> PRESCRIPTIONS
+>> -----------------------------------------
+
+Prescription	SalvageLogger1
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		80
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut    
+
+
+Prescription	SalvageLogger2
+    StandRanking		TimeSinceDisturbance 
+    TimeSinceLastFire		1
+    SiteSelection    		Complete
+    CohortsRemoved   		ClearCut  
+
+
+>> -----------------------------------------
+>> PRESCRIPTION IMPLEMENTATION 
+>> ----------------------------------------
+
+    HarvestImplementations
+>>  Mgmt Area   Prescription    Harvest Area    Begin Time  End Time
+>>  ---------   ------------    ------------    ----------  --------
+	1	SalvageLogger1	50%
+	3	SalvageLogger2	50%
+
+
+
+>> --------------
+>> OUTPUTS
+>> --------------
+
+PrescriptionMaps    harvest/prescripts-{timestep}.img
+EventLog            harvest/harvest-event-log.csv
+SummaryLog	    harvest/harvest-summary-log.csv
+========================================================================
+
+
+
+
+"base-fire_Input.txt" used for QAQC ==>
+========================================================================
+LandisData  "Base Fire"
+
+Timestep  5
+
+
+>> ---------------
+>> FIRE REGIONS
+>> ---------------
+
+>> Fire        Map	___ Event Size ___   Ignition  
+>> region      Code	 Mean  Min    Max    Prob.     k
+>> ---------   ------	----   ----   ----   --------  --------
+    eco1       1	 100    4     400    0.001    100
+    eco2       2	 200    6     600    0.001     50
+
+InitialFireRegionsMap	"./ecoregions.gis"
+
+
+
+>> ---------------
+>> FIRE TABLES
+>> ---------------
+
+DynamicFireRegionTable  << Optional table
+>>Year	FileName  (this line always commented out)
+  20	ecoregions.gis  << If table is not active, comment out this line
+
+
+FuelCurveTable
+>>             Severities (in increasing order)
+>> Ecoregion   S1   S2   S3   S4   S5
+>> ------------------------------------
+    eco1       10   20   50   70   120
+    eco2        5   15   20   -1    -1
+
+
+
+WindCurveTable
+>>             Severities (in decreasing order)
+>> Ecoregion   S5   S4   S3   S2   S1
+>> ------------------------------------
+    eco1       -1   -1    1   10   20
+    eco2        1    5   15   20   30
+
+
+
+FireDamageTable
+>> Cohort Age       FireSeverity - 
+>> % of longevity   FireTolerance
+>> --------------   --------------
+     20%               -2
+     50%               -1
+     85%                0
+    100%                1
+
+
+
+>> ---------------
+>> OUTPUTS
+>> -------------
+MapNames	fire/severity-{timestep}.img
+LogFile		fire/fire-log.csv
+SummaryLogFile	fire/summary-log.csv
+===========================================================================
+
+
+
+
+	b. LANDIS-II run error messages
+
+Error Msg 1 ==>
+Loading Base Harvest extension ...
+   Registering Data:  Harvest.PrescriptionName.
+   Registering Data:  Harvest.TimeOfLastEvent.
+   Registering Data:  Harvest.CohortsDamaged.
+Error at line 22 of file "BaseHarvest-BDA.txt":
+  TimeSinceLastFire or TimeSinceLastWind is required when ranking with TimeSinceDisturbance.
+
+
+Error Msg 2 ==>
+Running Base BDA ...
+   Processing landscape for BDA events ...
+   Initializing agent budworm.
+   New BDA Epidemic Activated.
+   Calculating BDA Site Resource Dominance.
+   Calculating BDA Modified Site Resource Dominance.
+Internal error occurred within the program:
+  Object reference not set to an instance of an object.
+
+Stack trace:
+   at Landis.Extension.BaseBDA.SiteResources.SiteResourceDominanceModifier(IAgent agent)
+   at Landis.Extension.BaseBDA.Epidemic.Simulate(IAgent agent, Int32 currentTime, Int32 timestep, Int32 ROS)
+   at Landis.Extension.BaseBDA.PlugIn.Run()
+   at Landis.Model.Run(ExtensionMain extension)
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+
+
+
