@@ -23,7 +23,7 @@ import json
 os.getcwd() 
 
 #%%
-path= "/home/bmarron/Desktop/HpQcUGFJ.json"
+path= "/home/bruce/Desktop/LANDIS-II/ProjectFiles_LANDIS-II_Updates/QAQC/TrelloBoard_Archives/TrelloBaord_20171117.json"
 data = open(path, 'r').read()
 print data
 Trello=json.loads(data)
@@ -31,5 +31,5 @@ html_Trello = json2html.convert(json = Trello)
         
     
  #%%
-with open('/home/bmarron/Desktop/Trello.html', 'w') as f:
+with open('/home/bruce/Desktop/LANDIS-II/ProjectFiles_LANDIS-II_Updates/QAQC/TrelloBoard_Archives/TrelloBaord_20171117.html', 'w') as f:
     f.write(html_Trello)
