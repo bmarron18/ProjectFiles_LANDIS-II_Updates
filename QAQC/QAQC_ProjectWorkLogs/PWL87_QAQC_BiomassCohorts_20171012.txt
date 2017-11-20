@@ -3,7 +3,7 @@ Project Description:		LANDIS-II upgrades/corrections
 Project ID:			2016SoE021
 Author:				bmarron
 Origin Date:			12 Oct 2017
-Final Date:			
+Final Date:			20 Nov 2017
 
 
 
@@ -12,16 +12,45 @@ Final Date:
 QAQC Summary
 #############
 
-	1. 
+	1. Library.Biomass.Cohorts was rebuilt with Rob's changes to Lines 327-328 in 
+	SpeciesCohorts.cs (uncommented)
+
+	2. Changes to Library.Biomass.Cohorts affects many other libraries and extensions; 
+	specifically,
+
+Landis.Library.BiomassCohorts-v2.0.1.dll
+
+	Landis.Library.BiomassHarvest-v2.0.1.dll
+	Landis.Library.Biomass-v1.0.1.dll
+	Landis.Library.LeafBiomassCohorts-v1.0.1.dll
+
+		Landis.Extension.Succession.Biomass.dll
+		Landis.Extension.BiomassHarvest.dll
+		Landis.Extension.Output.BiomassReclass.dll
+		Landis.Extension.Output.BiomassByAge.dll
+		Landis.Extension.Output.Biomass.dll
+		Landis.Extension.Succession.NetEcosystemCarbonNitrogen.dll
+
+	All of the above were rebuilt. 
+
+	3. A specific harvest prescription was designed by Rob to check if the changes to the Biomass
+	library affected changes in biomass harvest
+
+	4. Rob's harvest prescription was run both WITH and WITHOUT the changes to Library.BiomassCohorts
 	
-	
+	5. No differences in harvested biomass or harvested sites were detected.
 
 
 #############
 QAQC Results
 #############
 
-	1. 
+	1. The changes made to Library.Biomass.Cohorts (ie uncommenting Lines 327-328 in 
+	SpeciesCohorts.cs) had no effect on performance of other libraries or extensions
+	(ie, all extensions having the change ran fine)
+
+	2. The changes made to Library.Biomass.Cohorts (ie uncommenting Lines 327-328 in 
+	SpeciesCohorts.cs) had no effect biomass harvest totals.
 
 
 
@@ -205,69 +234,235 @@ Model run is complete.
 PASSED QAQC!!
 
 
+	g. Run QAQC test4: Rob's suggested changes using NECN, biomass harvest and the 
+	    rebuilds  in c. above.
+
+--- biomass-harvest_SetUp_s3e1_QAQC.txt -----------------------------------------------------
+LandisData  "Biomass Harvest"
+
+
+>>----------------
+>> REQUIRED INPUTS
+>>-----------------
+Timestep    		5
+
+ManagementAreas 	./biomass-harvest_Management_s3e1.gis
+
+Stands     		./biomass-harvest_Stand_s3e1.gis
 
 
 
+>> -------------------------
+>> HARVESTING PRESCRIPTIONS
+>> -------------------------
+
+>>---- PRESCRIPTION_1 (Rob's suggested prescription) ---------------------------------------
+Prescription QAQC4
+    StandRanking 	MaxCohortAge
+    SiteSelection 	Complete
+    CohortsRemoved SpeciesList
+>>	Species		Selection
+>>	-------		---------
+	acerrubr   	1-400 (90%)
+	acersacc   	1-40 (90%)  45-100 (90%) 105 (90%) 
+	betualle   	1-400 (90%)
+	fraxamer   	1-400 (90%)
 
 
+>> ----------------------------------
+>> HARVESTING IMPLEMENTATION 
+>> ---------------------------------
 
-
-
-
-
-
-
-DISREGARD!!! THESE USED JANE'S CHANGES. ROB FOUND HE ALREADY CORRECTED THE PROBLEM
-Uncomment Lines 327-328 in SpeciesCohorts.cs
-
-	b. run QAQC examples with as many extensions as possible per run
-
-	c. First set of QAQC runs: Have to rebuild each one of the following individually (including
-	installers) and then run all at once with the same scenario. Note hierarchy of rebuild:
-
-
-Landis.Library.BiomassCohorts-v2.0.2.dll
-
-	Landis.Library.BiomassHarvest-v2.0.2.dll
-	Landis.Library.Biomass-v1.0.2.dll
-
-		Landis.Extension.Succession.Biomass.dll
-		Landis.Extension.BiomassHarvest.dll
-		Landis.Extension.Output.BiomassReclass.dll
-		Landis.Extension.Output.BiomassByAge.dll
-		Landis.Extension.Output.Biomass.dll
-
-
-C:\Users\bdmarron\Desktop\QAQC_examples_BiomassCohort_test1>call landis-ii scenario_s2e1_QAQC.txt
-LANDIS-II 6.2 (official release)
-
-Loading scenario from file "scenario_s2e1_QAQC.txt" ...
-....
-ataset created: outputs/spp-biomass-by-age/acersacc-ageclass1-100.img
-Model run is complete.
-
-
-	d. Second set of QAQC runs: Have to rebuild each one of the following individually (including
-	installers) and then run all at once with the same scenario.
-
-Landis.Library.BiomassCohorts-v2.0.2.dll
-
-	Landis.Library.BiomassHarvest-v2.0.2.dll
-	Landis.Library.Biomass-v1.0.2.dll
-
-		NECN-Succession
-
-
-
-
-
-
-
-
-
-
-
-
+    HarvestImplementations
+>>	Mgmt Area	Prescription		Harvest Area	BeginTime	EndTime
+>> 	---------   	------------   		------------   	---------- 	--------
+>>	1		SelectiveNorthernHardwood	10%	0  	    	30
+>>	2		SelectiveNorthernHardwood	10%	0  	    	30
+	1		QAQC4				5%	0	   	30
+	2		QAQC4				5%	0	    	30
 
 
 	
+>> ------------
+>> OUTPUTS
+>> ----------
+
+PrescriptionMaps    harvest/biomass-harvest-prescripts-{timestep}.img
+BiomassMaps         harvest/biomass-removed-{timestep}.img
+EventLog            harvest/biomass-harvest-event-log.csv
+SummaryLog	    harvest/biomass-harvest-summary-log.csv
+
+---------------------------------------------------------------------------------------------------
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test4>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e1_QAQC.txt" ...
+....
+   Writing acersacc and ageclass1 map to outputs/spp-biomass-by-age/acersacc-ageclass1-30.img ...
+dataset created: outputs/spp-biomass-by-age/acersacc-ageclass1-30.img
+Model run is complete.
+
+See biomass-harvest-summary-log.csv ==> renamed to biomass_harvest_log_QAQC4.csv
+Time	MngmtArea  Prescrip  Sites  TotalcompHarvest  TotalPartialHarvest  TotalBiomass
+5	1	 QAQC4	376	0	3184	7348.04
+5	2	 QAQC4	192	0	998	2724.53
+10	1	 QAQC4	376	0	3169	7803.91
+10	2	 QAQC4	192	0	896	2792.51
+15	1	 QAQC4	352	0	3011	7716.52
+15	2	 QAQC4	192	0	892	3271.39
+20	1	 QAQC4	352	0	3011	8120.27
+20	2	 QAQC4	192	0	1021	6876.38
+25	1	 QAQC4	352	0	2634	6661.13
+25	2	 QAQC4	192	0	921	8187.91
+30	1	 QAQC4	352	0	2981	9387.47
+30	2	 QAQC4	192	0	982	9687.88
+
+
+
+
+
+	h. Run QAQC test5: Run WITHOUT Rob's suggested changes using NECN, biomass harvest and the 
+	    rebuilds  in c. above. NB. will need to uninstall all extensions that have Rob's changes to
+	    Landis.Library.BiomassCohorts then reinstall old versions WITHOUT Rob's changes. Marked
+	    with asterick below:
+
+Landis.Library.BiomassCohorts-v2.0.1.dll
+
+	Landis.Library.BiomassHarvest-v2.0.1.dll
+	Landis.Library.Biomass-v1.0.1.dll
+	Landis.Library.LeafBiomassCohorts-v1.0.1.dll
+
+		*Landis.Extension.Succession.Biomass.dll			<<reinstall v.4.0.4
+		*Landis.Extension.BiomassHarvest.dll				<<reinstall v.3.2.5
+		*Landis.Extension.Output.BiomassReclass.dll			<<reinstall v.2.1.1
+		Landis.Extension.Output.BiomassByAge.dll
+		*Landis.Extension.Output.Biomass.dll				<<reinstall v.2.2.1
+		*Landis.Extension.Succession.NECN				<<reinstall v.4.2.2
+
+
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test5>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e1_QAQC.txt" ...
+Initialized random number generator with seed = 2,529,334,532
+Loading species data from file "./species_s3e1.txt" ...
+Loading ecoregions from file "./ecoregions_s3e1.txt" ...
+Initializing landscape from ecoregions map "./ecoregions_s3e1.gis" ...
+Cell length = 100 m, cell area = 1 ha
+Sites: 9,801 active (100.0 %), 0 inactive (0.0 %)
+  reading in ecoregion from ./ecoregions_s3e1.gis
+Loading NECN Succession extension ...
+   Registering Data:  Succession.AgeCohorts.
+   Registering Data:  Succession.BiomassCohorts.
+   Begin parsing FUNCTIONAL GROUP table.
+   Begin reading INITIAL ECOREGION parameters.
+   Begin reading FIXED ECOREGION parameters.
+   Begin reading FIRE REDUCTION parameters.
+   Begin reading HARVEST REDUCTION parameters.
+Initializing NECN Succession ...
+   Loading weather data ...
+Internal error occurred within the program:
+  Index was outside the bounds of the array.
+
+Stack trace:
+   at Landis.Library.Climate.Climate.WriteFuture_DailyData(ClimateRecord[][] TimestepData, Int32 year, Int32 maxTimeStep)
+   at Landis.Library.Climate.Climate.Initialize(String climateConfigFilename, Boolean writeOutput, ICore mCore)
+   at Landis.Extension.Succession.NetEcosystemCN.PlugIn.Initialize()
+   at Landis.Model.Run(String scenarioPath, IUserInterface ui)
+   at Landis.App.Main(String[] args)
+
+
+Downloaded NECN from http://www.landis-ii.org/extensions/net-ecosystem-cn-succession and got
+the same error
+
+
+%%%%%%%%%%%%%%%%%%%% sleuthing%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	1. Rob rebuilt climate library on Oct 9
+	commit 45697ea526ee75e134777f7d3c8f729b850c77cc
+	New climate library. Re-compiled Library.Succession-v5
+
+	2. Browse the repo on Oct 8 (just before Rob's changes)
+	commit 03a1b6b5d4159c69c911992ca968cbb95c19185f
+
+	3. Clone the repo from Oct 8
+
+git clone -b tmp1 --single-branch https://github.com/bmarron18/Extension-NECN-Succession.git
+
+	4. Uninstall NECN; install LANDIS-II NECN Succession 4.2.2-setup.exe
+
+	5. try QAQC_example_BiomassCohort_test5 ==> NO GO!
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test5>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+....
+Loading Biomass Harvest extension ...
+   Registering Data:  Harvest.PrescriptionName.
+   Registering Data:  Harvest.TimeOfLastEvent.
+   Registering Data:  Harvest.CohortsDamaged.
+The data type of site variable "Succession.BiomassCohorts" is Landis.Library.BiomassCohorts.ISiteCohorts, not Landis.Library.BiomassCohorts.ISiteCohorts
+
+
+	6. Browse the repo on Sept 12
+	commit 95e2405de0bd2614b51ba677455b8d9264f757ed
+
+	7. clone the repo from Sept 12
+
+git clone -b tmp2 --single-branch https://github.com/bmarron18/Extension-NECN-Succession.git
+
+	8. uninstall NECN
+
+	9. try QAQC_example_BiomassCohort_test5 ==> NO GO AGAIN!
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test5>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+....
+Loading Biomass Harvest extension ...
+   Registering Data:  Harvest.PrescriptionName.
+   Registering Data:  Harvest.TimeOfLastEvent.
+   Registering Data:  Harvest.CohortsDamaged.
+The data type of site variable "Succession.BiomassCohorts" is Landis.Library.BiomassCohorts.ISiteCohorts, not Landis.Library.BiomassCohorts.ISiteCohorts
+
+	10. try running scenario_s3e1.txt in /examples ==> RUNS OK!
+
+	11. try QAQC_example_BiomassCohort_test5 ==> RUNS OK!
+ uncomment outputs
+>>  	"Output Biomass"		output_Biomass.txt		
+>>  	"Output Biomass Reclass"    	output_BiomassReclass.txt	
+>>	"Output Biomass-by-Age"		output_Biomass-by-Age.txt
+
+C:\Users\bdmarron\Desktop\QAQC_example_BiomassCohort_test5>call landis-ii scenario_s3e1_QAQC.txt
+LANDIS-II 6.2 (official release)
+
+Loading scenario from file "scenario_s3e1_QAQC.txt" ...
+....
+
+Progress: +++++++++++++++++++++++++++++++++++++++++++++++++++
+dataset created: NECN_Hydro\Annual-water-budget-30.img
+Model run is complete.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	h1. QAQC_Run5 output running NECN from the 12 Sept NECN repository 
+	(commit 95e2405de0bd2614b51ba677455b8d9264f757ed)
+
+Time	MngmtArea  Prescrip  Sites  TotalcompHarvest  TotalPartialHarvest  TotalBiomass
+5	1	 QAQC4	376	0	3184	7348.04
+5	2	 QAQC4	192	0	998	2724.53
+10	1	 QAQC4	376	0	3169	7803.91
+10	2	 QAQC4	192	0	896	2792.51
+15	1	 QAQC4	352	0	3011	7716.52
+15	2	 QAQC4	192	0	892	3271.39
+20	1	 QAQC4	352	0	3011	8120.27
+20	2	 QAQC4	192	0	1021	6876.38
+25	1	 QAQC4	352	0	2634	6661.13
+25	2	 QAQC4	192	0	921	8187.91
+30	1	 QAQC4	352	0	2981	9387.47
+30	2	 QAQC4	192	0	982	9687.88
+
+
+
+
+
+
