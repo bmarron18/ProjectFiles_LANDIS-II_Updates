@@ -9,7 +9,7 @@ Final Date:			30 Nov 2017
 ###############################
 QAQC protocol:
 Reset Master branch to prior commit;
-add new forks
+add new branches
 ################################
 https://stackoverflow.com/questions/5916329/cleanup-git-master-branch-and-move-some-commit-to-new-branch
 
